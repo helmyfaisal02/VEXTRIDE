@@ -11,6 +11,8 @@ import { CITY } from './cityLayout'
 import type { Block, CityLayout, Rect, SidewalkSegment } from './cityTypes'
 import { GeometryBuilder } from './geometryBuilder'
 import { buildMarkings } from './roadMarkings'
+import { DRIVEWAYS } from './driveways'
+import { drawSidewalk } from './sidewalkGeometry'
 
 /**
  * Turns the city layout into two merged, vertex-coloured geometries:
@@ -75,7 +77,12 @@ export function buildCityGeometries(layout: CityLayout = CITY): CityGeometries {
   const surface = new GeometryBuilder()
   for (const j of layout.junctions) surface.top(j.rect, ROAD_TOP, SURFACE_COLORS.asphalt)
   for (const r of layout.roads) surface.top(r.rect, ROAD_TOP, SURFACE_COLORS.asphalt)
-  for (const block of layout.blocks) (block.paved ? addPavedBlock : addRingBlock)(surface, block)
+  for (const block of layout.blocks) {
+    if (!block.paved && DRIVEWAYS.some((d) => d.blockId === block.id)) {
+      for (const s of layout.sidewalks.filter((s) => s.blockId === block.id)) drawSidewalk(surface, s, block.rect)
+      surface.top(block.lot as Rect, ROAD_TOP, DISTRICT_COLORS[block.districtId])
+    } else (block.paved ? addPavedBlock : addRingBlock)(surface, block)
+  }
   for (const s of layout.sidewalks) if (s.side === 'perimeter') addPerimeter(surface, s)
 
   const markings = new GeometryBuilder()

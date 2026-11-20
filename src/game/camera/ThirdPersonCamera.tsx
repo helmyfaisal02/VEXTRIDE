@@ -3,10 +3,10 @@ import { useFrame } from '@react-three/fiber'
 import { useRapier } from '@react-three/rapier'
 import { Vector3 } from 'three'
 import { playerState } from '../character'
-import { damp } from '../shared/math'
 import { MAX_FRAME_DT, poseCamera } from './cameraTransition'
 import { cameraRig, FOLLOW } from './cameraRig'
 import { useCameraInput } from './useCameraInput'
+import { CAMERA_PROBE_RADIUS, cameraClearance, stepCameraDistance } from './cameraCollision'
 
 interface CameraState {
   initialised: boolean
@@ -15,21 +15,21 @@ interface CameraState {
   target: Vector3
   offset: Vector3
   position: Vector3
-  ray: InstanceType<ReturnType<typeof useRapier>['rapier']['Ray']>
+  probeDirection: Vector3
+  probe: InstanceType<ReturnType<typeof useRapier>['rapier']['Ball']>
 }
 
 const FOCUS_RATE = 16
-const PULL_IN_RATE = 28
-const PUSH_OUT_RATE = 5
 
 /**
  * Third-person follow camera. Orbits the player using `cameraRig` (mouse drag
  * and wheel), follows with light smoothing, and pulls in when a collider sits
  * between the player and the desired camera position. Must be mounted inside
- * <Physics> so it can ray-cast against the world.
+ * <Physics> so it can sweep its camera volume against the world.
  */
 function ThirdPersonCameraImpl() {
-  const { world, rapier } = useRapier()
+  const physics = useRapier()
+  const { rapier } = physics
   useCameraInput()
 
   // Scratch state lives in a ref so the frame loop can mutate it freely.
@@ -41,7 +41,8 @@ function ThirdPersonCameraImpl() {
     target: new Vector3(),
     offset: new Vector3(),
     position: new Vector3(),
-    ray: new rapier.Ray({ x: 0, y: 0, z: 0 }, { x: 0, y: 0, z: 1 }),
+    probeDirection: new Vector3(),
+    probe: new rapier.Ball(CAMERA_PROBE_RADIUS),
   }
 
   useEffect(() => {
@@ -55,7 +56,7 @@ function ThirdPersonCameraImpl() {
   useFrame(({ camera }, delta) => {
     const s = state.current
     if (!s) return
-    const { focus, target, offset, position, ray } = s
+    const { focus, target, offset, position, probe, probeDirection } = s
     const dt = Math.min(delta, MAX_FRAME_DT)
 
     target.copy(playerState.position)
@@ -68,34 +69,35 @@ function ThirdPersonCameraImpl() {
       const k = 1 - Math.exp(-FOCUS_RATE * dt)
       focus.lerp(target, k)
     }
+    // Near a corner the smoothed focus must not lag through the building.
+    probeDirection.copy(focus).sub(target)
+    const lag = probeDirection.length()
+    if (lag > 1e-6) {
+      probeDirection.divideScalar(lag)
+      const clearLag = cameraClearance(physics, target, probeDirection, lag, probe)
+      if (clearLag < lag) focus.copy(target).addScaledVector(probeDirection, clearLag)
+    }
 
     // Unit vector from the focus toward the camera.
     const cp = Math.cos(cameraRig.pitch)
     offset.set(Math.sin(cameraRig.yaw) * cp, Math.sin(cameraRig.pitch), Math.cos(cameraRig.yaw) * cp)
 
-    // Pull the camera in front of static geometry. Dynamic bodies (the player
-    // and the crates) are ignored so they never make the camera jump.
-    ray.origin.x = focus.x
-    ray.origin.y = focus.y
-    ray.origin.z = focus.z
-    ray.dir.x = offset.x
-    ray.dir.y = offset.y
-    ray.dir.z = offset.z
-    const flags =
-      rapier.QueryFilterFlags.EXCLUDE_DYNAMIC |
-      rapier.QueryFilterFlags.EXCLUDE_KINEMATIC |
-      rapier.QueryFilterFlags.EXCLUDE_SENSORS
-    const hit = world.castRay(ray, cameraRig.distance + FOLLOW.collisionMargin, true, flags)
-    const allowed = hit
-      ? Math.max(FOLLOW.minCollisionDistance, hit.timeOfImpact - FOLLOW.collisionMargin)
-      : cameraRig.distance
-    const wanted = Math.min(allowed, cameraRig.distance)
-    s.distance = damp(s.distance, wanted, wanted < s.distance ? PULL_IN_RATE : PUSH_OUT_RATE, dt)
+    const allowed = cameraClearance(physics, focus, offset, cameraRig.distance, probe)
+    s.distance = stepCameraDistance(s.distance, allowed, dt)
 
     position.copy(focus).addScaledVector(offset, s.distance)
     if (position.y < FOLLOW.minHeight) position.y = FOLLOW.minHeight
     // Blends in from whichever camera was active before (see cameraTransition).
     poseCamera(camera, position, focus, dt)
+    // The hand-over blend can also cross a wall. Constrain the rendered pose,
+    // without restarting its easing or changing the creator/orbit cameras.
+    probeDirection.copy(camera.position).sub(focus)
+    const blendedDistance = probeDirection.length()
+    if (blendedDistance > 1e-6) {
+      probeDirection.divideScalar(blendedDistance)
+      const clear = cameraClearance(physics, focus, probeDirection, blendedDistance, probe)
+      if (clear < blendedDistance) camera.position.copy(focus).addScaledVector(probeDirection, clear)
+    }
   })
 
   return null

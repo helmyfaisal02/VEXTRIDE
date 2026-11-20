@@ -11,6 +11,8 @@ import { Frame, footprint } from './localFrame'
 import { KIND_SPECS, Placer, propRect } from './propLayout'
 import { entranceCorridor, cornerZones } from './streetProps'
 import type { LocalSign, LocalSolid } from './modelTypes'
+import { DRIVEWAYS } from '../city/driveways'
+import { surfaceHeightAt } from '../city/citySurface'
 
 /** Space reserved for the future river: the southern strip of the two riverside park lots. */
 export const RIVER_RESERVE: Rect = { minX: -150.5, maxX: -9.5, minZ: 134, maxZ: 150.5 }
@@ -81,6 +83,10 @@ export function buildEnvironment(layout: CityLayout = CITY): EnvironmentLayout {
     { id: 'river-reserve', rect: RIVER_RESERVE },
   ]
   for (const info of infos) keepClear.push({ id: `entrance:${info.def.id}`, rect: entranceCorridor(info.def, block(info.def.blockId)) })
+  for (const cut of DRIVEWAYS) {
+    keepClear.push({ id: `driveway:${cut.id}`, rect: cut.approach })
+    keepClear.push({ id: `shoulders:${cut.id}`, rect: { ...cut.crossing, minX: cut.crossing.minX - cut.flare, maxX: cut.crossing.maxX + cut.flare } })
+  }
   for (const b of layout.blocks) cornerZones(b.rect).forEach((rect, i) => keepClear.push({ id: `corner:${b.id}:${i}`, rect }))
 
   const solids: Rect[] = []
@@ -122,8 +128,7 @@ export function buildEnvironment(layout: CityLayout = CITY): EnvironmentLayout {
 }
 
 function layoutSurface(layout: CityLayout, x: number, z: number): number {
-  for (const s of layout.sidewalks) if (x >= s.rect.minX && x <= s.rect.maxX && z >= s.rect.minZ && z <= s.rect.maxZ) return s.top
-  return layout.floor.minX <= x && x <= layout.floor.maxX ? 0.03 : 0
+  return surfaceHeightAt(x, z, layout)
 }
 
 export { SIDEWALK_TOP }

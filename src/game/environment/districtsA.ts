@@ -4,6 +4,8 @@ import type { BuildingDef } from './envTypes'
 import { Frame, footprint } from './localFrame'
 import { around, intersect, seededRandom, type Placer } from './propLayout'
 import { entranceCorridor, placeStopSigns, placeStreetFurniture } from './streetProps'
+import { DRIVEWAYS, motorParking } from '../city/driveways'
+import { subtractRect } from './propLayout'
 
 /** Downtown, Residential and Motor Row content. Each function places props and paint through the shared Placer. */
 
@@ -128,19 +130,33 @@ export function placeMotorRow(c: DistrictContext): void {
   const lines = (rect: Rect, rows: Array<[number, number]>, stall: number, pad: Rect): void => {
     c.placer.paintRect(pad, PAL.asphaltPad, 'base')
     for (const [z0, z1] of rows) {
-      for (let x = rect.minX; x <= rect.maxX + 1e-6; x += stall) c.placer.paintRect({ minX: x - 0.06, maxX: x + 0.06, minZ: z0, maxZ: z1 }, PAL.paintWhite, 'lines')
+      for (let x = rect.minX; x <= rect.maxX + 1e-6; x += stall) {
+        let pieces = [{ minX: x - 0.06, maxX: x + 0.06, minZ: z0, maxZ: z1 }]
+        for (const entry of DRIVEWAYS.filter((d) => d.parkingId)) pieces = pieces.flatMap((piece) => subtractRect(piece, entry.approach))
+        for (const piece of pieces) c.placer.paintRect(piece, PAL.paintWhite, 'lines')
+      }
     }
   }
   // Customer parking behind the garage and showroom (north of both).
   const lotN = lotOf(c, 'B30')
-  const padN: Rect = { minX: lotN.minX + 3, maxX: lotN.maxX - 2, minZ: lotN.minZ + 3, maxZ: lotN.minZ + 31 }
+  const { north: padN, south: padS } = motorParking()
   lines({ ...padN, minX: padN.minX + 1, maxX: padN.maxX - 1 }, [[padN.minZ + 1, padN.minZ + 6], [padN.maxZ - 6, padN.maxZ - 1]], 2.8, padN)
   for (let i = 0; i < 3; i++) c.placer.add('streetlight', 'motor-row', padN.minX + 12 + i * 18, (padN.minZ + padN.maxZ) / 2, 'S')
   // Parking beside the workshop and the store.
   const lotS = lotOf(c, 'B31')
-  const padS: Rect = { minX: lotS.minX + 31, maxX: lotS.maxX - 3, minZ: lotS.maxZ - 24, maxZ: lotS.maxZ - 2 }
   lines({ ...padS, minX: padS.minX + 1, maxX: padS.maxX - 1 }, [[padS.minZ + 1, padS.minZ + 6], [padS.maxZ - 6, padS.maxZ - 1]], 2.8, padS)
   c.placer.add('streetlight', 'motor-row', (padS.minX + padS.maxX) / 2, (padS.minZ + padS.maxZ) / 2, 'S')
+  for (const entry of DRIVEWAYS) {
+    if (!entry.parkingId) continue
+    const lot = entry.parkingId === 'north' ? lotN : lotS
+    const connector = intersect(entry.approach, lot)
+    if (connector) c.placer.paintAround(connector, [entry.parkingId === 'north' ? padN : padS], PAL.asphaltPad)
+  }
+  // Short bay guide lines stop at the closed garage facade; this phase adds no interior.
+  const garage = DRIVEWAYS.find((d) => d.id === 'garage-bay')!
+  for (const x of [garage.crossing.minX, garage.crossing.maxX]) {
+    c.placer.paintRect({ minX: x - 0.05, maxX: x + 0.05, minZ: garage.approach.minZ + 0.8, maxZ: lotN.maxZ }, PAL.paintWhite, 'lines')
+  }
   for (const def of c.buildings.filter((b) => b.districtId === 'motor-row')) {
     paveForecourt(c, def, PAL.driveway)
     if (def.type === 'garage' || def.type === 'workshop') {

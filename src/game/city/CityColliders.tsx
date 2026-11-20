@@ -1,14 +1,17 @@
-import { memo } from 'react'
-import { CuboidCollider, RigidBody } from '@react-three/rapier'
+import { memo, useEffect, useState } from 'react'
+import { CuboidCollider, RigidBody, TrimeshCollider } from '@react-three/rapier'
 import { ROAD_TOP } from './cityConfig'
 import { CITY } from './cityLayout'
 import type { Rect } from './cityTypes'
+import { DRIVEWAYS } from './driveways'
+import { buildSidewalkGeometry } from './sidewalkGeometry'
 
 /**
  * Static physics for the city: ONE fixed body holding
  *  - one flat slab for everything at road level (roads, junctions, lots), and
- *  - one box per sidewalk piece (raised 0.16 m, so the curb is 0.13 m).
- * About 60 cuboids in total, all matching the visible geometry exactly.
+ *  - boxes for unchanged sidewalk pieces (0.13 m above the road), and
+ *  - three small static triangle meshes for strips containing driveway cuts.
+ * 57 colliders in total, matching the visible surface without extra bodies.
  */
 
 function boxProps(r: Rect, top: number) {
@@ -19,12 +22,20 @@ function boxProps(r: Rect, top: number) {
 }
 
 function CityCollidersImpl() {
+  const [ramps] = useState(() => new Map(CITY.sidewalks.filter((s) => DRIVEWAYS.some((d) => d.sidewalkId === s.id)).map((s) => {
+    const geometry = buildSidewalkGeometry(s, CITY.blocks.find((b) => b.id === s.blockId)!.rect)
+    return [s.id, geometry] as const
+  })))
+  useEffect(() => () => { for (const g of ramps.values()) g.dispose() }, [ramps])
   return (
     <RigidBody type="fixed" colliders={false} friction={1}>
       <CuboidCollider {...boxProps(CITY.floor, ROAD_TOP)} />
-      {CITY.sidewalks.map((s) => (
-        <CuboidCollider key={s.id} {...boxProps(s.rect, s.top)} />
-      ))}
+      {CITY.sidewalks.map((s) => {
+        const ramp = ramps.get(s.id)
+        return ramp
+          ? <TrimeshCollider key={s.id} args={[ramp.getAttribute('position').array, ramp.getIndex()!.array]} />
+          : <CuboidCollider key={s.id} {...boxProps(s.rect, s.top)} />
+      })}
     </RigidBody>
   )
 }

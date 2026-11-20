@@ -72,6 +72,7 @@ export const SURFACE_COLORS = {
   markingYellow: '#f0c33c',
   sidewalk: '#bdb8ae',
   curb: '#d9d5cb',
+  driveway: '#a7a49b',
   plaza: '#d8d2c4',
 } as const
 
