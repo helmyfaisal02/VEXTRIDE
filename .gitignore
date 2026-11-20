@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+coverage/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.keystore
+
+# Logs
+*.log
+console.jsonl
+npm-debug.log*
+bun-debug.log*
+
+# Local agent files
+.agents/
+
+# Foundry generated files
+cache/
+out/
+broadcast/
+
+# Development tools
+.vercel/
+.turbo/
+
+# Windows downloaded-file metadata
+*:Zone.Identifier
+
+# OS and editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

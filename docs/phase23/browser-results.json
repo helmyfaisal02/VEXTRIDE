@@ -1,0 +1,69 @@
+{
+  "checks": [
+    "time panel hidden by default",
+    "six merged district meshes and one shadow-casting sun",
+    "four real streetlights maximum",
+    "developer time shortcut opens controls",
+    "sunrise changes time and pauses",
+    "day changes time and pauses",
+    "sunset changes time and pauses",
+    "night changes time and pauses",
+    "night emission fully active, day emission off",
+    "paused time stays fixed",
+    "automatic resumes progression",
+    "focused time controls do not send movement keys",
+    "W moves the real player through physics",
+    "sprint receives real input and moves player",
+    "jump lifts real player",
+    "F shows measured performance",
+    "P toggles collider debug",
+    "C toggles orbit camera",
+    "hidden document does not progress clock",
+    "time and guest persistence survive reload independently",
+    "targeted streetlight camera view renders without runtime or shader errors",
+    "nearby real streetlight pool illuminates after approaching lamps"
+  ],
+  "perfText": "7 fps 147.8 ms 53 calls 23.7k tris",
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "pool": [
+    {
+      "intensity": 84.99998966266794,
+      "visible": true,
+      "position": [
+        -6.35,
+        6.0600000000000005,
+        -65.5
+      ]
+    },
+    {
+      "intensity": 84.99690060622638,
+      "visible": true,
+      "position": [
+        6.35,
+        6.0600000000000005,
+        -65.5
+      ]
+    },
+    {
+      "intensity": 0,
+      "visible": false,
+      "position": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "intensity": 0,
+      "visible": false,
+      "position": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "errors": [],
+  "programErrors": 0,
+  "harnessNotes": "Reload and debug-camera capture each required a test-harness repair. Prior gameplay checks passed before the harness failure; this targeted pass completed the rendering checks."
+}
