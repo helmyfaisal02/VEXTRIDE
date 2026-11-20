@@ -5,6 +5,7 @@ import { Vector3 } from 'three'
 import { dampAngle } from '../shared/math'
 import { vehicleState, getActiveVehicleDefinition, getActiveVehicleRuntime } from '../vehicles/vehicleState'
 import { CAMERA_PROBE_RADIUS, cameraClearance, stepCameraDistance } from './cameraCollision'
+import { constrainVehicleCamera } from './vehicleCameraCollision'
 import { MAX_FRAME_DT, poseCamera, beginCameraTransition } from './cameraTransition'
 import { usePointerOrbit } from './useCameraInput'
 
@@ -46,13 +47,7 @@ export function VehicleCamera() {
     s.distance = stepCameraDistance(s.distance, allowed, dt)
     s.position.copy(s.focus).addScaledVector(s.offset, s.distance)
     poseCamera(camera, s.position, s.focus, dt)
-    s.direction.copy(camera.position).sub(s.focus)
-    const length = s.direction.length()
-    if (length > 1e-6) {
-      s.direction.divideScalar(length)
-      const safe = cameraClearance(physics, s.focus, s.direction, length, s.probe)
-      if (safe < length) camera.position.copy(s.focus).addScaledVector(s.direction, safe)
-    }
+    constrainVehicleCamera(physics,camera,s.focus,s.probe,s.direction)
   })
   return null
 }

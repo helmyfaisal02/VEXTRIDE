@@ -1,0 +1,147 @@
+{
+  "checks": [
+    "three original cars and pedestrian mounted in real WebGL/Rapier scene",
+    "street-coupe: named E interaction and correct active HUD",
+    "street-coupe: at least 27 simulated seconds of repeated acceleration/braking/reverse/handbrake",
+    "street-coupe: sustained existing-road physics and chase state remain finite/upright",
+    "street-coupe: focus loss resets driving controls",
+    "street-coupe: releasing partial R cancels recovery",
+    "street-coupe: real held R restores active car upright",
+    "street-coupe: safe exit restores walking after sustained driving/recovery",
+    "city-sedan: named E interaction and correct active HUD",
+    "city-sedan: at least 27 simulated seconds of repeated acceleration/braking/reverse/handbrake",
+    "city-sedan: sustained existing-road physics and chase state remain finite/upright",
+    "city-sedan: focus loss resets driving controls",
+    "city-sedan: releasing partial R cancels recovery",
+    "city-sedan: real held R restores active car upright",
+    "city-sedan: safe exit restores walking after sustained driving/recovery",
+    "utility-pickup: named E interaction and correct active HUD",
+    "pickup loading dock: real mouse orbit/zoom retain visible focus outside static geometry",
+    "utility-pickup: at least 27 simulated seconds of repeated acceleration/braking/reverse/handbrake",
+    "utility-pickup: sustained existing-road physics and chase state remain finite/upright",
+    "utility-pickup: focus loss resets driving controls",
+    "utility-pickup: releasing partial R cancels recovery",
+    "utility-pickup: real held R restores active car upright",
+    "utility-pickup: safe exit restores walking after sustained driving/recovery",
+    "F/P/C remain available",
+    "night brake/reverse lamps activate and reset correctly",
+    "body/collider counts and vehicle geometry/material identities remain stable",
+    "no JavaScript or shader errors"
+  ],
+  "errors": [],
+  "samples": [
+    {
+      "id": "street-coupe",
+      "simulatedSeconds": 27.6,
+      "state": {
+        "p": {
+          "x": 0.000007528463356720749,
+          "y": 0.5289304256439209,
+          "z": -75.82814025878906
+        },
+        "v": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "up": 1,
+        "speed": 0,
+        "steer": 0,
+        "revision": 1,
+        "tail": 0.25,
+        "reverse": 0,
+        "roll": -236.9629383087171,
+        "camera": [
+          0.0000047383520803230355,
+          3.4430920781425485,
+          -68.18544834578472
+        ],
+        "hint": "Vehicle recovered — controls reset"
+      }
+    },
+    {
+      "id": "city-sedan",
+      "simulatedSeconds": 27.566666666666666,
+      "state": {
+        "p": {
+          "x": 80,
+          "y": 0.5789305567741394,
+          "z": -42.91299819946289
+        },
+        "v": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "up": 1,
+        "speed": 0,
+        "steer": 0,
+        "revision": 1,
+        "tail": 0.25,
+        "reverse": 0,
+        "roll": -126.21470058662783,
+        "camera": [
+          79.99998446478806,
+          3.8224348337821312,
+          -34.72292949846049
+        ],
+        "hint": "Vehicle recovered — controls reset"
+      }
+    },
+    {
+      "dock": {
+        "ndc": [
+          5.707824614578661e-16,
+          1.8265038766651715e-15,
+          0.9334143857140363
+        ],
+        "intersection": false
+      }
+    },
+    {
+      "id": "utility-pickup",
+      "simulatedSeconds": 27.566666666666666,
+      "state": {
+        "p": {
+          "x": -80,
+          "y": 0.6789305806159973,
+          "z": -18.335453033447266
+        },
+        "v": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "up": 1,
+        "speed": 0,
+        "steer": 0,
+        "revision": 1,
+        "tail": 0.25,
+        "reverse": 0,
+        "roll": -47.013982137050405,
+        "camera": [
+          -85.50236693340914,
+          6.010731161391655,
+          -16.19623292100295
+        ],
+        "hint": "Vehicle recovered — controls reset"
+      }
+    }
+  ],
+  "resources": {
+    "bodies": [
+      39,
+      39
+    ],
+    "colliders": [
+      557,
+      557
+    ],
+    "geometry": 80,
+    "textures": 2,
+    "calls": 31,
+    "triangles": 32346,
+    "assetsUnchanged": true
+  },
+  "notes": "Real Chromium WebGL with SwiftShader, no hardware FPS claim. Pedestrian fixtures approach actual original spawns; sustained occupied-car tests reposition one car onto each of three existing road centrelines. Rollovers injected to test real held R because upright locks prevent natural flips. No manual acceptance."
+}

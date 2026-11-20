@@ -1,10 +1,11 @@
-import { memo, useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { BallCollider, CuboidCollider, CoefficientCombineRule, RigidBody, useBeforePhysicsStep, useRapier, type RapierRigidBody } from '@react-three/rapier'
 import { useFrame } from '@react-three/fiber'
 import { MeshStandardMaterial, type Group } from 'three'
 import { GeometryBuilder } from '../city/geometryBuilder'
 import { modelBox } from './modelPrimitives'
 import { createRecoveryState, stepRecovery } from './vehicleRecovery'
+import { findVehicleExit } from './vehicleInteraction'
 import { vehicleSignals } from './vehicleSignals'
 import { inputState } from '../input/inputState'
 import { FIXED_DT } from '../character/config'
@@ -16,7 +17,7 @@ import { createPickupAssets } from './pickupGeometry'
 import type { SharedVehicleMaterials } from './modelPrimitives'
 import { vehicleWheels, type VehicleDefinition } from './vehicleConfig'
 import { bodyYaw, createVehicleSim, stepVehicle } from './vehicleSim'
-import { getVehicleRuntime, useVehicleStore } from './vehicleState'
+import { getVehicleRuntime, useVehicleStore, vehicleRuntime } from './vehicleState'
 
 export function createVehicleAssets(definition: VehicleDefinition) {
   return definition.modelType==='coupe' ? createCoupeAssets() : definition.modelType==='sedan' ? createSedanAssets() : createPickupAssets()
@@ -38,6 +39,17 @@ function VehicleImpl({definition,shared}: {definition:VehicleDefinition;shared:S
     return result
   })
   const mutableAssets=useRef(assets),mutableReverse=useRef(reverseLamp)
+  const {world,rapier}=physics
+  // Run before Rapier's passive body removal, while clearance queries remain valid.
+  useLayoutEffect(()=>()=>{
+    const store=useVehicleStore.getState(),car=runtime.current.body,player=vehicleRuntime.pedestrian
+    if(store.activeVehicleId!==definition.id)return
+    if(car?.isValid()&&player?.isValid()){
+      const exit=findVehicleExit({world,rapier},car,player,definition,true)
+      if(exit){player.setTranslation(exit,true);player.setLinvel({x:0,y:0,z:0},true);player.setEnabled(true)}
+    }
+    store.setDriving(false)
+  },[definition,world,rapier])
   useEffect(()=>()=>{
     runtime.current.body=null
     for(const g of Object.values(assets.geometries))g.dispose()

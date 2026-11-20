@@ -19,11 +19,13 @@ export function canEnter(physics: Physics, car: RapierRigidBody, player: RapierR
 }
 
 /** Real ground normal, capsule clearance, and an unobstructed path out; no guessed surface Y. */
-export function findVehicleExit(physics: Physics, car: RapierRigidBody, player: RapierRigidBody, definition: VehicleDefinition = COUPE) {
+export function findVehicleExit(physics: Physics, car: RapierRigidBody, player: RapierRigidBody, definition: VehicleDefinition = COUPE, removing = false) {
   const p = car.translation(), yaw = bodyYaw(car), c = Math.cos(yaw), s = Math.sin(yaw)
   const capsule = new physics.rapier.Capsule(CAPSULE_HALF_SEGMENT, CAPSULE_RADIUS)
   const side = definition.width/2+.8, end = definition.length/2+.9, rear = 1.2*definition.wheelbase/COUPE.wheelbase
-  for (const [x, z] of [[-side, 0], [side, 0], [0, end], [0, -end], [-side, rear], [side, rear]]) {
+  const candidates=[[-side, 0], [side, 0], [0, end], [0, -end], [-side, rear], [side, rear]]
+  if(removing)candidates.push([0,0]) // The disappearing chassis may free the only capsule-sized space.
+  for (const [x, z] of candidates) {
     const wx = p.x + c * x + s * z, wz = p.z - s * x + c * z
     if (Math.abs(wx) > GROUND_SIZE / 2 - 0.5 || Math.abs(wz) > GROUND_SIZE / 2 - 0.5) continue
     const hit = physics.world.castRayAndGetNormal(new physics.rapier.Ray({ x: wx, y: p.y + 1.5, z: wz }, { x: 0, y: -1, z: 0 }), 3.5, true, physics.rapier.QueryFilterFlags.EXCLUDE_DYNAMIC | physics.rapier.QueryFilterFlags.EXCLUDE_SENSORS)
@@ -31,8 +33,9 @@ export function findVehicleExit(physics: Physics, car: RapierRigidBody, player: 
     const ground = p.y + 1.5 - hit.timeOfImpact
     if (Math.abs(ground - (p.y - definition.rideHeight)) > 0.45) continue
     const candidate = { x: wx, y: ground + FEET_OFFSET + 0.04, z: wz }
-    if (physics.world.intersectionWithShape(candidate, IDENTITY, capsule, physics.rapier.QueryFilterFlags.EXCLUDE_SENSORS, undefined, undefined, player)) continue
+    if (physics.world.intersectionWithShape(candidate, IDENTITY, capsule, physics.rapier.QueryFilterFlags.EXCLUDE_SENSORS, undefined, undefined, player, collider => !removing || collider.parent()?.handle !== car.handle)) continue
     const length = Math.hypot(wx - p.x, wz - p.z)
+    if(removing&&length<.01)return candidate
     const blocked = physics.world.castRay(new physics.rapier.Ray({ x: p.x, y: p.y + 0.5, z: p.z }, { x: (wx - p.x) / length, y: 0, z: (wz - p.z) / length }), length, true, physics.rapier.QueryFilterFlags.EXCLUDE_SENSORS, undefined, undefined, car)
     if (!blocked) return candidate
   }
