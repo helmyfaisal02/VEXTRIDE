@@ -6,6 +6,7 @@ import { useCharacterStore } from '../state/characterStore'
 import { useGameStore } from '../state/gameStore'
 import { CharacterCreator } from './CharacterCreator'
 import { WorldTimeHud } from './WorldTimeHud'
+import { MissionHud } from './MissionHud'
 import { NPCDialogue } from './NPCDialogue'
 import { VehicleHud } from './VehicleHud'
 import { useVehicleStore } from '../vehicles/vehicleState'
@@ -167,6 +168,7 @@ export function Hud() {
       <WorldTimeHud />
       <VehicleHud />
       <NPCDialogue />
+      <MissionHud />
       <PerfReadout />
       <Controls />
       <CharacterButton />

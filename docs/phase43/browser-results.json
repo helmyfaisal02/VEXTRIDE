@@ -1,0 +1,47 @@
+{
+  "checks": [
+    "three original cars and pedestrian mounted in real WebGL/Rapier scene",
+    "Maya ordinary opening dialogue is preserved",
+    "talking and proximity do not start First Contact",
+    "mission preview still requires explicit acceptance",
+    "declining leaves mission available",
+    "acceptance shows Marcus objective and actual-target straight-line waypoint",
+    "Maya cannot complete before the Marcus visit",
+    "actual on-foot road journey reaches and enters the original parked coupe",
+    "mission tracker and vehicle HUD remain readable together",
+    "real driving/braking cannot advance the talk objective",
+    "safe vehicle exit restores walking without progressing mission",
+    "Marcus presents the mission-specific introduction alongside normal dialogue",
+    "closing Marcus early does not skip acknowledgement",
+    "Marcus acknowledgement changes the objective and target to Maya",
+    "returning to Maya still requires completion acknowledgement",
+    "mission completion confirmation is displayed",
+    "completed mission removes active objective and waypoint",
+    "Maya normal dialogue works after completion with no restart action",
+    "completion notice expires without resetting mission",
+    "F/P/C and Shift+T remain compatible with completed mission",
+    "mission adds no physics bodies and all five ambient agents remain active",
+    "complete mission journey has no JavaScript or shader errors"
+  ],
+  "errors": [],
+  "initial": {
+    "bodies": 46,
+    "colliders": 564
+  },
+  "end": {
+    "bodies": 46,
+    "colliders": 564,
+    "ambient": 5,
+    "geometries": 266,
+    "calls": 125,
+    "triangles": 28748,
+    "progress": {
+      "missionId": "first-contact",
+      "status": "COMPLETED",
+      "objectiveId": null,
+      "lastDialogueSession": 6
+    }
+  },
+  "walkedWaypointMeters": 727.1416086021466,
+  "notes": "Actual complete First Contact journey from Central Plaza spawn. No player/vehicle position teleports or direct mission-state mutation. Harness adjusts existing camera yaw and uses real W/Shift along explicit road waypoints, plus E/mission buttons, W/Space driving, and safe exit. Nighttime return. Chromium SwiftShader; no hardware FPS or owner manual acceptance claim."
+}

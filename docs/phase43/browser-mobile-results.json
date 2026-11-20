@@ -1,0 +1,18 @@
+{
+  "checks": [
+    "three original cars and pedestrian mounted in real WebGL/Rapier scene",
+    "offer expansion focuses the explicit Accept action",
+    "375px mission offer fits the mobile viewport",
+    "mission section preserves the original dialogue focus loop",
+    "mobile objective/waypoint card remains within viewport",
+    "creator toggles and three HUD remounts release distance timers with no growth",
+    "creator and HUD remounts preserve active mission progress",
+    "completion HUD unmount clears its timeout; active waypoint timer is gone",
+    "completion timeout leaves completed progress intact",
+    "refresh resets session-only mission progress as documented",
+    "refresh preserves existing character persistence",
+    "mobile mission/remount checks have no runtime or shader errors"
+  ],
+  "errors": [],
+  "notes": "Mobile UI/lifecycle fixtures position the player by the existing NPCs for real E/button interactions. Extra hidden MissionHud roots test interval/timeout cleanup. Desktop browser-results.json records the complete physical city journey."
+}
