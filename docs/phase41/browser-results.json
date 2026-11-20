@@ -1,0 +1,52 @@
+{
+  "checks": [
+    "three original cars and pedestrian mounted in real WebGL/Rapier scene",
+    "Marcus and Maya models mounted in the existing WebGL city",
+    "marcus: actual walking approach shows correct name and E hint",
+    "marcus: E opens character-specific accessible dialogue",
+    "marcus: conversation receives accessible button focus",
+    "marcus: movement/jump and repeated E cannot leak into gameplay",
+    "marcus: dialogue leaves pedestrian camera stable",
+    "marcus: Escape closes and resets held inputs",
+    "marcus: fresh walking input resumes",
+    "marcus: Continue advances exactly one line",
+    "marcus: final dialogue line closes cleanly",
+    "marcus: nighttime model and dialogue render in existing lighting",
+    "maya: actual walking approach shows correct name and E hint",
+    "maya: E opens character-specific accessible dialogue",
+    "maya: conversation receives accessible button focus",
+    "maya: movement/jump and repeated E cannot leak into gameplay",
+    "maya: dialogue leaves pedestrian camera stable",
+    "maya: Escape closes and resets held inputs",
+    "maya: fresh walking input resumes",
+    "maya: Continue advances exactly one line",
+    "maya: final dialogue line closes cleanly",
+    "maya: nighttime model and dialogue render in existing lighting",
+    "vehicle E entry remains functional after both conversations",
+    "driving beside an NPC never opens dialogue or a walking hint",
+    "E beside NPC routes to safe vehicle exit only",
+    "F/P/C and Shift+T remain compatible",
+    "no JavaScript or shader errors",
+    "world body/collider counts remain stable across conversations",
+    "375px mobile panel fits viewport with readable controls",
+    "Tab and Shift+Tab wrap between accessible conversation buttons",
+    "mobile Close conversation button works without runtime errors"
+  ],
+  "errors": [],
+  "resources": {
+    "start": {
+      "bodies": 41,
+      "colliders": 559
+    },
+    "end": {
+      "bodies": 41,
+      "colliders": 559,
+      "geometry": 90,
+      "textures": 2,
+      "calls": 100,
+      "triangles": 25570
+    }
+  },
+  "notes": "Chromium WebGL via SwiftShader; no hardware FPS/manual acceptance claim. Player positioned beyond interaction range near each actual spawn, then approached with real W. Camera rig fixtures provide frontal normal-follow views; dialogue does not replace the camera. An occupied-car fixture beside Marcus tests driving priority. Vehicles are not teleported for selection.",
+  "mobileNotes": "UI-only fixture opened Maya conversation directly through the guarded store; walking/E flow was tested in desktop WebGL run."
+}

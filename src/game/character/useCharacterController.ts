@@ -2,6 +2,7 @@ import { useEffect, useRef, type RefObject } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useBeforePhysicsStep, useRapier, type RapierRigidBody } from '@react-three/rapier'
 import { Vector3, type Group } from 'three'
+import { useDialogueStore } from '../interactions/dialogueState'
 import { inputState } from '../input'
 import { dampAngle } from '../shared/math'
 import { createStepProbeResult, probeGround, type CharacterProbe } from './characterProbes'
@@ -32,6 +33,7 @@ export function useCharacterController(
   const getState = useThree((s) => s.get)
   const sim = useRef<CharacterSim>(createCharacterSim())
   const wasDriving = useRef(false)
+  const wasTalking = useRef(false)
   useEffect(() => () => { vehicleRuntime.pedestrian = null }, [])
   const probe = useRef<CharacterProbe | null>(null)
   probe.current ??= {
@@ -56,6 +58,15 @@ export function useCharacterController(
       return
     }
     if (wasDriving.current) { sim.current = createCharacterSim(); wasDriving.current = false }
+
+    if(useDialogueStore.getState().active){
+      wasTalking.current=true
+      const velocity=body.linvel()
+      body.setLinvel({x:0,y:velocity.y,z:0},true)
+      playerState.speed=0;playerState.animState='idle'
+      return
+    }
+    if(wasTalking.current){sim.current=createCharacterSim();wasTalking.current=false}
 
     // Camera-relative basis on the ground plane.
     getState().camera.getWorldDirection(camDir)

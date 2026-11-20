@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { isTypingTarget } from '../shared/dom'
 import { useCharacterStore } from '../state/characterStore'
+import { useDialogueStore } from '../interactions/dialogueState'
 import { inputState, resetInput } from './inputState'
 
 /** Keys whose default browser behaviour (page scroll) must be suppressed in play. */
@@ -57,6 +58,11 @@ export function useKeyboardInput(): void {
     const onKeyDown = (e: KeyboardEvent) => {
       // The character creator owns the keyboard while it is open.
       if (useCharacterStore.getState().menuOpen) return
+      const dialogue=useDialogueStore.getState()
+      if(dialogue.active){
+        if(e.code==='Escape'&&!e.repeat){e.preventDefault();dialogue.close()}
+        return
+      }
       if (isTypingTarget(e.target)) return
       if ((e.code === 'KeyE' || e.code === 'KeyR') && (e.ctrlKey || e.altKey)) return
       // With Cmd held the browser swallows other keys' keyup events, which

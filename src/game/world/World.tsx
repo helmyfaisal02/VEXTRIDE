@@ -8,6 +8,7 @@ import { Props } from './Props'
 import { SkyDome } from './SkyDome'
 import { StepTestArea } from './StepTestArea'
 import { WorldTimeDriver } from './WorldTimeDriver'
+import { NPCSystem } from '../npcs/NPCSystem'
 import { VehicleSystem } from '../vehicles'
 
 /** Marks the game ready once Rapier's WASM has initialised and the world mounted. */
@@ -32,6 +33,7 @@ function WorldImpl() {
       <EnvironmentView />
       <EnvColliders />
       <VehicleSystem />
+      <NPCSystem />
       {/* Phase 1 demo objects, moved out of the street grid into the demo yard east of the city. */}
       <group position={[DEMO_YARD_ORIGIN.x, 0, DEMO_YARD_ORIGIN.z]}>
         <Props />

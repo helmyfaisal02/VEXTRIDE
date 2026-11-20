@@ -6,6 +6,7 @@ import { useCharacterStore } from '../state/characterStore'
 import { useGameStore } from '../state/gameStore'
 import { CharacterCreator } from './CharacterCreator'
 import { WorldTimeHud } from './WorldTimeHud'
+import { NPCDialogue } from './NPCDialogue'
 import { VehicleHud } from './VehicleHud'
 import { useVehicleStore } from '../vehicles/vehicleState'
 
@@ -22,7 +23,7 @@ function Brand() {
         className="mt-1 text-[11px] font-medium uppercase text-white/85"
         style={{ letterSpacing: '0.1em', textShadow: '0 1px 8px rgba(20, 40, 80, 0.5)' }}
       >
-        Vehicle Variety &middot; Phase 3.2
+        NPC Foundation &middot; Phase 4.1
       </p>
     </div>
   )
@@ -56,7 +57,7 @@ const Controls = memo(function Controls() {
       <ControlRow keys="WASD" label={driving ? 'Drive / Steer' : 'Move'} />
       {!driving && <ControlRow keys="Shift" label="Sprint" />}
       <ControlRow keys="Space" label={driving ? 'Handbrake' : 'Jump'} />
-      <ControlRow keys="E" label={driving ? 'Exit when stopped' : 'Enter nearby car'} />
+      <ControlRow keys="E" label={driving ? 'Exit when stopped' : 'Talk / Enter nearby car'} />
       <ControlRow keys="Mouse Drag" label="Camera" />
       <ControlRow keys="Scroll" label="Zoom" />
       <ControlRow keys="F" label="Performance" note={showPerf ? 'on' : 'off'} />
@@ -165,6 +166,7 @@ export function Hud() {
       <Brand />
       <WorldTimeHud />
       <VehicleHud />
+      <NPCDialogue />
       <PerfReadout />
       <Controls />
       <CharacterButton />
