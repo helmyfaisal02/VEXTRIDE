@@ -22,7 +22,7 @@ function Brand() {
         className="mt-1 text-[11px] font-medium uppercase text-white/85"
         style={{ letterSpacing: '0.1em', textShadow: '0 1px 8px rgba(20, 40, 80, 0.5)' }}
       >
-        Arcade Vehicle &middot; Phase 3.1
+        Vehicle Variety &middot; Phase 3.2
       </p>
     </div>
   )

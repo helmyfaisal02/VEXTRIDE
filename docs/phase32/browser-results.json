@@ -1,0 +1,105 @@
+{
+  "checks": [
+    "three distinct real vehicle bodies and original pedestrian are available",
+    "each visible model has four independent wheel groups",
+    "coupe, four-door sedan and open-bed pickup rendered in daylight and night",
+    "street-coupe: actual walking approach shows its own E hint",
+    "street-coupe: E selects correct car and HUD, disabling only the pedestrian",
+    "street-coupe: real acceleration and movement-based wheel rolling",
+    "street-coupe: front steering changes the real chassis heading",
+    "street-coupe: moving exit remains speed gated",
+    "street-coupe: S brakes forward motion",
+    "street-coupe: handbrake stops and clears stale brake hint",
+    "street-coupe: reverse and reverse wheel roll work",
+    "street-coupe: safe exit restores walking",
+    "street-coupe: other parked vehicles retained independent world poses",
+    "street-coupe: exited car retains its transform",
+    "street-coupe: original walking resumes",
+    "city-sedan: actual walking approach shows its own E hint",
+    "city-sedan: E selects correct car and HUD, disabling only the pedestrian",
+    "city-sedan: real acceleration and movement-based wheel rolling",
+    "city-sedan: front steering changes the real chassis heading",
+    "city-sedan: moving exit remains speed gated",
+    "city-sedan: S brakes forward motion",
+    "city-sedan: handbrake stops and clears stale brake hint",
+    "city-sedan: reverse and reverse wheel roll work",
+    "city-sedan: safe exit restores walking",
+    "city-sedan: other parked vehicles retained independent world poses",
+    "city-sedan: exited car retains its transform",
+    "city-sedan: original walking resumes",
+    "utility-pickup: actual walking approach shows its own E hint",
+    "utility-pickup: E selects correct car and HUD, disabling only the pedestrian",
+    "utility-pickup: real acceleration and movement-based wheel rolling",
+    "utility-pickup: front steering changes the real chassis heading",
+    "utility-pickup: moving exit remains speed gated",
+    "utility-pickup: S brakes forward motion",
+    "utility-pickup: handbrake stops and clears stale brake hint",
+    "utility-pickup: reverse and reverse wheel roll work",
+    "pickup chase camera supports real mouse orbit and zoom",
+    "F performance overlay remains available",
+    "C/P and Shift+T coexist with occupied pickup",
+    "utility-pickup: safe exit restores walking",
+    "utility-pickup: other parked vehicles retained independent world poses",
+    "utility-pickup: exited car retains its transform",
+    "utility-pickup: original walking resumes",
+    "all three vehicle objects remain visible after switching",
+    "no JavaScript or shader errors"
+  ],
+  "errors": [],
+  "samples": [
+    {
+      "id": "street-coupe",
+      "accelerated": {
+        "id": "street-coupe",
+        "name": "VEXTRIDE Street Coupe",
+        "p": {
+          "x": 106.4000015258789,
+          "y": 0.5289304256439209,
+          "z": -139.38455200195312
+        },
+        "yaw": 3.141592653589793,
+        "speed": 8.260408401489258,
+        "roll": -13.992881774902344,
+        "steering": 0,
+        "sleep": false
+      }
+    },
+    {
+      "id": "city-sedan",
+      "accelerated": {
+        "id": "city-sedan",
+        "name": "VEXTRIDE City Sedan",
+        "p": {
+          "x": 140,
+          "y": 0.5789305567741394,
+          "z": -17.992069244384766
+        },
+        "yaw": 0,
+        "speed": 5.693130016326904,
+        "roll": -8.520979039809284,
+        "steering": 0,
+        "sleep": false
+      }
+    },
+    {
+      "id": "utility-pickup",
+      "accelerated": {
+        "id": "utility-pickup",
+        "name": "VEXTRIDE Utility Pickup",
+        "p": {
+          "x": 11.60145092010498,
+          "y": 0.6789305806159973,
+          "z": 108
+        },
+        "yaw": 1.5707962925663537,
+        "speed": 4.209992408752444,
+        "roll": -5.585462619096802,
+        "steering": 0,
+        "sleep": false
+      }
+    }
+  ],
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "perf": "6 fps 155.8 ms 28 calls 25.0k tris",
+  "notes": "Player fixtures moved near each original parking spawn; approach and all vehicle actions used actual keyboard input. Vehicles were not teleported for selection."
+}

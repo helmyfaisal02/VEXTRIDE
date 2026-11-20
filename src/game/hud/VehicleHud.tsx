@@ -2,11 +2,12 @@ import { useEffect, useRef } from 'react'
 import { subscribePerf } from '../shared/perfStats'
 import { useVehicleStore, vehicleState } from '../vehicles/vehicleState'
 import { useCharacterStore } from '../state/characterStore'
-import { COUPE } from '../vehicles/vehicleConfig'
+import { getVehicleDefinition } from '../vehicles/vehicleConfig'
 import { inputState } from '../input/inputState'
 
 export function VehicleHud() {
   const driving = useVehicleStore((s) => s.driving), hint = useVehicleStore((s) => s.hint)
+  const activeId=useVehicleStore(s=>s.activeVehicleId)
   const creator = useCharacterStore((s) => s.menuOpen)
   const readout = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -19,7 +20,7 @@ export function VehicleHud() {
   return (
     <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 space-y-2 text-center text-white" data-testid="vehicle-hud">
       {driving && <div className="rounded-2xl bg-[#142440]/90 px-5 py-3 shadow-lg">
-        <p className="text-xs font-semibold">{COUPE.name}</p>
+        <p className="text-xs font-semibold">{activeId ? getVehicleDefinition(activeId).name : ''}</p>
         <div ref={readout} className="mt-1 text-xl font-bold tabular-nums">0 km/h · N · Stopped</div>
         <p className="mt-1 text-[11px] text-white/80">W Accelerate · S Brake / Reverse · A/D Steer</p>
         <p className="text-[11px] text-white/80">Space Handbrake · E Exit when stopped</p>

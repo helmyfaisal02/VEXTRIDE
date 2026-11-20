@@ -2,22 +2,37 @@ import { create } from 'zustand'
 import { Vector3 } from 'three'
 import type { RapierRigidBody } from '@react-three/rapier'
 import { resetInput } from '../input/inputState'
-import { COUPE } from './vehicleConfig'
+import { COUPE, VEHICLES, getVehicleDefinition, type VehicleId, type VehicleDefinition } from './vehicleConfig'
 
-/** Only discrete mode/hint changes notify React. Simulation data stays mutable. */
+/** Only discrete ownership/hint changes notify React. */
 export const useVehicleStore = create<{
-  driving: boolean; hint: string
-  setDriving: (driving: boolean) => void; setHint: (hint: string) => void
-}>((set) => ({
-  driving: false, hint: '',
-  setDriving: (driving) => { resetInput(); set({ driving, hint: '' }) },
-  setHint: (hint) => set((s) => s.hint === hint ? s : { hint }),
+  driving: boolean; activeVehicleId: VehicleId | null; hint: string
+  setDriving: (driving: boolean, id?: VehicleId) => void; setHint: (hint: string) => void
+}>((set)=>({
+  driving:false,activeVehicleId:null,hint:'',
+  setDriving:(driving,id=COUPE.id)=>{resetInput();set({driving,activeVehicleId:driving?id:null,hint:''})},
+  setHint:(hint)=>set(s=>s.hint===hint?s:{hint}),
 }))
-
-export const vehicleState = {
-  position: new Vector3(COUPE.spawn.x, COUPE.spawn.y, COUPE.spawn.z),
-  yaw: COUPE.spawnYaw, speed: 0, steering: 0, wheelRoll: 0, grounded: false,
+export function createVehicleState(definition: VehicleDefinition) {
+  return {position:new Vector3(definition.spawn.x,definition.spawn.y,definition.spawn.z),yaw:definition.spawnYaw,speed:0,steering:0,wheelRoll:0,grounded:false}
 }
+export const vehicleRegistry = new Map(VEHICLES.map(definition=>[definition.id,{definition,body:null as RapierRigidBody|null,state:createVehicleState(definition)}]))
+export const getVehicleRuntime = (id: VehicleId) => vehicleRegistry.get(id)!
+export const getActiveVehicleDefinition = () => getVehicleDefinition(useVehicleStore.getState().activeVehicleId ?? COUPE.id)
+export const getActiveVehicleRuntime = () => getVehicleRuntime(useVehicleStore.getState().activeVehicleId ?? COUPE.id)
 
-/** Runtime references only; never persisted or placed in a URL/store. */
-export const vehicleRuntime: { body: RapierRigidBody | null; pedestrian: RapierRigidBody | null } = { body: null, pedestrian: null }
+/** Active read view retains the existing player/camera consumers and coupe test API. */
+export const vehicleState = {
+  get position(){return getActiveVehicleRuntime().state.position},
+  get yaw(){return getActiveVehicleRuntime().state.yaw},
+  get speed(){return getActiveVehicleRuntime().state.speed},
+  get steering(){return getActiveVehicleRuntime().state.steering},
+  get wheelRoll(){return getActiveVehicleRuntime().state.wheelRoll},
+  get grounded(){return getActiveVehicleRuntime().state.grounded},
+}
+/** body refers to the occupied body, or the original coupe when walking. */
+export const vehicleRuntime = {
+  get body(): RapierRigidBody|null {return getActiveVehicleRuntime().body},
+  set body(body: RapierRigidBody|null){getActiveVehicleRuntime().body=body},
+  pedestrian:null as RapierRigidBody|null,
+}
