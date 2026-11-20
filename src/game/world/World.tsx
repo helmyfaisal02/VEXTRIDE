@@ -8,6 +8,7 @@ import { Props } from './Props'
 import { SkyDome } from './SkyDome'
 import { StepTestArea } from './StepTestArea'
 import { WorldTimeDriver } from './WorldTimeDriver'
+import { AmbientSystem } from '../ambient/AmbientSystem'
 import { NPCSystem } from '../npcs/NPCSystem'
 import { VehicleSystem } from '../vehicles'
 
@@ -34,6 +35,7 @@ function WorldImpl() {
       <EnvColliders />
       <VehicleSystem />
       <NPCSystem />
+      <AmbientSystem />
       {/* Phase 1 demo objects, moved out of the street grid into the demo yard east of the city. */}
       <group position={[DEMO_YARD_ORIGIN.x, 0, DEMO_YARD_ORIGIN.z]}>
         <Props />

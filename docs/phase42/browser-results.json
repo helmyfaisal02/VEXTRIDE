@@ -1,0 +1,74 @@
+{
+  "checks": [
+    "three original cars and pedestrian mounted in real WebGL/Rapier scene",
+    "exact 2 traffic/3 walkers coexist with 2 named NPCs and 3 playable cars",
+    "ambient-coupe: real autonomous motion and movement-based wheel rolling",
+    "ambient-coupe: legal junction turn changes chassis heading and front steering",
+    "ambient-sedan: real autonomous motion and movement-based wheel rolling",
+    "ambient-sedan: legal junction turn changes chassis heading and front steering",
+    "traffic stops before a parked playable car without pushing it",
+    "traffic resumes when the parked obstruction clears",
+    "ambient-plaza: distinct procedural walker moves on supported pavement with gait animation",
+    "ambient-downtown: distinct procedural walker moves on supported pavement with gait animation",
+    "ambient-residential: distinct procedural walker moves on supported pavement with gait animation",
+    "traffic lamps and walkers render with the existing nighttime sky/lighting",
+    "marcus: original dialogue and E interaction remain functional",
+    "maya: original dialogue and E interaction remain functional",
+    "original player-owned coupe drives and brakes near ambient traffic",
+    "existing R recovery succeeds with ambient colliders present",
+    "safe player vehicle exit and camera handoff remain functional",
+    "F/P/C and Shift+T remain available",
+    "world body/collider counts remain stable",
+    "no JavaScript or shader errors",
+    "pedestrian faces actual movement through a complete endpoint reversal",
+    "pedestrian pauses in place while turning at endpoint",
+    "endpoint regression has no runtime or shader errors"
+  ],
+  "errors": [],
+  "initial": {
+    "bodies": 46,
+    "colliders": 564
+  },
+  "resources": {
+    "bodies": 46,
+    "colliders": 564,
+    "geometries": 266,
+    "textures": 2,
+    "calls": 93,
+    "triangles": 27514,
+    "traffic": [
+      {
+        "speed": 5.119999999999994,
+        "lane": "RZ10:N",
+        "turn": null
+      },
+      {
+        "speed": 7,
+        "lane": "RZ43:N",
+        "turn": null
+      }
+    ],
+    "walkers": [
+      {
+        "speed": 0,
+        "phase": 4.55530934770529
+      },
+      {
+        "speed": 1.25,
+        "phase": 4.123004717596064
+      },
+      {
+        "speed": 1.1,
+        "phase": 2.3199453441893296
+      }
+    ]
+  },
+  "notes": "Real Chromium WebGL with SwiftShader; no hardware FPS or manual acceptance claim. Traffic turns and pedestrians observed at natural route positions. Controlled fixtures parked the original coupe ahead of traffic then restored its spawn; later positioned the occupied coupe behind traffic for real driving/R tests. Pedestrian fixtures approached original named NPC spawns. Test-only placements are not production teleport behavior.",
+  "endpointRegression": {
+    "minDot": 0.993779972945113,
+    "pauseMotion": 0,
+    "waitSeen": true,
+    "finished": true,
+    "samples": 502
+  }
+}
