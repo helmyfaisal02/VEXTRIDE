@@ -6,6 +6,8 @@ import { useGameStore, type CameraMode } from '../state/gameStore'
 import { CharacterPreviewCamera } from './CharacterPreviewCamera'
 import { OrbitRig } from './OrbitRig'
 import { ThirdPersonCamera } from './ThirdPersonCamera'
+import { VehicleCamera } from './VehicleCamera'
+import { useVehicleStore } from '../vehicles/vehicleState'
 import {
   applyViewOffset,
   beginCameraTransition,
@@ -15,11 +17,11 @@ import {
   type ViewOffset,
 } from './cameraTransition'
 
-export type ActiveCamera = 'preview' | 'follow' | 'orbit'
+export type ActiveCamera = 'preview' | 'follow' | 'orbit' | 'vehicle'
 
 /** The one camera system allowed to run: the creator's preview always wins over gameplay cameras. */
-export function selectActiveCamera(creatorOpen: boolean, mode: CameraMode): ActiveCamera {
-  return creatorOpen ? 'preview' : mode
+export function selectActiveCamera(creatorOpen: boolean, mode: CameraMode, driving = false): ActiveCamera {
+  return creatorOpen ? 'preview' : mode === 'orbit' ? 'orbit' : driving ? 'vehicle' : 'follow'
 }
 
 const current: ViewOffset = { x: 0, y: 0 }
@@ -35,7 +37,8 @@ const target: ViewOffset = { x: 0, y: 0 }
 function CameraDirectorImpl() {
   const creatorOpen = useCharacterStore((s) => s.menuOpen)
   const cameraMode = useGameStore((s) => s.cameraMode)
-  const active = selectActiveCamera(creatorOpen, cameraMode)
+  const driving = useVehicleStore((s) => s.driving)
+  const active = selectActiveCamera(creatorOpen, cameraMode, driving)
   const camera = useThree((s) => s.camera)
 
   useEffect(() => {
@@ -51,6 +54,7 @@ function CameraDirectorImpl() {
   return (
     <>
       {active === 'follow' && <ThirdPersonCamera />}
+      {active === 'vehicle' && <VehicleCamera />}
       {active === 'preview' && <CharacterPreviewCamera />}
       {active === 'orbit' && <OrbitRig />}
     </>

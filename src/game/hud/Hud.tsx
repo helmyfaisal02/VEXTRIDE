@@ -6,6 +6,8 @@ import { useCharacterStore } from '../state/characterStore'
 import { useGameStore } from '../state/gameStore'
 import { CharacterCreator } from './CharacterCreator'
 import { WorldTimeHud } from './WorldTimeHud'
+import { VehicleHud } from './VehicleHud'
+import { useVehicleStore } from '../vehicles/vehicleState'
 
 function Brand() {
   return (
@@ -20,7 +22,7 @@ function Brand() {
         className="mt-1 text-[11px] font-medium uppercase text-white/85"
         style={{ letterSpacing: '0.1em', textShadow: '0 1px 8px rgba(20, 40, 80, 0.5)' }}
       >
-        Dynamic Day &amp; Night &middot; Phase 2.3
+        Arcade Vehicle &middot; Phase 3.1
       </p>
     </div>
   )
@@ -43,6 +45,7 @@ const Controls = memo(function Controls() {
   const showPerf = useGameStore((s) => s.showPerf)
   const cameraMode = useGameStore((s) => s.cameraMode)
   const creatorOpen = useCharacterStore((s) => s.menuOpen)
+  const driving = useVehicleStore((s) => s.driving)
 
   if (creatorOpen) return null
   return (
@@ -50,9 +53,10 @@ const Controls = memo(function Controls() {
       className="pointer-events-none absolute bottom-5 left-5 m-0 grid select-none grid-cols-[auto_1fr] gap-x-3 rounded-2xl border border-white/40 bg-white/55 px-4 py-3 text-xs text-[#1B3158] shadow-[0_8px_30px_rgba(27,49,88,0.18)] backdrop-blur-md sm:bottom-6 sm:left-7"
       style={{ lineHeight: 1.65 }}
     >
-      <ControlRow keys="WASD" label="Move" />
-      <ControlRow keys="Shift" label="Sprint" />
-      <ControlRow keys="Space" label="Jump" />
+      <ControlRow keys="WASD" label={driving ? 'Drive / Steer' : 'Move'} />
+      {!driving && <ControlRow keys="Shift" label="Sprint" />}
+      <ControlRow keys="Space" label={driving ? 'Handbrake' : 'Jump'} />
+      <ControlRow keys="E" label={driving ? 'Exit when stopped' : 'Enter nearby car'} />
       <ControlRow keys="Mouse Drag" label="Camera" />
       <ControlRow keys="Scroll" label="Zoom" />
       <ControlRow keys="F" label="Performance" note={showPerf ? 'on' : 'off'} />
@@ -89,6 +93,7 @@ function PerfReadout() {
 
 /** Small in-game entry point to reopen the character creator. */
 const CharacterButton = memo(function CharacterButton() {
+  const driving = useVehicleStore((s) => s.driving)
   const name = useCharacterStore((s) => s.settings.name)
   const open = useCharacterStore((s) => s.menuOpen)
   const openMenu = useCharacterStore((s) => s.openMenu)
@@ -96,6 +101,8 @@ const CharacterButton = memo(function CharacterButton() {
   return (
     <button
       type="button"
+      disabled={driving}
+      title={driving ? 'Exit vehicle to edit character' : 'Edit character'}
       onClick={(e) => {
         // Release focus so a later Space press (jump) cannot re-activate this button.
         e.currentTarget.blur()
@@ -157,6 +164,7 @@ export function Hud() {
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
       <Brand />
       <WorldTimeHud />
+      <VehicleHud />
       <PerfReadout />
       <Controls />
       <CharacterButton />

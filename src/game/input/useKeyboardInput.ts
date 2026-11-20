@@ -14,6 +14,10 @@ const BLOCKED_DEFAULTS = new Set([
 
 function setKey(code: string, down: boolean): void {
   switch (code) {
+    case 'KeyE':
+      if (down && !inputState.interactHeld) inputState.interactQueued = true
+      inputState.interactHeld = down
+      break
     case 'KeyW':
     case 'ArrowUp':
       inputState.forward = down
@@ -51,6 +55,7 @@ export function useKeyboardInput(): void {
       // The character creator owns the keyboard while it is open.
       if (useCharacterStore.getState().menuOpen) return
       if (isTypingTarget(e.target)) return
+      if (e.code === 'KeyE' && (e.ctrlKey || e.altKey)) return
       // With Cmd held the browser swallows other keys' keyup events, which
       // would leave movement keys stuck; treat it as leaving the game keys.
       if (e.metaKey) {
@@ -58,6 +63,9 @@ export function useKeyboardInput(): void {
         return
       }
       if (BLOCKED_DEFAULTS.has(e.code)) e.preventDefault()
+      // Held flags already carry continuous input. A reset (mode/menu/focus)
+      // must require a fresh press, rather than reactivating on OS repeat.
+      if (e.repeat) return
       setKey(e.code, true)
     }
     const onKeyUp = (e: KeyboardEvent) => {

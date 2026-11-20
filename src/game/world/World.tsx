@@ -8,6 +8,7 @@ import { Props } from './Props'
 import { SkyDome } from './SkyDome'
 import { StepTestArea } from './StepTestArea'
 import { WorldTimeDriver } from './WorldTimeDriver'
+import { StreetCoupe } from '../vehicles'
 
 /** Marks the game ready once Rapier's WASM has initialised and the world mounted. */
 function ReadySignal() {
@@ -30,6 +31,7 @@ function WorldImpl() {
       <CityColliders />
       <EnvironmentView />
       <EnvColliders />
+      <StreetCoupe />
       {/* Phase 1 demo objects, moved out of the street grid into the demo yard east of the city. */}
       <group position={[DEMO_YARD_ORIGIN.x, 0, DEMO_YARD_ORIGIN.z]}>
         <Props />

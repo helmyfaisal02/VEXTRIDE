@@ -1,4 +1,4 @@
-import { useRef, type RefObject } from 'react'
+import { useEffect, useRef, type RefObject } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useBeforePhysicsStep, useRapier, type RapierRigidBody } from '@react-three/rapier'
 import { Vector3, type Group } from 'three'
@@ -7,6 +7,7 @@ import { dampAngle } from '../shared/math'
 import { createStepProbeResult, probeGround, type CharacterProbe } from './characterProbes'
 import { createCharacterSim, stepCharacter, type CharacterSim } from './characterSim'
 import { playerState } from './playerState'
+import { useVehicleStore, vehicleRuntime, vehicleState } from '../vehicles/vehicleState'
 
 const TURN_RATE = 14
 const camDir = new Vector3()
@@ -30,6 +31,8 @@ export function useCharacterController(
   const { world, rapier } = useRapier()
   const getState = useThree((s) => s.get)
   const sim = useRef<CharacterSim>(createCharacterSim())
+  const wasDriving = useRef(false)
+  useEffect(() => () => { vehicleRuntime.pedestrian = null }, [])
   const probe = useRef<CharacterProbe | null>(null)
   probe.current ??= {
     world,
@@ -43,6 +46,16 @@ export function useCharacterController(
     const body = bodyRef.current
     const characterProbe = probe.current
     if (!body || !characterProbe) return
+    vehicleRuntime.pedestrian = body
+    const driving = useVehicleStore.getState().driving
+    if (driving) {
+      wasDriving.current = true
+      playerState.speed = 0
+      playerState.animState = 'idle'
+      playerState.grounded = true
+      return
+    }
+    if (wasDriving.current) { sim.current = createCharacterSim(); wasDriving.current = false }
 
     // Camera-relative basis on the ground plane.
     getState().camera.getWorldDirection(camDir)
@@ -54,7 +67,8 @@ export function useCharacterController(
   // body's object has already been interpolated for this frame.
   useFrame((_, delta) => {
     const visual = visualRef.current
-    if (visual) visual.getWorldPosition(playerState.position)
+    if (useVehicleStore.getState().driving) playerState.position.copy(vehicleState.position)
+    else if (visual) visual.getWorldPosition(playerState.position)
 
     const yaw = yawRef.current
     if (yaw && playerState.speed > 0.3) {

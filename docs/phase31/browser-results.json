@@ -1,0 +1,57 @@
+{
+  "checks": [
+    "one original coupe and four separately animated wheels render",
+    "actual walking approach displays E to enter",
+    "E switches to driving and safely disables pedestrian physics",
+    "driving HUD and collision-aware chase camera activate",
+    "character editing requires exiting first",
+    "W accelerates real chassis and wheel motion follows travel",
+    "A steers front wheels and changes real heading",
+    "moving exit is blocked with clear brake hint",
+    "S actively brakes forward speed",
+    "Space handbrake stops the car",
+    "held S produces controlled reverse and reverse wheel motion",
+    "drives along an existing secondary street with stable road contact",
+    "turns through the existing central four-way junction",
+    "drives across the actual north parking curb cut without falling",
+    "Shift+T and nighttime vehicle emissions coexist",
+    "C debug orbit remains available while driving",
+    "F performance overlay remains available",
+    "P collider debug remains available",
+    "E exits safely and restores walking physics",
+    "car position persists after exit",
+    "original walking resumes after exit",
+    "no runtime or shader errors"
+  ],
+  "errors": [],
+  "perf": "9 fps 109.7 ms 23 calls 11.0k tris",
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "samples": [
+    {
+      "name": "accelerated",
+      "car": {
+        "x": 106.4000015258789,
+        "y": 0.5289305448532104,
+        "z": -132.3862762451172
+      },
+      "pedestrian": {
+        "x": 104.49036407470703,
+        "y": 0.928999662399292,
+        "z": -144
+      },
+      "pedEnabled": false,
+      "yaw": 3.141592653589793,
+      "speed": 13.141576766967773,
+      "roll": -35.60824394226074,
+      "steering": 0,
+      "driving": true,
+      "hint": "",
+      "camera": [
+        106.4000015258789,
+        3.6848022608605646,
+        -141.13018346221563
+      ]
+    }
+  ],
+  "notes": "Test fixtures repositioned real Rapier bodies at parking, street, junction and curb cut locations; approach, entry, driving and exit used real keyboard input. No manual acceptance is claimed."
+}

@@ -18,6 +18,7 @@ import {
   SPAWN_POSITION,
 } from './config'
 import { resolveAppearance } from './presets'
+import { useVehicleStore } from '../vehicles/vehicleState'
 import { useCharacterAnimation } from './useCharacterAnimation'
 import { useCharacterController } from './useCharacterController'
 
@@ -41,6 +42,7 @@ const PlayerModel = memo(function PlayerModel({ rig }: { rig: CharacterRig }) {
  * the visual yaw group turns to face the direction of travel.
  */
 function PlayerImpl() {
+  const driving = useVehicleStore((s) => s.driving)
   const bodyRef = useRef<RapierRigidBody>(null)
   const visualRef = useRef<Group>(null)
   const yawRef = useRef<Group>(null)
@@ -69,7 +71,7 @@ function PlayerImpl() {
         frictionCombineRule={CoefficientCombineRule.Min}
         restitutionCombineRule={CoefficientCombineRule.Min}
       />
-      <group ref={visualRef}>
+      <group ref={visualRef} name="pedestrian-visual" visible={!driving}>
         <group ref={yawRef} rotation-y={Math.PI}>
           <group position-y={-FEET_OFFSET}>
             <PlayerModel rig={rig} />

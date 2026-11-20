@@ -12,6 +12,8 @@ export interface InputState {
   jumpHeld: boolean
   /** Set on a fresh jump press; consumed (cleared) by the controller. */
   jumpQueued: boolean
+  interactHeld: boolean
+  interactQueued: boolean
 }
 
 export const inputState: InputState = {
@@ -22,6 +24,8 @@ export const inputState: InputState = {
   sprint: false,
   jumpHeld: false,
   jumpQueued: false,
+  interactHeld: false,
+  interactQueued: false,
 }
 
 export function resetInput(): void {
@@ -32,4 +36,6 @@ export function resetInput(): void {
   inputState.sprint = false
   inputState.jumpHeld = false
   inputState.jumpQueued = false
+  inputState.interactHeld = false
+  inputState.interactQueued = false
 }
