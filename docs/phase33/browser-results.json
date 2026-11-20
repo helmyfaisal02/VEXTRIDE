@@ -1,0 +1,191 @@
+{
+  "checks": [
+    "three original cars and pedestrian mounted in real WebGL/Rapier scene",
+    "street-coupe: E selects correct car and disables pedestrian",
+    "street-coupe: R cannot recover an ordinary parked car",
+    "street-coupe: acceleration, low-speed cornering and movement-based wheels",
+    "street-coupe: handbrake overrides throttle, illuminates brakes and stops upright",
+    "street-coupe: white reverse lamps illuminate while brake lamps return to running brightness",
+    "utility-pickup: E selects correct car and disables pedestrian",
+    "utility-pickup: R cannot recover an ordinary parked car",
+    "utility-pickup: acceleration, low-speed cornering and movement-based wheels",
+    "utility-pickup: handbrake overrides throttle, illuminates brakes and stops upright",
+    "utility-pickup: white reverse lamps illuminate while brake lamps return to running brightness",
+    "utility-pickup: sustained controlled rollover shows contextual recovery hint",
+    "utility-pickup: hold R restores upright safe ground, resets input and retains active car/camera",
+    "utility-pickup: sampled recovery camera has no abrupt orientation jump",
+    "utility-pickup: safe exit restores original pedestrian controls",
+    "night lamps and existing day/night controls render correctly",
+    "C/P/F debug shortcuts remain usable while occupied",
+    "focus loss releases recovery input",
+    "no JavaScript or shader errors",
+    "street-coupe: clear-road nighttime brake lamps render brightly",
+    "street-coupe: clear-road nighttime white reverse lamps render independently",
+    "street-coupe: clear-road night rollover recovers upright with finite chase camera",
+    "city-sedan: clear-road nighttime brake lamps render brightly",
+    "city-sedan: clear-road nighttime white reverse lamps render independently",
+    "city-sedan: clear-road night rollover recovers upright with finite chase camera",
+    "utility-pickup: clear-road nighttime brake lamps render brightly",
+    "utility-pickup: clear-road nighttime white reverse lamps render independently",
+    "utility-pickup: clear-road night rollover recovers upright with finite chase camera",
+    "night fixture has no JavaScript or shader errors",
+    "controlled wall: three seconds of actual blocked throttle enables recovery",
+    "stuck hint survives throttle release for the recovery window",
+    "holding R without throttle safely recovers the occupied wall-blocked car",
+    "wall recovery fixture has no runtime errors"
+  ],
+  "errors": [],
+  "samples": [
+    {
+      "id": "utility-pickup",
+      "handbrake": {
+        "p": {
+          "x": 11.088212013244629,
+          "y": 0.8098868727684021,
+          "z": 108.03327941894531
+        },
+        "v": {
+          "x": -0.8721185922622681,
+          "y": 0,
+          "z": 0.0649971142411232
+        },
+        "up": 1,
+        "speed": 0.8745255166132884,
+        "steer": 0.20018674972016842,
+        "revision": 0,
+        "tail": 1.8,
+        "reverse": 0,
+        "roll": -7.046270309927474,
+        "camera": [
+          19.295313660826096,
+          4.437294178412087,
+          107.56154828554895
+        ],
+        "hint": ""
+      },
+      "recovered": {
+        "p": {
+          "x": 12.462647438049316,
+          "y": 0.6789305806159973,
+          "z": 107.93827056884766
+        },
+        "v": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "up": 1,
+        "speed": 0,
+        "steer": 0,
+        "revision": 1,
+        "tail": 0.25,
+        "reverse": 0,
+        "roll": -3.5511826988682755,
+        "camera": [
+          19.61461744776537,
+          4.004694901260911,
+          107.63875481176639
+        ],
+        "hint": "Vehicle recovered — controls reset",
+        "maxCameraAngle": 0.3487319629387871,
+        "frames": 15,
+        "held": false,
+        "active": "utility-pickup"
+      }
+    }
+  ],
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "limitations": [
+    "Brief W-braking flashes after reversing were not reliably sampled in SwiftShader; all three signal/control paths pass Rapier tests.",
+    "Original-spawn approach/drives used pedestrian fixtures. Additional clear-road lighting/recovery fixtures repositioned the tested car one at a time on an existing road.",
+    "Tight loading-dock camera can temporarily obscure lamps during handoff; clear-road screenshots verify nighttime appearance.",
+    "Additional stuck-grace browser test used one temporary Rapier wall on the central road; application city geometry was unchanged."
+  ],
+  "notes": "Pedestrian positioned near each actual vehicle for approach. Cars drove from their real spawns. Rollovers injected with Rapier setRotation because normal upright locks prevent flips; recovery itself used real held R. Software rendering; no manual acceptance or hardware FPS claim.",
+  "nightFixtureSamples": [
+    {
+      "id": "street-coupe",
+      "recovered": {
+        "p": {
+          "x": -1.2418857409102202e-7,
+          "y": 0.5289304256439209,
+          "z": 2.326888084411621
+        },
+        "v": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "up": 1,
+        "speed": 0,
+        "steer": 0,
+        "revision": 1,
+        "tail": 0.65,
+        "reverse": 0,
+        "roll": 7.271525263786323,
+        "camera": [
+          -4.4510147310550206e-7,
+          3.4430930515169735,
+          9.969579997416462
+        ],
+        "hint": "Vehicle recovered — controls reset"
+      }
+    },
+    {
+      "id": "city-sedan",
+      "recovered": {
+        "p": {
+          "x": 1.4861029740131926e-7,
+          "y": 0.5789305567741394,
+          "z": 1.7224857807159424
+        },
+        "v": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "up": 1,
+        "speed": 0,
+        "steer": 0,
+        "revision": 1,
+        "tail": 0.65,
+        "reverse": 0,
+        "roll": 5.066134298549014,
+        "camera": [
+          2.8294236763851697e-7,
+          3.822434413660111,
+          9.912554481733077
+        ],
+        "hint": "Vehicle recovered — controls reset"
+      }
+    },
+    {
+      "id": "utility-pickup",
+      "recovered": {
+        "p": {
+          "x": 5.86748512887425e-7,
+          "y": 0.6789305806159973,
+          "z": 1.0742449760437012
+        },
+        "v": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "up": 1,
+        "speed": 0,
+        "steer": 0,
+        "revision": 1,
+        "tail": 0.65,
+        "reverse": 0,
+        "roll": 2.7544742975480943,
+        "camera": [
+          0.0000010509448037321414,
+          4.597063030965462,
+          10.03041429856298
+        ],
+        "hint": "Vehicle recovered — controls reset"
+      }
+    }
+  ]
+}

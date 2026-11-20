@@ -15,6 +15,7 @@ export interface VehicleDefinition {
   brake: number; coast: number; steeringAngle: number; steeringResponse: number
   traction: number; handbrakeTraction: number; handbrakeBrake: number
   yawLimit: number; highSpeedSteering: number; maxGroundRise: number
+  steeringReduction: number; gripResponse: number; handbrakeYaw: number; throttleResponse: number
   entryRange: number; exitSpeed: number
   camera: { distance: number; focusHeight: number; pitch: number }
   spawn: { x: number; y: number; z: number }; spawnYaw: number
@@ -25,14 +26,15 @@ export const CHASSIS_COLLIDERS: readonly ChassisCollider[] = [
   { half: [.65,.30,.75], position: [0,.57,.1], mass: 30 },
 ]
 
-/** Phase 3.1 coupe tuning, model, collider dimensions and stall are retained. */
+/** Original coupe dimensions, speed caps and stall; shared Phase 3.3 handling polish. */
 export const COUPE: VehicleDefinition = {
   id: 'street-coupe', modelType: 'coupe', name: 'VEXTRIDE Street Coupe',
   length: 4.2, width: 1.8, height: 1.4, mass: 1130,
   wheelRadius: .32, wheelWidth: .22, wheelbase: 2.64,
   rideHeight: .5, runnerRadius: .28, probeTrack: .64, wheelMass: 25, colliders: CHASSIS_COLLIDERS,
   maxSpeed: 22, reverseSpeed: 7, acceleration: 8, reverseAcceleration: 5, brake: 16, coast: 2,
-  steeringAngle: .55, steeringResponse: 9, traction: 16, handbrakeTraction: 5, handbrakeBrake: 12,
+  steeringAngle: .55, steeringResponse: 9, traction: 16, handbrakeTraction: 5, handbrakeBrake: 18,
+  steeringReduction: .35, gripResponse: 5, handbrakeYaw: 1.18, throttleResponse: 36,
   yawLimit: 1.35, highSpeedSteering: .04, maxGroundRise: 1.2,
   entryRange: 3, exitSpeed: 1, camera: { distance: 8, focusHeight: .55, pitch: .3 },
   spawn: { x: pads.north.minX + 1 + 2.8 * 5.5, y: ROAD_TOP + .52, z: pads.north.minZ + 3.5 }, spawnYaw: Math.PI,
@@ -43,7 +45,8 @@ export const SEDAN: VehicleDefinition = {
   wheelRadius: .34, wheelWidth: .24, wheelbase: 2.8, rideHeight: .55, runnerRadius: .30, probeTrack: .66, wheelMass: 30,
   colliders: [{half:[.88,.30,2.28],position:[0,-.02,0],mass:1250},{half:[.68,.32,.95],position:[0,.62,.10],mass:80}],
   maxSpeed: 18, reverseSpeed: 6, acceleration: 6, reverseAcceleration: 4, brake: 14, coast: 2,
-  steeringAngle: .48, steeringResponse: 6.5, traction: 20, handbrakeTraction: 7, handbrakeBrake: 11,
+  steeringAngle: .48, steeringResponse: 6.5, traction: 20, handbrakeTraction: 7, handbrakeBrake: 16,
+  steeringReduction: .40, gripResponse: 6, handbrakeYaw: 1.08, throttleResponse: 26,
   yawLimit: 1.15, highSpeedSteering: .05, maxGroundRise: 1.1,
   camera: {distance:8.6,focusHeight:.62,pitch:.31},
   spawn: {x:pads.south.minX+1+2.8*7.5,y:ROAD_TOP+.57,z:pads.south.maxZ-3.5}, spawnYaw: 0,
@@ -64,7 +67,8 @@ export const PICKUP: VehicleDefinition = {
     {half:[.90,.30,.06],position:[0,.20,2.49],mass:40},
   ],
   maxSpeed:15,reverseSpeed:5,acceleration:4.5,reverseAcceleration:3.2,brake:12,coast:1.8,
-  steeringAngle:.43,steeringResponse:4.5,traction:22,handbrakeTraction:9,handbrakeBrake:10,
+  steeringAngle:.43,steeringResponse:4.5,traction:22,handbrakeTraction:9,handbrakeBrake:14,
+  steeringReduction:.45,gripResponse:7,handbrakeYaw:1.02,throttleResponse:20,
   yawLimit:.9,highSpeedSteering:.055,maxGroundRise:1,
   camera:{distance:9.5,focusHeight:.75,pitch:.34},
   spawn:{x:(PICKUP_APRON.minX+PICKUP_APRON.maxX)/2,y:ROAD_TOP+.67,z:(PICKUP_APRON.minZ+PICKUP_APRON.maxZ)/2},spawnYaw:Math.PI/2,

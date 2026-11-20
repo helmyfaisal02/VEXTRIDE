@@ -6,15 +6,16 @@ import { COUPE, VEHICLES, getVehicleDefinition, type VehicleId, type VehicleDefi
 
 /** Only discrete ownership/hint changes notify React. */
 export const useVehicleStore = create<{
-  driving: boolean; activeVehicleId: VehicleId | null; hint: string
-  setDriving: (driving: boolean, id?: VehicleId) => void; setHint: (hint: string) => void
+  driving: boolean; activeVehicleId: VehicleId | null; hint: string; recoveryHint: string
+  setDriving: (driving: boolean, id?: VehicleId) => void; setRecoveryHint: (hint: string) => void; setHint: (hint: string) => void
 }>((set)=>({
-  driving:false,activeVehicleId:null,hint:'',
-  setDriving:(driving,id=COUPE.id)=>{resetInput();set({driving,activeVehicleId:driving?id:null,hint:''})},
+  driving:false,activeVehicleId:null,hint:'',recoveryHint:'',
+  setDriving:(driving,id=COUPE.id)=>{resetInput();set({driving,activeVehicleId:driving?id:null,hint:'',recoveryHint:''})},
+  setRecoveryHint:(recoveryHint)=>set(s=>s.recoveryHint===recoveryHint?s:{recoveryHint}),
   setHint:(hint)=>set(s=>s.hint===hint?s:{hint}),
 }))
 export function createVehicleState(definition: VehicleDefinition) {
-  return {position:new Vector3(definition.spawn.x,definition.spawn.y,definition.spawn.z),yaw:definition.spawnYaw,speed:0,steering:0,wheelRoll:0,grounded:false}
+  return {position:new Vector3(definition.spawn.x,definition.spawn.y,definition.spawn.z),yaw:definition.spawnYaw,speed:0,steering:0,wheelRoll:0,grounded:false,recoveryRevision:0}
 }
 export const vehicleRegistry = new Map(VEHICLES.map(definition=>[definition.id,{definition,body:null as RapierRigidBody|null,state:createVehicleState(definition)}]))
 export const getVehicleRuntime = (id: VehicleId) => vehicleRegistry.get(id)!

@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "three original cars and pedestrian mounted in real WebGL/Rapier scene",
+    "street-coupe: E selects correct car and disables pedestrian",
+    "street-coupe: R cannot recover an ordinary parked car",
+    "street-coupe: acceleration, low-speed cornering and movement-based wheels",
+    "street-coupe: handbrake overrides throttle, illuminates brakes and stops upright",
+    "street-coupe: white reverse lamps illuminate while brake lamps return to running brightness"
+  ],
+  "errors": [],
+  "error": "TimeoutError: page.waitForFunction: Timeout 25000ms exceeded."
+}

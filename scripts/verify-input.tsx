@@ -41,7 +41,7 @@ function key(type: 'keydown' | 'keyup', code: string, target: unknown = null, ex
   const event = new Event(type)
   Object.defineProperties(event, {
     code: { value: code },
-    repeat: { value: false },
+    repeat: { value: extra.repeat === true },
     target: { value: target },
     metaKey: { value: extra.metaKey === true },
     preventDefault: { value: () => { result.prevented = true } },
@@ -118,6 +118,27 @@ check('hiding the tab releases held keys', !inputState.forward)
 inputState.right = true
 windowTarget.dispatchEvent(new Event('blur'))
 check('window blur releases held keys', !inputState.right)
+
+// R shares the existing input listener and all focus/menu/typing guards.
+Object.assign(documentTarget, { hidden: false })
+key('keydown', 'KeyR', input)
+check('typing ignores recovery R', !inputState.recoveryHeld)
+key('keydown', 'KeyR')
+check('fresh R press is held for fixed-step recovery', inputState.recoveryHeld)
+windowTarget.dispatchEvent(new Event('blur'))
+key('keydown', 'KeyR', null, { repeat: true })
+check('blur resets R and OS repeat cannot re-arm recovery', !inputState.recoveryHeld)
+key('keyup', 'KeyR'); key('keydown', 'KeyR')
+st().openMenu()
+check('creator opening resets held R', !inputState.recoveryHeld)
+key('keydown', 'KeyR')
+check('creator ignores recovery R', !inputState.recoveryHeld)
+st().cancel()
+key('keydown', 'KeyR')
+Object.assign(documentTarget, { hidden: true })
+documentTarget.dispatchEvent(new Event('visibilitychange'))
+check('tab hiding resets recovery hold', !inputState.recoveryHeld)
+key('keyup', 'KeyR')
 
 await act(() => root.unmount())
 key('keydown', 'KeyW')

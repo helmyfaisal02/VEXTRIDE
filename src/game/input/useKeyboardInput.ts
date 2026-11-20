@@ -14,6 +14,9 @@ const BLOCKED_DEFAULTS = new Set([
 
 function setKey(code: string, down: boolean): void {
   switch (code) {
+    case 'KeyR':
+      inputState.recoveryHeld = down
+      break
     case 'KeyE':
       if (down && !inputState.interactHeld) inputState.interactQueued = true
       inputState.interactHeld = down
@@ -55,7 +58,7 @@ export function useKeyboardInput(): void {
       // The character creator owns the keyboard while it is open.
       if (useCharacterStore.getState().menuOpen) return
       if (isTypingTarget(e.target)) return
-      if (e.code === 'KeyE' && (e.ctrlKey || e.altKey)) return
+      if ((e.code === 'KeyE' || e.code === 'KeyR') && (e.ctrlKey || e.altKey)) return
       // With Cmd held the browser swallows other keys' keyup events, which
       // would leave movement keys stuck; treat it as leaving the game keys.
       if (e.metaKey) {

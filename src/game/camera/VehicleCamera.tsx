@@ -3,9 +3,9 @@ import { useFrame } from '@react-three/fiber'
 import { useRapier } from '@react-three/rapier'
 import { Vector3 } from 'three'
 import { dampAngle } from '../shared/math'
-import { vehicleState, getActiveVehicleDefinition } from '../vehicles/vehicleState'
+import { vehicleState, getActiveVehicleDefinition, getActiveVehicleRuntime } from '../vehicles/vehicleState'
 import { CAMERA_PROBE_RADIUS, cameraClearance, stepCameraDistance } from './cameraCollision'
-import { MAX_FRAME_DT, poseCamera } from './cameraTransition'
+import { MAX_FRAME_DT, poseCamera, beginCameraTransition } from './cameraTransition'
 import { usePointerOrbit } from './useCameraInput'
 
 export const vehicleCameraRig = { yaw: 0, pitch: .3, distance: 8 }
@@ -15,12 +15,18 @@ const LIMITS = { minPitch: .08, maxPitch: 1.1, minDistance: 4, maxDistance: 14, 
 export function VehicleCamera() {
   const physics = useRapier()
   usePointerOrbit(vehicleCameraRig, LIMITS)
-  const state = useRef({ initialized: false, vehicleId: '', heading: 0, distance: 8, focus: new Vector3(), base: new Vector3(), offset: new Vector3(), direction: new Vector3(), position: new Vector3(), probe: new physics.rapier.Ball(CAMERA_PROBE_RADIUS) })
+  const state = useRef({ initialized: false, vehicleId: '', recoveryRevision: 0, heading: 0, distance: 8, focus: new Vector3(), base: new Vector3(), offset: new Vector3(), direction: new Vector3(), position: new Vector3(), probe: new physics.rapier.Ball(CAMERA_PROBE_RADIUS) })
   useFrame(({ camera }, delta) => {
     const s = state.current, dt = Math.min(delta, MAX_FRAME_DT)
     const definition=getActiveVehicleDefinition()
     if(s.vehicleId!==definition.id){s.initialized=false;s.vehicleId=definition.id}
     s.base.copy(vehicleState.position); s.base.y += definition.camera.focusHeight
+    const revision=getActiveVehicleRuntime().state.recoveryRevision
+    if(s.recoveryRevision!==revision){
+      s.recoveryRevision=revision
+      s.focus.copy(s.base)
+      beginCameraTransition(camera)
+    }
     if (!s.initialized) { s.heading = vehicleState.yaw; s.focus.copy(s.base); s.initialized = true }
     s.heading = dampAngle(s.heading, vehicleState.yaw, 6, dt)
     s.position.copy(s.base).addScaledVector(s.offset.set(-Math.sin(s.heading), 0, -Math.cos(s.heading)), Math.max(-.3, Math.min(.65, vehicleState.speed * .03)))
