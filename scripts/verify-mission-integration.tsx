@@ -19,6 +19,8 @@ const store = new Map<string, string>()
 Object.assign(windowTarget, { navigator: { userAgent: 'headless' }, innerWidth: 1280, innerHeight: 720, localStorage: { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => void store.set(k, v) } })
 Object.assign(globalThis, { HTMLElement: FakeElement, window: windowTarget, document: Object.assign(new EventTarget(), { hidden: false }) })
 
+const { newResprayOperationId } = await import('../src/game/economy/garageResprayService')
+const { playerPaintSlots } = await import('../src/game/vehicles/vehiclePaint')
 const { GARAGE } = await import('../src/game/garage/garageConfig')
 const { useGarageStore,garageRuntime } = await import('../src/game/garage/garageState')
 const { GarageSystem } = await import('../src/game/garage/GarageSystem')
@@ -101,6 +103,7 @@ run(240)
 
 
 
+check('mounted new session starts with zero SC and empty history',useMissionStore.getState().economy.balance===0&&useMissionStore.getState().economy.transactions.length===0)
 const counts={body:ctx.world.bodies.len(),collider:ctx.world.colliders.len(),callback:ctx.beforeStepCallbacks.size,listeners:listenerCount()}
 const trafficStart=ambientTraffic.get('ambient-coupe')!.distance
 place(GARAGE.terminal.x,GARAGE.terminal.z+1.7)
@@ -125,6 +128,7 @@ let session=await talk('marcus')
 check('Marcus cannot accept before Maya; ordinary lines remain',!acceptMission(session)&&useDialogueStore.getState().active?.lines===NPCS[0].lines&&useMissionStore.getState().progress.status==='NOT_STARTED')
 await act(()=>{press('Escape');run(2)})
 session=await talk('maya')
+check('opening Maya dialogue never grants Street Cash',useMissionStore.getState().economy.balance===0)
 check('talking to Maya does not automatically accept',useMissionStore.getState().progress.status==='NOT_STARTED')
 await act(()=>{declineMission(session);run(2)})
 check('declining restores walking and leaves mission available',!useDialogueStore.getState().active&&useMissionStore.getState().progress.status==='NOT_STARTED')
@@ -136,7 +140,7 @@ check('first HUD waypoint references actual Marcus definition',missionHUD(accept
 await act(()=>{useCharacterStore.getState().openMenu();run(2)})
 check('creator open leaves mission coherent',useMissionStore.getState().progress===accepted)
 await act(()=>{useCharacterStore.getState().cancel();run(2)})
-const render=(npcs=true,garage=true)=><Suspense fallback={null}><Physics gravity={[0,-9.81,0]} timeStep={FIXED_DT} updatePriority={-50}><RigidBody type="fixed" colliders={false}><CuboidCollider args={[800,.5,800]} position={[0,-.5,0]}/></RigidBody><CityColliders/><EnvColliders/><VehicleSystem/><MissionDriver/>{garage&&<GarageSystem/>}{npcs&&<NPCSystem/>}<AmbientSystem/><Player/><CameraDirector/><Capture/></Physics></Suspense>
+const render=(npcs=true,garage=true,definitions=VEHICLES)=><Suspense fallback={null}><Physics gravity={[0,-9.81,0]} timeStep={FIXED_DT} updatePriority={-50}><RigidBody type="fixed" colliders={false}><CuboidCollider args={[800,.5,800]} position={[0,-.5,0]}/></RigidBody><CityColliders/><EnvColliders/><VehicleSystem definitions={definitions}/><MissionDriver/>{garage&&<GarageSystem/>}{npcs&&<NPCSystem/>}<AmbientSystem/><Player/><CameraDirector/><Capture/></Physics></Suspense>
 session=await talk('marcus')
 await act(()=>{root.render(render(false))});run(2)
 check('NPC unmount closes dialogue and invalidates stale mission acknowledgement',!useDialogueStore.getState().active&&!acknowledgeObjective('meet-marcus',session)&&useMissionStore.getState().progress===accepted)
@@ -166,6 +170,7 @@ session=await talk('maya')
 check('return conversation alone does not complete',useMissionStore.getState().progress.status==='ACTIVE')
 await act(()=>{acknowledgeObjective('return-to-maya',session);run(2)})
 check('final acknowledgement completes with confirmation and no stale waypoint',useMissionStore.getState().progress.status==='COMPLETED'&&useMissionStore.getState().completionNotice&&missionHUD(useMissionStore.getState().progress)===null&&missionTarget(useMissionStore.getState().progress)===null)
+check('First Contact completion credits exactly 150 SC',useMissionStore.getState().economy.balance===150&&useMissionStore.getState().economy.transactions.length===1)
 session=await talk('maya')
 check('completed mission cannot restart; Maya normal dialogue retained',!acceptMission(session)&&useDialogueStore.getState().active?.lines===NPCS[1].lines)
 await act(()=>{press('Escape');run(2)})
@@ -192,12 +197,15 @@ for(let i=0;i<CHECKPOINTS.length;i++){
  await act(()=>{press('KeyE');run(2);press('KeyE',false)})
  check(`${d.id}: safe exit and vehicle switching preserve checkpoint progress`,!useVehicleStore.getState().driving&&useMissionStore.getState().progress.status==='ACTIVE')
 }
+check('all driving checkpoints still leave balance at First Contact reward',useMissionStore.getState().economy.balance===150)
 check('third gate selects actual Marcus return target',useMissionStore.getState().progress.objectiveId==='report-to-marcus'&&missionTarget(useMissionStore.getState().progress)===NPCS[0])
 session=await talk('marcus')
 await act(()=>{acknowledgeObjective('report-to-marcus',session);run(2)})
 check('final on-foot acknowledgement completes second mission exactly once',useMissionStore.getState().progress.status==='COMPLETED'&&useMissionStore.getState().progress.completed?.length===2&&!acknowledgeObjective('report-to-marcus',session))
+check('Shakedown report credits 300 SC for a 450 SC total',useMissionStore.getState().economy.balance===450&&useMissionStore.getState().economy.transactions.length===2)
 await act(()=>{root.render(render(false))});run(2)
 await act(()=>{root.render(render())});run(30)
+check('NPC remount cannot duplicate either reward',useMissionStore.getState().economy.balance===450&&useMissionStore.getState().economy.transactions.length===2)
 check('combined mission history and one observer survive remount',useMissionStore.getState().progress.completed?.length===2&&ctx.afterStepCallbacks.size===2)
 for(let i=0;i<2;i++){
  const b=GARAGE.bays[i],d=VEHICLES[i],car=getVehicleRuntime(d.id).body!
@@ -215,6 +223,20 @@ for(let i=0;i<2;i++){
  check(`${d.id}: physical parking and safe exit confirm exclusive bay occupancy`,useGarageStore.getState().occupancy[b.id]===d.id&&!useVehicleStore.getState().driving)
 }
 check('two parked vehicles coexist without duplicate bay or vehicle assignments',Object.keys(useGarageStore.getState().occupancy).length===2&&new Set(Object.values(useGarageStore.getState().occupancy)).size===2)
+place(GARAGE.terminal.x,GARAGE.terminal.z+1.7)
+await act(()=>{press('KeyE');run(2);press('KeyE',false)})
+const buy=(id:string,paintId:string,operationId=newResprayOperationId())=>useMissionStore.getState().confirmRespray({operationId,vehicleId:id,paintId})
+const material=(id:string)=>(scene as unknown as THREE.Scene).getObjectByName(`vextride-${id}`)!.children[0] as THREE.Mesh<THREE.BufferGeometry,THREE.MeshStandardMaterial>
+const beforePurchasePosition={...getVehicleRuntime('street-coupe').body!.translation()},paintRequest=newResprayOperationId()
+check('garage terminal opens for parked respray after both missions',useGarageStore.getState().open)
+await act(()=>{check('paid Coupe respray succeeds',buy('street-coupe','ember',paintRequest).ok)})
+check('125 SC debit and actual mounted body paint update together',useMissionStore.getState().economy.balance===325&&material('street-coupe').material.color.getHexString()==='e45d43')
+check('respray preserves exact car transform and parking',JSON.stringify(getVehicleRuntime('street-coupe').body!.translation())===JSON.stringify(beforePurchasePosition)&&useGarageStore.getState().occupancy[GARAGE.bays[0].id]==='street-coupe')
+check('double confirmation cannot charge the same operation again',!buy('street-coupe','ember',paintRequest).ok&&useMissionStore.getState().economy.balance===325)
+await act(()=>{check('paid Sedan respray succeeds independently',buy('city-sedan','violet').ok)})
+check('Sedan material changes without repainting Coupe or Pickup',material('city-sedan').material.color.getHexString()==='8059c9'&&material('street-coupe').material.color.getHexString()==='e45d43'&&material('utility-pickup').material.color.getHexString()==='c88a3f')
+await act(()=>{press('Escape');run(2)})
+
 const sedanPosition={...getVehicleRuntime('city-sedan').body!.translation()},coupe=getVehicleRuntime('street-coupe').body!
 body.setTranslation(findVehicleExit(ctx,coupe,body as never,VEHICLES[0])!,true);run(3)
 await act(()=>{press('KeyE');run(2);press('KeyE',false);press('KeyS');run(150);press('KeyS',false)})
@@ -224,7 +246,31 @@ await act(()=>{press('Space');run(120);press('Space',false);press('KeyE');run(2)
 getVehicleRuntime('city-sedan').state.recoveryRevision++;run(12)
 check('recovery revision revokes parked status and cannot reconfirm inside the bay',!useGarageStore.getState().occupancy[GARAGE.bays[1].id])
 run(150);check('recovered stationary bay cannot spoof a new drive-in',Object.keys(useGarageStore.getState().occupancy).length===0)
+
+{
+ // Independent Pickup setup: clear the departed Coupe from the approach, where the lot's pole stopped it.
+ coupe.setTranslation({x:130,y:.55,z:-128},true);coupe.setLinvel({x:0,y:0,z:0},true);coupe.setAngvel({x:0,y:0,z:0},true);run(45)
+ const b=GARAGE.bays[0],d=VEHICLES[2],car=getVehicleRuntime(d.id).body!
+ car.setTranslation({x:b.x,y:b.y+d.rideHeight+.03,z:b.z+6.5},true);car.setRotation({x:0,y:0,z:0,w:1},true);car.setLinvel({x:0,y:0,z:0},true);car.setAngvel({x:0,y:0,z:0},true);run(45)
+ body.setTranslation(findVehicleExit(ctx,car,body as never,d)!,true);run(3)
+ await act(()=>{press('KeyE');run(2);press('KeyE',false);for(let j=0;j<450&&car.translation().z>b.z+.15;j++){const v=car.linvel();press('KeyW',Math.hypot(v.x,v.z)<2.1);run(1)}press('KeyW',false);press('Space');run(90);press('Space',false);press('KeyE');run(2);press('KeyE',false);run(90)})
+ check('Pickup also earns real parking eligibility',useGarageStore.getState().occupancy[b.id]===d.id,JSON.stringify({position:car.translation(),velocity:car.linvel(),ownership:useVehicleStore.getState(),occupancy:useGarageStore.getState().occupancy}))
+ place(GARAGE.terminal.x,GARAGE.terminal.z+1.7)
+ await act(()=>{press('KeyE');run(2);press('KeyE',false);check('paid Pickup respray succeeds',buy(d.id,'ember').ok)})
+ check('actual Pickup paint and 75 SC remaining are consistent',material(d.id).material.color.getHexString()==='e45d43'&&useMissionStore.getState().economy.balance===75)
+ const e=useMissionStore.getState().economy
+ check('insufficient cash rejects with unchanged snapshot and paint',!buy(d.id,'violet').ok&&useMissionStore.getState().economy===e&&material(d.id).material.color.getHexString()==='e45d43')
+ await act(()=>{press('Escape');run(2)})
+}
 check('garage actions preserve both completed mission histories',useMissionStore.getState().progress.completed?.length===2)
+const paidEconomy=useMissionStore.getState().economy
+const oldMaterials=VEHICLES.map(d=>material(d.id).material);let paintDisposed=0
+for(const m of oldMaterials)m.addEventListener('dispose',()=>paintDisposed++)
+await act(()=>{root.render(render(true,true,[]))});run(2)
+check('removing fleet releases private paint slots and each body material',playerPaintSlots.size===0&&paintDisposed===3)
+await act(()=>{root.render(render())});run(90)
+check('fleet remount restores session paints without new transactions',playerPaintSlots.size===3&&useMissionStore.getState().economy===paidEconomy&&material('street-coupe').material.color.getHexString()==='e45d43'&&material('city-sedan').material.color.getHexString()==='8059c9'&&material('utility-pickup').material.color.getHexString()==='e45d43')
+
 for(let i=0;i<3;i++){
  const resources=new Set<THREE.BufferGeometry|THREE.Material>()
  ;(scene as unknown as THREE.Scene).traverse(o=>{if(o instanceof THREE.Mesh&&(o.parent?.name==='garage-service-terminal'||o.name==='garage-parking-markers')){const mesh=o as THREE.Mesh<THREE.BufferGeometry,THREE.Material|THREE.Material[]>;resources.add(mesh.geometry);for(const m of Array.isArray(mesh.material)?mesh.material:[mesh.material])resources.add(m)}})
@@ -240,6 +286,7 @@ check('mission adds no bodies, colliders, callbacks or input listeners',ctx.worl
 check('camera stays finite through walking, driving and dialogues',Number.isFinite((camera as unknown as THREE.Camera).position.length()))
 await act(()=>root.unmount())
 check('teardown leaves no dialogue/NPC/ambient references or window listeners',!useDialogueStore.getState().active&&npcRegistry.size===0&&ambientBodies.size===0&&listenerCount()===0&&garageRuntime.terminal===null&&!useGarageStore.getState().open&&Object.keys(useGarageStore.getState().occupancy).length===0)
+check('economy survives component teardown without duplicating rewards or losing paint selections',playerPaintSlots.size===0&&useMissionStore.getState().economy===paidEconomy)
 check('session mission completion survives component teardown without restarting',useMissionStore.getState().progress.status==='COMPLETED')
 console.log(fails?`${fails} FAILED`:'ALL PASS')
 process.exit(fails?1:0)

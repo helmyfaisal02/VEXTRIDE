@@ -86,7 +86,7 @@ test('correct Marcus conversation does not progress until acknowledged; early cl
  assert.ok(!acknowledgeObjective('meet-marcus',first));assert.ok(acknowledgeObjective('meet-marcus',second));assert.ok(!acknowledgeObjective('meet-marcus',second))
  assert.equal(useMissionStore.getState().progress.objectiveId,'return-to-maya');f.free()
 })
-test('Maya cannot finish early; final acknowledgement completes once with no rewards or restart',()=>{
+test('Maya cannot finish early; final acknowledgement completes once with no restart',()=>{
  const f=fixture();assert.ok(acceptMission(f.talk('maya')))
  assert.ok(!acknowledgeObjective('return-to-maya',f.talk('maya')))
  assert.ok(acknowledgeObjective('meet-marcus',f.talk('marcus')))

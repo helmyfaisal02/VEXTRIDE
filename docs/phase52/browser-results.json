@@ -1,0 +1,118 @@
+{
+  "checks": [
+    "New session starts at zero Street Cash",
+    "Maya normal dialogue retained",
+    "First Contact decline leaves unstarted",
+    "First Contact explicitly accepted",
+    "Shakedown locked before First Contact completion",
+    "First Contact completed normally",
+    "First Contact awards exactly 150 SC",
+    "Shakedown decline preserves First Contact",
+    "Marcus explicitly starts only mission two",
+    "Early Marcus cannot complete",
+    "Existing coupe entered with E",
+    "Actual coupe movement crosses all three ordered checkpoints",
+    "Driving E exits without completing report",
+    "Both missions independently completed",
+    "Shakedown final report awards 300 SC and balance reaches 450",
+    "Marcus normal dialogue remains and no restart offer",
+    "Garage E opens without NPC dialogue",
+    "Garage catalog shows exactly three neutral vehicle choices",
+    "Close button restores walking",
+    "Shared Escape closes garage",
+    "Real Coupe entry near garage remains available",
+    "Coupe physically driven into an existing garage stall",
+    "Safe exit confirms live parked status",
+    "Terminal reflects actual parked Coupe and occupied count",
+    "Cancelling respray leaves cash and paint unchanged",
+    "Explicit double-click confirmation debits only 125 SC",
+    "Actual Coupe body changes to Ember Red",
+    "Other playable and ambient paints remain unchanged",
+    "Respray allocates no new geometry",
+    "Same-color paid change is rejected without debit",
+    "Two additional genuine color changes cost exactly 250 SC",
+    "Insufficient funds leave 75 SC and Ember paint unchanged",
+    "Actual departure clears only its garage bay",
+    "Resprayed vehicle drives with selected color and unchanged cash",
+    "Terminal updates after physical drive-away",
+    "Garage workflow leaves both missions completed",
+    "No game runtime or shader errors"
+  ],
+  "errors": [],
+  "networkWarnings": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:5173/favicon.ico"
+    }
+  ],
+  "progress": {
+    "missionId": "motor-row-shakedown",
+    "status": "COMPLETED",
+    "objectiveId": null,
+    "lastDialogueSession": 8,
+    "completed": [
+      "first-contact",
+      "motor-row-shakedown"
+    ]
+  },
+  "economy": {
+    "balance": 75,
+    "sequence": 5,
+    "transactions": [
+      {
+        "id": "mission:first-contact",
+        "type": "EARN",
+        "amount": 150,
+        "reason": "First Contact Complete",
+        "missionId": "first-contact",
+        "sequence": 1,
+        "balanceAfter": 150
+      },
+      {
+        "id": "mission:motor-row-shakedown",
+        "type": "EARN",
+        "amount": 300,
+        "reason": "Motor Row Shakedown Complete",
+        "missionId": "motor-row-shakedown",
+        "sequence": 2,
+        "balanceAfter": 450
+      },
+      {
+        "id": "respray:2",
+        "type": "SPEND",
+        "amount": 125,
+        "reason": "Body respray — Ember Red",
+        "vehicleId": "street-coupe",
+        "paintId": "ember",
+        "sequence": 3,
+        "balanceAfter": 325
+      },
+      {
+        "id": "respray:4",
+        "type": "SPEND",
+        "amount": 125,
+        "reason": "Body respray — Metro Violet",
+        "vehicleId": "street-coupe",
+        "paintId": "violet",
+        "sequence": 4,
+        "balanceAfter": 200
+      },
+      {
+        "id": "respray:5",
+        "type": "SPEND",
+        "amount": 125,
+        "reason": "Body respray — Ember Red",
+        "vehicleId": "street-coupe",
+        "paintId": "ember",
+        "sequence": 5,
+        "balanceAfter": 75
+      }
+    ],
+    "paints": {
+      "street-coupe": "ember",
+      "city-sedan": "factory",
+      "utility-pickup": "factory"
+    }
+  },
+  "notes": "Complete physical journeys for both missions AND actual garage parking, earned SC, paid body respray, rejection paths and departure. Real keyboard walking/driving, camera yaw input only, no player/vehicle teleport or mission state mutation. Chromium SwiftShader."
+}

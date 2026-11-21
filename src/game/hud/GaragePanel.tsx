@@ -1,3 +1,4 @@
+import { GarageRespray,GarageEconomyHistory } from './GarageRespray'
 import { useEffect,useRef,useState } from 'react'
 import { GARAGE } from '../garage/garageConfig'
 import { garageCatalog } from '../garage/garageCatalog'
@@ -9,7 +10,7 @@ function OpenGaragePanel(){
  return <div className="pointer-events-auto absolute inset-0 z-30 flex items-center justify-center bg-black/35 p-4" onPointerDown={e=>e.stopPropagation()}>
   <section role="dialog" aria-modal="true" aria-labelledby="garage-title" aria-describedby="garage-help" data-testid="garage-panel" className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-white/20 bg-[#142440]/95 p-5 text-white shadow-xl" onKeyDown={e=>{
    if(e.key!=='Tab')return
-   const buttons=Array.from(e.currentTarget.querySelectorAll('button'))
+   const buttons=Array.from(e.currentTarget.querySelectorAll<HTMLElement>('button:not([disabled]), select:not([disabled])'))
    if(e.shiftKey&&document.activeElement===buttons[0]){e.preventDefault();buttons[buttons.length-1]?.focus()}
    else if(!e.shiftKey&&document.activeElement===buttons[buttons.length-1]){e.preventDefault();buttons[0]?.focus()}
   }}>
@@ -21,6 +22,8 @@ function OpenGaragePanel(){
     </button>)}</div>
     <div className="rounded-xl border border-white/15 p-4" data-testid="garage-vehicle-overview"><h3 className="text-sm font-semibold">{vehicle.name}</h3><dl className="mt-3 space-y-2 text-sm"><div><dt className="text-xs text-white/60">Type</dt><dd>{vehicle.type}</dd></div><div><dt className="text-xs text-white/60">Length × Width × Height</dt><dd>{vehicle.dimensions}</dd></div><div><dt className="text-xs text-white/60">Top-speed specification</dt><dd>{vehicle.topSpeed} km/h</dd></div></dl><p className="mt-3 text-sm leading-relaxed text-white/80">{vehicle.description}</p><p className="mt-3 text-sm" data-testid="garage-selected-status">{vehicle.bayId?`Parked at Garage — ${GARAGE.bays.find(b=>b.id===vehicle.bayId)?.name}`:vehicle.present?'Elsewhere in the city':'Not currently in the scene'}</p></div>
    </div>
+   <GarageRespray key={vehicle.id} vehicleId={vehicle.id} name={vehicle.name} parked={!!vehicle.bayId}/>
+   <GarageEconomyHistory/>
    <div className="mt-4 flex flex-wrap gap-3 text-xs text-white/70">{GARAGE.bays.map(b=><p key={b.id}>{b.name}: {occupancy[b.id]?catalog.find(v=>v.id===occupancy[b.id])?.name:'Available'}</p>)}</div>
    <p id="garage-help" className="mt-4 text-xs leading-relaxed text-white/65">The teal corner markers identify two existing stalls in the north parking lot behind the garage. Drive fully inside, align with the stall, stop and exit. Parking confirms after one stationary second. Drive away to free the bay. Esc to close.</p>
   </section>

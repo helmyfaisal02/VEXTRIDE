@@ -82,7 +82,7 @@ const meshes=VEHICLES.map(d=>(scene as unknown as THREE.Scene).getObjectByName(`
 check('three distinct models each retain four independent wheel groups', meshes.every((g,i)=>g.children.filter(c=>c.name.startsWith(`${VEHICLES[i].modelType}-wheel-`)).length===4))
 const bodies=meshes.map(g=>(g.children[0] as THREE.Mesh).material)
 const tails=meshes.map(g=>(g.children[4] as THREE.Mesh).material)
-check('common materials are shared, brake light materials stay independent', bodies[0]===bodies[1]&&bodies[1]===bodies[2]&&tails[0]!==tails[1]&&tails[1]!==tails[2])
+check('paint slots and brake lights are independent while glass remains shared',new Set(bodies).size===3&&(meshes[0].children[1] as THREE.Mesh).material===(meshes[1].children[1] as THREE.Mesh).material&&tails[0]!==tails[1]&&tails[1]!==tails[2])
 
 // Controlled test arrangement on a clear road. Production spawns are checked separately.
 VEHICLES.forEach((d,i)=>{

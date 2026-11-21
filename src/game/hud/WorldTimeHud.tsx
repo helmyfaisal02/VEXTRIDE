@@ -32,7 +32,7 @@ export function WorldTimeHud() {
       {import.meta.env.DEV && !creatorOpen && open && (
         <section
           aria-label="Developer world time"
-          className="pointer-events-auto absolute left-5 top-36 w-64 space-y-3 rounded-xl bg-[#142440]/95 p-4 text-xs text-white sm:left-7"
+          className="pointer-events-auto absolute left-5 top-44 z-20 w-64 space-y-3 rounded-xl bg-[#142440]/95 p-4 text-xs text-white sm:left-7"
           onFocusCapture={() => resetInput()}
           onKeyDown={(event) => { if (event.code === 'Escape') setOpen(false); event.stopPropagation() }}
         >

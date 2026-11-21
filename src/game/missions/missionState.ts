@@ -1,3 +1,6 @@
+import { initialEconomyState,type EconomySnapshot } from '../economy/economyState'
+import { rewardMissionCompletion } from '../economy/missionRewards'
+import { respray,type ResprayRequest } from '../economy/garageResprayService'
 import { create } from 'zustand'
 import { FIRST_CONTACT,MISSIONS,missionDefinition,type MissionId,type ObjectiveId } from './missionDefinitions'
 import { crossesCheckpoint,type VehicleSample } from './checkpointCrossing'
@@ -36,10 +39,12 @@ export function reduceMission(progress:MissionProgress,event:MissionEvent):Missi
 }
 /** Session-only. Current progress retains the Phase 4.3 API; completed IDs retain independent history. */
 export const useMissionStore=create<{
- progress:MissionProgress;completionNotice:boolean
+ progress:MissionProgress;completionNotice:boolean;economy:EconomySnapshot
+ confirmRespray:(request:ResprayRequest)=>{ok:boolean;message:string}
  transition:(event:MissionEvent)=>boolean;dismissCompletion:()=>void
 }>((set,get)=>({
- progress:initialMissionProgress(),completionNotice:false,
- transition:(event)=>{const previous=get().progress,next=reduceMission(previous,event);if(next===previous)return false;set({progress:next,completionNotice:next.status==='COMPLETED'});return true},
+ progress:initialMissionProgress(),completionNotice:false,economy:initialEconomyState(),
+ confirmRespray:request=>{const result=respray(get().economy,request);if(!result.ok)return result;set({economy:result.economy});return {ok:true,message:"Respray complete — 125 SC spent."}},
+ transition:(event)=>{const previous=get().progress,next=reduceMission(previous,event);if(next===previous)return false;set({progress:next,completionNotice:next.status==='COMPLETED',economy:rewardMissionCompletion(get().economy,previous,next)});return true},
  dismissCompletion:()=>set(s=>s.completionNotice?{completionNotice:false}:s),
 }))

@@ -6,6 +6,7 @@ import { useCharacterStore } from '../state/characterStore'
 import { useGameStore } from '../state/gameStore'
 import { CharacterCreator } from './CharacterCreator'
 import { WorldTimeHud } from './WorldTimeHud'
+import { EconomyHud } from './EconomyHud'
 import { GaragePanel } from './GaragePanel'
 import { MissionHud } from './MissionHud'
 import { NPCDialogue } from './NPCDialogue'
@@ -167,6 +168,7 @@ export function Hud() {
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
       <Brand />
       <WorldTimeHud />
+      <EconomyHud />
       <VehicleHud />
       <NPCDialogue />
       <MissionHud />

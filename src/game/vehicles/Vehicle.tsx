@@ -1,3 +1,4 @@
+import { bindPlayerPaint } from './playerPaintBinding'
 import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { BallCollider, CuboidCollider, CoefficientCombineRule, RigidBody, useBeforePhysicsStep, useRapier, type RapierRigidBody } from '@react-three/rapier'
 import { useFrame } from '@react-three/fiber'
@@ -35,9 +36,10 @@ function VehicleImpl({definition,shared}: {definition:VehicleDefinition;shared:S
   const [wheels]=useState(()=>vehicleWheels(definition))
   const [assets]=useState(()=>{
     const result=createVehicleAssets(definition)
-    for(const key of ['body','glass','trim','tire'] as const){result.materials[key].dispose();result.materials[key]=shared[key]}
+    for(const key of ['glass','trim','tire'] as const){result.materials[key].dispose();result.materials[key]=shared[key]}
     return result
   })
+  useEffect(()=>bindPlayerPaint(definition.id,assets.geometries.body,assets.materials.body),[definition.id,assets])
   const mutableAssets=useRef(assets),mutableReverse=useRef(reverseLamp)
   const {world,rapier}=physics
   // Run before Rapier's passive body removal, while clearance queries remain valid.
@@ -53,7 +55,7 @@ function VehicleImpl({definition,shared}: {definition:VehicleDefinition;shared:S
   useEffect(()=>()=>{
     runtime.current.body=null
     for(const g of Object.values(assets.geometries))g.dispose()
-    assets.materials.head.dispose();assets.materials.tail.dispose()
+    assets.materials.body.dispose();assets.materials.head.dispose();assets.materials.tail.dispose()
     reverseLamp.geometry.dispose();reverseLamp.material.dispose()
   },[assets,reverseLamp])
   useBeforePhysicsStep(()=>{

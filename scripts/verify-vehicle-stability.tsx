@@ -83,7 +83,7 @@ run(240)
 
 
 const view=scene as unknown as THREE.Scene
-const common=(view.getObjectByName('vextride-street-coupe')!.children[0] as THREE.Mesh).material as THREE.Material
+const common=(view.getObjectByName('vextride-street-coupe')!.children[1] as THREE.Mesh).material as THREE.Material
 let disposed=0;common.addEventListener('dispose',()=>disposed++)
 const render=(definitions=VEHICLES,debug=false)=><Suspense fallback={null}><Physics gravity={[0,-9.81,0]} timeStep={FIXED_DT} updatePriority={-50} debug={debug}><RigidBody type="fixed" colliders={false}><CuboidCollider args={[800,.5,800]} position={[0,-.5,0]}/></RigidBody><CityColliders/><EnvColliders/><VehicleSystem definitions={definitions}/><Player/><CameraDirector/><Capture/></Physics></Suspense>
 await act(()=>{root.render(render(VEHICLES.filter(d=>d.id!=='street-coupe')))});run(5)
@@ -136,7 +136,7 @@ for(let cycle=0;cycle<4;cycle++){
   check(`remount ${cycle}: all vehicle references removed`,VEHICLES.every(d=>getVehicleRuntime(d.id).body===null))
   await act(()=>{root.render(render())});run(150)
   // The fleet owns shared materials; they survive individual car removal, then dispose on full-system unmount.
-  check(`remount ${cycle}: geometry released and body/collider/callback counts stable`,g===geos.size&&m===mats.size-4&&ctx.world.bodies.len()===bodyCount&&ctx.world.colliders.len()===colliderCount&&ctx.beforeStepCallbacks.size===callbacks&&listenerCount()===listeners,`geometry disposals ${g}/${geos.size}; material disposals ${m}/${mats.size}`)
+  check(`remount ${cycle}: geometry released and body/collider/callback counts stable`,g===geos.size&&m===mats.size-3&&ctx.world.bodies.len()===bodyCount&&ctx.world.colliders.len()===colliderCount&&ctx.beforeStepCallbacks.size===callbacks&&listenerCount()===listeners,`geometry disposals ${g}/${geos.size}; material disposals ${m}/${mats.size}`)
 }
 check('camera remains finite after repeated switches/remounts',Number.isFinite((camera as unknown as THREE.Camera).position.length()))
 await act(()=>root.unmount())

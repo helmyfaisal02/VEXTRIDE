@@ -1,0 +1,35 @@
+{
+  "checks": [
+    "Mobile new session starts at 0 SC",
+    "Fixture enters original Coupe with real E input",
+    "Physical approach confirms real garage parking proof",
+    "Respray-enabled mobile panel fits viewport",
+    "Review focuses explicit confirmation",
+    "Cancel leaves 450 SC and factory paint",
+    "Escape cancels pending service without spending",
+    "Double click commits exactly one 125 SC purchase",
+    "Actual mobile body material is Ember Red",
+    "Expanded service preserves reverse focus trap",
+    "Expanded service preserves forward focus trap",
+    "Insufficient funds leaves 75 SC and five ledger entries",
+    "Nighttime, world-time controls and F P C preserve economy",
+    "No new bodies/colliders or ambient agents",
+    "Refresh resets balance, ledger, selections and actual paint",
+    "Refresh preserves original session-only mission and character lifecycle",
+    "No mobile runtime or shader errors"
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:5173/favicon.ico"
+    }
+  ],
+  "counts": {
+    "bodies": 47,
+    "colliders": 565,
+    "ambient": 5,
+    "paintSlots": 3
+  },
+  "notes": "375x812 economy UI/confirmation/focus/refresh fixture. Mission reward prerequisites are synthetic validated reducer events; player and car setup use pose fixtures. Actual driving from outside a bay earns parking proof, then player proximity is positioned at terminal. This is separate from the complete physical desktop journey."
+}
