@@ -1,0 +1,85 @@
+{
+  "reports": [
+    {
+      "name": "long-night",
+      "camera": [
+        0.6522931871789056,
+        6.091828593690886,
+        -130.84426263385538
+      ],
+      "depth": 24,
+      "calls": 127,
+      "triangles": 36096,
+      "geometries": 218,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "long-day",
+      "camera": [
+        0.9999999966968726,
+        6.694065983663288,
+        -133.04772745410364
+      ],
+      "depth": 24,
+      "calls": 127,
+      "triangles": 36096,
+      "geometries": 218,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "bakery-long",
+      "camera": [
+        -51.56455154281868,
+        5.367563912555004,
+        -74.05631495563398
+      ],
+      "depth": 24,
+      "calls": 132,
+      "triangles": 28682,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "wide-storefront",
+      "camera": [
+        -36.00005469672117,
+        7.852848791260484,
+        -41.39410989954442
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "plaza-zoom",
+      "camera": [
+        -21.181873565141718,
+        8.719655082744424,
+        -43.46695871311236
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    }
+  ],
+  "errors": []
+}

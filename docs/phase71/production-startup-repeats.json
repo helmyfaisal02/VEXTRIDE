@@ -1,0 +1,78 @@
+{
+  "before": [
+    {
+      "creatorMs": 227,
+      "readyMs": 3229,
+      "walletMs": 888,
+      "initialJs": [
+        "/assets/index-pHpj75ZI.js",
+        "/assets/rapier-DVCvfZ9g.js",
+        "/assets/three-CQosuols.js"
+      ],
+      "walletRequest": "/assets/ArcWalletContent-CDC9DZuh.js",
+      "walletListeners": 0
+    },
+    {
+      "creatorMs": 269,
+      "readyMs": 3011,
+      "walletMs": 1183,
+      "initialJs": [
+        "/assets/index-pHpj75ZI.js",
+        "/assets/rapier-DVCvfZ9g.js",
+        "/assets/three-CQosuols.js"
+      ],
+      "walletRequest": "/assets/ArcWalletContent-CDC9DZuh.js",
+      "walletListeners": 0
+    },
+    {
+      "creatorMs": 237,
+      "readyMs": 3170,
+      "walletMs": 929,
+      "initialJs": [
+        "/assets/index-pHpj75ZI.js",
+        "/assets/rapier-DVCvfZ9g.js",
+        "/assets/three-CQosuols.js"
+      ],
+      "walletRequest": "/assets/ArcWalletContent-CDC9DZuh.js",
+      "walletListeners": 0
+    }
+  ],
+  "after": [
+    {
+      "creatorMs": 237,
+      "readyMs": 3313,
+      "walletMs": 1126,
+      "initialJs": [
+        "/assets/index-DQpj8pLw.js",
+        "/assets/rapier-DVCvfZ9g.js",
+        "/assets/three-CQosuols.js"
+      ],
+      "walletRequest": "/assets/ArcWalletContent-CDC9DZuh.js",
+      "walletListeners": 0
+    },
+    {
+      "creatorMs": 243,
+      "readyMs": 3223,
+      "walletMs": 879,
+      "initialJs": [
+        "/assets/index-DQpj8pLw.js",
+        "/assets/rapier-DVCvfZ9g.js",
+        "/assets/three-CQosuols.js"
+      ],
+      "walletRequest": "/assets/ArcWalletContent-CDC9DZuh.js",
+      "walletListeners": 0
+    },
+    {
+      "creatorMs": 1240,
+      "readyMs": 4118,
+      "walletMs": 860,
+      "initialJs": [
+        "/assets/index-DQpj8pLw.js",
+        "/assets/rapier-DVCvfZ9g.js",
+        "/assets/three-CQosuols.js"
+      ],
+      "walletRequest": "/assets/ArcWalletContent-CDC9DZuh.js",
+      "walletListeners": 0
+    }
+  ]
+}

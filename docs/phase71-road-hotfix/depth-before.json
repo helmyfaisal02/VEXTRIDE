@@ -1,0 +1,103 @@
+{
+  "reports": [
+    {
+      "name": "debug-base",
+      "camera": [
+        -40.00000069673796,
+        3.4533545145399556,
+        -73.22687136860709
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 136,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "debug-on",
+      "camera": [
+        -40.000000000001926,
+        3.4570837674524153,
+        -73.21096600536586
+      ],
+      "depth": 24,
+      "calls": 100,
+      "triangles": 25622,
+      "geometries": 137,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "storefront-base",
+      "camera": [
+        -39.00000055739037,
+        3.7076355183882814,
+        -41.20299283598097
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 158,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "depth": 16,
+      "mode": "normal",
+      "actualDepth": 16
+    },
+    {
+      "depth": 16,
+      "mode": "no-ground",
+      "actualDepth": 16
+    },
+    {
+      "depth": 16,
+      "mode": "no-grid",
+      "actualDepth": 16
+    },
+    {
+      "depth": 16,
+      "mode": "no-grid-ground",
+      "actualDepth": 16
+    },
+    {
+      "depth": 16,
+      "mode": "no-markings",
+      "actualDepth": 16
+    },
+    {
+      "depth": 24,
+      "mode": "normal",
+      "actualDepth": 24
+    },
+    {
+      "depth": 24,
+      "mode": "no-ground",
+      "actualDepth": 24
+    },
+    {
+      "depth": 24,
+      "mode": "no-grid",
+      "actualDepth": 24
+    },
+    {
+      "depth": 24,
+      "mode": "no-grid-ground",
+      "actualDepth": 24
+    },
+    {
+      "depth": 24,
+      "mode": "no-markings",
+      "actualDepth": 24
+    }
+  ],
+  "errors": []
+}

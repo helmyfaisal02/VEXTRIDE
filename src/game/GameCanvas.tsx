@@ -23,10 +23,6 @@ export function GameCanvas() {
       dpr={[1, 1.75]}
       camera={{ fov: CAMERA.fov, near: CAMERA.near, far: CAMERA.far, position: CAMERA.position }}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
-      onCreated={({ gl }) => {
-        // Keep the context restorable instead of letting the browser discard it.
-        gl.domElement.addEventListener('webglcontextlost', (e) => e.preventDefault())
-      }}
     >
       <Suspense fallback={null}>
         {/*

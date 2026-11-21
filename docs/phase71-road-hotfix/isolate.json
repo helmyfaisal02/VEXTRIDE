@@ -1,0 +1,261 @@
+{
+  "reports": [
+    {
+      "name": "storefront-distant",
+      "camera": [
+        -39.00000621173829,
+        3.58088999904734,
+        -39.23740294864823
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 198,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "no-grid",
+      "camera": [
+        -39.00000000008494,
+        3.5869642057984956,
+        -39.21147661923715
+      ],
+      "depth": 24,
+      "calls": 98,
+      "triangles": 25620,
+      "geometries": 198,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "no-markings",
+      "camera": [
+        -39,
+        3.5871485738130677,
+        -39.21068920437418
+      ],
+      "depth": 24,
+      "calls": 98,
+      "triangles": 22838,
+      "geometries": 198,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "no-base",
+      "camera": [
+        -39,
+        3.587153198019222,
+        -39.210669454909116
+      ],
+      "depth": 24,
+      "calls": 98,
+      "triangles": 25432,
+      "geometries": 198,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "no-road",
+      "camera": [
+        -39,
+        3.587153338680336,
+        -39.2106688541613
+      ],
+      "depth": 24,
+      "calls": 98,
+      "triangles": 24724,
+      "geometries": 198,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "no-ground",
+      "camera": [
+        -39,
+        3.5871533418624417,
+        -39.21066884057088
+      ],
+      "depth": 24,
+      "calls": 98,
+      "triangles": 25620,
+      "geometries": 198,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "no-shadow",
+      "camera": [
+        -39,
+        3.5871533420027255,
+        -39.210668839971746
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 198,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "no-grid-ground",
+      "camera": [
+        -39,
+        3.5871533420061104,
+        -39.210668839957286
+      ],
+      "depth": 24,
+      "calls": 97,
+      "triangles": 25618,
+      "geometries": 198,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "storefront-day",
+      "camera": [
+        -39,
+        3.4272515387146125,
+        -67.20063144208586
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 198,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "storefront-oblique",
+      "camera": [
+        -49.227343332012445,
+        3.412905832723687,
+        -72.44922306385561
+      ],
+      "depth": 24,
+      "calls": 115,
+      "triangles": 28154,
+      "geometries": 207,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "storefront-night",
+      "camera": [
+        -39.00000195374582,
+        3.4272514879172227,
+        -67.20063769277827
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 207,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "street-grazing",
+      "camera": [
+        -75.06878483812984,
+        0.37661836490619205,
+        -75.64951518172437
+      ],
+      "depth": 24,
+      "calls": 169,
+      "triangles": 37192,
+      "geometries": 254,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "plaza-night",
+      "camera": [
+        -11.070588821647812,
+        4.594432184640158,
+        -8.974834328846566
+      ],
+      "depth": 24,
+      "calls": 106,
+      "triangles": 26108,
+      "geometries": 254,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "intersection-day",
+      "camera": [
+        -6.255192464119647,
+        6.3092038265939445,
+        -66.45460445684328
+      ],
+      "depth": 24,
+      "calls": 53,
+      "triangles": 23988,
+      "geometries": 254,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "motor-row-night",
+      "camera": [
+        109.02066010112851,
+        3.534954169911109,
+        -90.71309556902341
+      ],
+      "depth": 24,
+      "calls": 95,
+      "triangles": 25318,
+      "geometries": 269,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "residential-day",
+      "camera": [
+        -88.78232098847626,
+        3.2337217786260286,
+        -117.9999447991755
+      ],
+      "depth": 24,
+      "calls": 169,
+      "triangles": 37192,
+      "geometries": 269,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    }
+  ],
+  "errors": []
+}

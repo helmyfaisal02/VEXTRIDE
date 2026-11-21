@@ -24,7 +24,8 @@ function GroundImpl() {
       <Grid
         position={[0, 0.01, 0]}
         args={[GROUND_SIZE, GROUND_SIZE]}
-        infiniteGrid
+        // Match the terrain footprint. Drei's infinite mode multiplies the
+        // vertices by (1 + fadeDistance), which let this grid draw over the city.
         cellSize={2}
         cellThickness={0.6}
         cellColor={COLORS.gridCell}

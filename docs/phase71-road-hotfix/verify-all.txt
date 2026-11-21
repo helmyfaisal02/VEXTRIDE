@@ -1,0 +1,1173 @@
+$ bun run verify:character && bun run verify:settings && bun run verify:model && bun run verify:input && bun run verify:camera && bun run verify:player && bun run verify:city && bun run verify:city-geometry && bun run verify:city-physics && bun run verify:environment && bun run verify:environment-geometry && bun run verify:environment-physics && bun run verify:world-time && bun run verify:city-finalization && bun run verify:camera-collision && bun run verify:vehicle && bun run verify:vehicle-integration && bun run verify:vehicle-variety && bun run verify:vehicle-fleet && bun run verify:driving-polish && bun run verify:vehicle-endurance && bun run verify:vehicle-stability && bun run verify:npcs && bun run verify:npc-integration && bun run verify:ambient && bun run verify:ambient-integration && bun run verify:missions && bun run verify:mission-integration && bun run verify:shakedown && bun run verify:garage && bun run verify:economy && bun run verify:persistence && bun run verify:wallet && bun run verify:transfer && bun run verify:transfer-history && bun run verify:hardening && bun run verify:road-render
+$ bun run ./scripts/verify-character.ts
+PASS  spawn settles on ground, upright y=0.899 grounded=true
+PASS  rotation stays identity 
+PASS  walk speed 3.6 3.600
+PASS  stays on ground while walking y=0.899
+PASS  sprint speed 7.2 7.200
+PASS  stays on ground while sprinting y=0.899
+PASS  diagonal fwd+right speed 3.6 3.600 y=0.899
+PASS  diagonal fwd+left sprint speed 7.2 7.200 y=0.899
+PASS  diagonal back+right speed 3.6 3.600 y=0.899
+PASS  W moves along camera forward (-Z) 
+PASS  camera facing +X: W moves +X dx=1.80
+PASS  D = camera right (+X when facing -Z) 
+PASS  D with camera +X moves +Z 
+PASS  smooth acceleration (not instant) first-step speed 0.57
+PASS  reaches walk speed in ~0.1-0.3s 6 steps
+PASS  smooth deceleration to stop 10 steps, y=0.899
+PASS  jump apex ~1.4 m 1.383
+PASS  airtime ~0.7s 40 steps
+PASS  lands and grounded 0.899
+PASS  spamming jump in midair: no second jump apex 1.383
+PASS  single press = exactly one jump jumps=1
+PASS  stops at wall (face x=9; radius .3 => ~8.7) x=8.701
+PASS  speed reads ~0 against wall 
+PASS  no tunnelling when sprint-jumping into wall x=8.701
+PASS  slides along wall when moving diagonally x=8.70 z=3.54
+PASS  head stops at ceiling (2.2) head=2.192 x=-23.1
+PASS  climbs 16deg ramp and stays grounded y 0.90 -> 3.22 z=-43.7
+PASS  kill-plane respawn at spawn {"x":-41.25,"y":1.3558332920074463,"z":-41.25}
+PASS  pushes a dynamic crate crate z=-7.32 y=0.60
+PASS  stands still on the ramp (no slide) drift 0.000 at y=2.07 grounded=true
+PASS  step-up walking: 0.05 m ledge is climbed z=-17.83 y=0.949 (want 0.950)
+PASS  step-up walking: 0.05 m climb is gentle (no launch, no jitter) maxVy=3.50 maxRise/step=0.061 settled=0.0000
+PASS  step-up walking: 0.10 m ledge is climbed z=-17.84 y=0.999 (want 1.000)
+PASS  step-up walking: 0.10 m climb is gentle (no launch, no jitter) maxVy=3.50 maxRise/step=0.061 settled=0.0000
+PASS  step-up walking: 0.15 m ledge is climbed z=-17.84 y=1.049 (want 1.050)
+PASS  step-up walking: 0.15 m climb is gentle (no launch, no jitter) maxVy=3.50 maxRise/step=0.061 settled=0.0000
+PASS  step-up walking: 0.20 m ledge is climbed z=-17.84 y=1.099 (want 1.100)
+PASS  step-up walking: 0.20 m climb is gentle (no launch, no jitter) maxVy=3.50 maxRise/step=0.061 settled=0.0000
+PASS  step-up walking: 0.25 m obstacle blocks z=-7.64 y=0.899
+PASS  step-up walking: 0.30 m obstacle blocks z=-7.70 y=0.899
+PASS  step-up walking: 0.50 m obstacle blocks z=-7.70 y=0.899
+PASS  step-up walking: 1.00 m obstacle blocks z=-7.70 y=0.899
+PASS  step-up sprinting: 0.05 m ledge is climbed z=-20.90 y=0.949 (want 0.950)
+PASS  step-up sprinting: 0.05 m climb is gentle (no launch, no jitter) maxVy=3.50 maxRise/step=0.061 settled=0.0000
+PASS  step-up sprinting: 0.10 m ledge is climbed z=-20.90 y=0.999 (want 1.000)
+PASS  step-up sprinting: 0.10 m climb is gentle (no launch, no jitter) maxVy=3.50 maxRise/step=0.061 settled=0.0000
+PASS  step-up sprinting: 0.15 m ledge is climbed z=-20.90 y=1.049 (want 1.050)
+PASS  step-up sprinting: 0.15 m climb is gentle (no launch, no jitter) maxVy=3.50 maxRise/step=0.061 settled=0.0000
+PASS  step-up sprinting: 0.20 m ledge is climbed z=-20.88 y=1.099 (want 1.100)
+PASS  step-up sprinting: 0.20 m climb is gentle (no launch, no jitter) maxVy=4.97 maxRise/step=0.086 settled=0.0000
+PASS  step-up sprinting: 0.25 m obstacle blocks z=-7.63 y=0.899
+PASS  step-up sprinting: 0.30 m obstacle blocks z=-7.70 y=0.899
+PASS  step-up sprinting: 0.50 m obstacle blocks z=-7.70 y=0.899
+PASS  step-up sprinting: 1.00 m obstacle blocks z=-7.70 y=0.899
+PASS  step-up at a 30 degree angle y=1.092 z=-12.35
+PASS  sprint speed preserved on top of a ledge 7.200 m/s
+PASS  grounded state is not lost while stepping up (no spurious air time) 1 airborne steps
+PASS  staircase of 0.15 m risers is climbed to the top (0.60 m) peak y=1.518 at z=-10.22
+PASS  a tall wall with a 0.15 m ledge cannot be climbed maxY=1.067 z=-11.20
+PASS  no step-up under a low overhang z=-7.64 y=0.899
+PASS  pressing against a tall wall never lifts the body maxY=0.899
+PASS  ramp: smooth climb, no step-up spikes maxRise/step=0.0189 y=3.22
+PASS  ceiling walking under a 2.2 m slab: head stops at the slab (2.2 m) head=2.1918 overshoot=-8.2 mm
+PASS  ceiling walking under a 2.2 m slab: lands normally, one jump per press jumps=5/5 y=0.899
+PASS  ceiling sprinting under a 2.2 m slab: head stops at the slab (2.2 m) head=2.1918 overshoot=-8.2 mm
+PASS  ceiling sprinting under a 2.2 m slab: lands normally, one jump per press jumps=1/1 y=0.899
+PASS  ceiling under a 2.0 m slab: head stops at the slab (2.0 m) head=1.9918 overshoot=-8.2 mm
+PASS  ceiling under a 2.0 m slab: lands normally, one jump per press jumps=5/5 y=0.905
+PASS  ceiling: mid-air jump spam beneath a slab cannot push through it head=1.9918
+PASS  jump height unchanged in open space (1.38 m) 1.383
+PASS  landing from a 5 m drop: no sink-in (< 5 mm) dip=1.9 mm
+PASS  landing from a 5 m drop: no bounce, settles on the ground bounce=0.0 mm final=0.8990
+PASS  landing from a normal jump: dip under 5 mm dip=1.2 mm
+PASS  stopping from a sprint: no vertical oscillation (< 3 mm) range=0.34 mm
+PASS  stopping: rests on the floor, not floating (< 12 mm) y=0.8990
+PASS  repeated sprint-jump landings stay on the floor dip=1.9 mm
+PASS  same distance after 2 s at 30 / 60 / 144 fps z=-13.70 / -13.70 / -13.70
+ALL PASS
+$ bun run ./scripts/verify-character-settings.ts
+PASS  three presets 
+PASS  preset names match the spec 
+PASS  preset ids are unique 
+PASS  preset outfits are distinct 
+PASS  every preset offers 4 valid clothing colours 
+PASS  every preset/colour combination resolves to valid hex colours 
+PASS  out-of-range colour index falls back to the signature colour 
+PASS  sanitize strips markup and symbols 
+PASS  sanitize collapses and trims spaces 
+PASS  sanitize caps at 16 characters 
+PASS  sanitize rejects non-strings 
+PASS  1-char name invalid, 2-char valid 
+PASS  name with symbols invalid 
+PASS  unicode letters allowed 
+PASS  valid record parses 
+PASS  null is empty 
+PASS  garbage is corrupt 
+PASS  array / missing version is invalid 
+PASS  newer version is flagged 
+PASS  old/unknown version is invalid 
+PASS  missing character is invalid 
+PASS  unknown preset is invalid 
+PASS  bad topColor 4 is invalid 
+PASS  bad topColor -1 is invalid 
+PASS  bad topColor 1.5 is invalid 
+PASS  bad topColor 1 is invalid 
+PASS  bad topColor null is invalid 
+PASS  bad topColor NaN is invalid 
+PASS  bad names are invalid 
+PASS  unknown extra fields are dropped 
+PASS  empty storage: first run with defaults 
+PASS  save reports saved 
+PASS  saved record is versioned 
+PASS  returning player resumes saved character 
+PASS  corrupt record falls back to defaults + creator 
+PASS  corrupt record is not touched by loading 
+PASS  user can overwrite a corrupt record by confirming 
+PASS  save refuses to overwrite a newer-version record 
+PASS  invalid settings are never written 
+PASS  throwing getItem is handled 
+PASS  throwing setItem is handled 
+PASS  quota error on save is handled 
+PASS  no storage at all is handled 
+PASS  getStorage is safe outside a browser 
+PASS  store: first launch opens the creator and it cannot be cancelled 
+PASS  store: invalid draft cannot be confirmed 
+PASS  store: name is filtered while typing 
+PASS  store: preset + colour update the draft, bad colour ignored 
+PASS  store: draft does not change the committed character 
+PASS  store: changing preset resets the colour index 
+PASS  store: confirm saves and closes 
+PASS  store: persisted record matches 
+PASS  store: reopening edits a draft; cancel reverts it 
+PASS  store: saved data survives a reload (fresh load) 
+ALL PASS
+$ bun run ./scripts/verify-character-model.tsx
+PASS  Urban Blue: all 11 animation joints attached 
+PASS  Urban Blue: height ~1.8 m height=1.832 minY=0.000
+PASS  Urban Blue: feet at ground 
+PASS  Urban Blue: symmetric and slim width=0.697
+PASS  Urban Blue: reasonable mesh count (<= 80) 39 meshes
+PASS  Street Red: all 11 animation joints attached 
+PASS  Street Red: height ~1.8 m height=1.845 minY=0.000
+PASS  Street Red: feet at ground 
+PASS  Street Red: symmetric and slim width=0.692
+PASS  Street Red: reasonable mesh count (<= 80) 46 meshes
+PASS  Metro Green: all 11 animation joints attached 
+PASS  Metro Green: height ~1.8 m height=1.838 minY=0.000
+PASS  Metro Green: feet at ground 
+PASS  Metro Green: symmetric and slim width=0.687
+PASS  Metro Green: reasonable mesh count (<= 80) 45 meshes
+PASS  all presets share identical joint layout (animation-compatible) 
+PASS  clothing colour option changes the rendered colours 
+PASS  switching preset keeps the same joint objects (no rig rebuild) 
+PASS  switching preset swaps the outfit geometry 39 -> 46 meshes
+PASS  Street Red uses its red hoodie 
+PASS  colour swatch recolours in place 
+ALL PASS
+$ bun run ./scripts/verify-input.tsx
+PASS  first launch: creator is open 
+PASS  creator open: W is ignored 
+PASS  creator open: Space is not hijacked (page/inputs keep default behaviour) 
+PASS  confirm closes the creator 
+PASS  gameplay: WASD + Shift register 
+PASS  gameplay: Space queues a jump and blocks page scroll 
+PASS  gameplay: arrow keys blocked from scrolling 
+PASS  opening the creator releases every held key 
+PASS  creator reopened: A ignored 
+PASS  typing in a text field: W is ignored 
+PASS  typing in a text field: Space is not hijacked 
+PASS  focus on a non-text element still plays 
+PASS  hold W, open then close the creator: W is not stuck 
+PASS  movement responds again right after the creator closes 
+PASS  keys released while the creator was open stay released 
+PASS  Cmd held (browser swallows keyups): all keys are released, nothing sticks 
+PASS  hiding the tab releases held keys 
+PASS  window blur releases held keys 
+PASS  typing ignores recovery R 
+PASS  fresh R press is held for fixed-step recovery 
+PASS  blur resets R and OS repeat cannot re-arm recovery 
+PASS  creator opening resets held R 
+PASS  creator ignores recovery R 
+PASS  tab hiding resets recovery hold 
+PASS  listeners are removed on unmount 
+ALL PASS
+$ bun run ./scripts/verify-camera.ts
+PASS  smootherstep: 0 -> 0, 1 -> 1, monotonic, clamped 
+PASS  30 fps: position follows the time-based easing curve exactly max error 7.9e-15
+PASS  60 fps: position follows the time-based easing curve exactly max error 1.2e-14
+PASS  144 fps: position follows the time-based easing curve exactly max error 1.2e-14
+PASS  30 fps: ends exactly on the target pose 
+PASS  30 fps: every frame is a valid pose 
+PASS  60 fps: ends exactly on the target pose 
+PASS  60 fps: every frame is a valid pose 
+PASS  144 fps: ends exactly on the target pose 
+PASS  144 fps: every frame is a valid pose 
+PASS  30 fps: no camera jump (max step 0.390 <= 0.410) 
+PASS  60 fps: no camera jump (max step 0.195 <= 0.205) 
+PASS  144 fps: no camera jump (max step 0.081 <= 0.085) 
+PASS  blend takes the configured duration done at 0.900s (want 0.9)
+PASS  rotation is continuous (no sudden flips) max 0.060 rad/frame
+PASS  non-finite targets or time leave the camera untouched 
+PASS  a stalled frame (5 s) cannot skip the blend progress=0.111
+PASS  negative time cannot run the blend backwards 
+PASS  re-triggering mid-transition starts from the current pose (no teleport) 
+PASS  identical start and target stays put 
+PASS  orbit target keeps the view direction (no turn on entry) 
+PASS  orbit target is safe when the camera is on the player 
+PASS  orbit target distance is clamped (<= 60 m) 
+PASS  creator open: the preview camera is the only one 
+PASS  creator closed: the selected gameplay camera is the only one 
+PASS  desktop: character shifts right of the panel x=-210
+PASS  narrow: character shifts above the bottom sheet y=224.00000000000003
+PASS  creator closed: no offset 
+PASS  view offset easing is frame-rate independent -197.2 vs -197.5
+PASS  view offset settles exactly on the target 
+PASS  applyViewOffset sets the camera view 
+PASS  a zero offset clears the camera view (back to the normal projection) 
+ALL PASS
+$ bun run ./scripts/verify-player.tsx
+PASS  the player body exists in the real physics world 
+PASS  player spawned at the spawn point and settled on the ground y=0.899
+PASS  first launch: creator open 
+PASS  switching all presets and colours keeps the same physics body and collider body #5.4e-323, 13 bodies, 13 colliders
+PASS  the character does not move or reset while the creator is open drift=0.0e+0
+PASS  confirming the creator keeps the body and position 
+PASS  reopening and cancelling does not reset the character 
+PASS  Urban Blue: idle, walk, run idle / walk / run
+PASS  Urban Blue: sprint speed unchanged (7.2 m/s) 7.20 m/s
+PASS  Urban Blue: jump and fall/landing animation states occur jump state jump; saw idle,walk,run,jump,fall,land
+PASS  Urban Blue: returns to idle on the ground 
+PASS  Street Red: idle, walk, run idle / walk / run
+PASS  Street Red: sprint speed unchanged (7.2 m/s) 7.20 m/s
+PASS  Street Red: jump and fall/landing animation states occur jump state jump; saw idle,walk,run,jump,fall,land
+PASS  Street Red: returns to idle on the ground 
+PASS  Metro Green: idle, walk, run idle / walk / run
+PASS  Metro Green: sprint speed unchanged (7.2 m/s) 7.20 m/s
+PASS  Metro Green: jump and fall/landing animation states occur jump state jump; saw idle,walk,run,jump,fall,land
+PASS  Metro Green: returns to idle on the ground 
+PASS  creator open: preview camera frames the character close up distance=3.30 m
+PASS  creator open: the camera view is shifted to leave room for the panel offsetX=-210
+PASS  closing the creator: smooth blend to the gameplay camera (no snap) max step 0.310 m, max turn 0.078 rad per frame
+PASS  gameplay camera settles at the follow distance distance=6.74 m
+PASS  creator view offset is eased back to none view enabled=false
+PASS  closing the creator did not move the character 
+PASS  opening the creator: smooth blend to the preview camera max step 0.336 m, max turn 0.099 rad per frame
+PASS  the gameplay camera orientation survives opening the creator 
+PASS  and the camera returns behind the player at that orientation yaw=0.90
+PASS  C: entering the orbit camera keeps the view (no turn, no jump) turn=0.0000 rad
+PASS  orbit camera is stable 
+PASS  C: leaving the orbit camera blends smoothly back to gameplay max step 0.000 m
+PASS  rapid mode and creator toggling keeps the camera valid 
+PASS  camera is pulled in front of a wall behind the player (wall face z=22.5) camera z=22.20
+PASS  camera never dips below the ground camera y=0.41
+PASS  real test area: 0.10 m block is climbed z=-60.78 y=0.999
+PASS  real test area: 0.15 m block is climbed z=-60.72 y=1.049
+PASS  real test area: 0.20 m block is climbed z=-60.72 y=1.099
+PASS  real test area: 0.25 m block (> 0.2 m) blocks z=-56.64 y=0.899
+PASS  real test area: 0.35 m block (> 0.2 m) blocks z=-56.70 y=0.899
+PASS  real test area: 1.00 m block (> 0.2 m) blocks z=-56.70 y=0.899
+ALL PASS
+$ bun run ./scripts/verify-city.ts
+PASS  city footprint is about 350 m (340 m) 340 m
+PASS  main road width 12-14 m 14 m
+PASS  secondary road width 8-10 m 9 m
+PASS  sidewalk width 2-3 m 2.5 m
+PASS  curb height 0.12-0.15 m 0.13 m
+PASS  curb is within the step-up limit with margin curb 0.13, sidewalk above ground 0.16, limit 0.2
+PASS  sidewalk top = road surface + curb 
+PASS  5 x 5 junctions, 40 roads, 4 x 4 blocks, 6 districts 
+PASS  four-way intersections, T-intersections and corners all present {"corner":4,"t":12,"four-way":9}
+PASS  no dead ends or orphan junctions 
+PASS  junction type matches its arm count 
+PASS  both road classes are used 
+PASS  no two surface pieces overlap (no z-fighting, no double geometry) worst overlap 0.0e+0 m2
+PASS  roads + junctions + sidewalks + lots tile the whole city floor (no gaps) 115600.000 of 115600.000 m2
+PASS  every surface piece lies inside the city floor 
+PASS  floor is the declared +/-170 m square 
+PASS  each road meets its junctions exactly edge to edge 
+PASS  road width equals the junction side it enters 
+PASS  sidewalk rings sit exactly on the block edges, 2.5 m wide 
+PASS  the plaza is paved solid, one raised block each 
+PASS  no sidewalk touches the roadway except along a curb (sidewalks never overlap roads) 
+PASS  all 25 junctions form one connected network 
+PASS  main road loop: 16 ring junctions, 16 main segments, each junction used twice (a closed loop) 
+PASS  main roads alone form one connected system (ring + central crossing) 21 junctions
+PASS  secondary roads link into the main system at both ends 
+PASS  all six planned districts exist 
+PASS  every block belongs to exactly one district 
+PASS  every district borders the main road system 
+PASS  every district is reachable from the central crossing max 4 hops
+PASS  district bounds and centres lie inside the city 
+PASS  Central Plaza surrounds the central crossing 
+PASS  two directed lanes per road 
+PASS  right-hand traffic: eastbound keeps south, westbound north, southbound west, northbound east 
+PASS  lanes are quarter-width from the centreline and inside the road 
+PASS  lane edges run junction edge to junction edge, matching connection points 
+PASS  connection points: one per junction arm, on the junction edge 
+PASS  movements: every arrival may continue onto every other road (no U-turns) 188 movements
+PASS  four-way junctions offer straight, left and right from every approach 
+PASS  turn kinds are right-handed (east then south is a right turn) 
+PASS  lane graph is strongly connected: every lane reaches every other lane 80 forward / 80 backward of 80
+PASS  no lane is a dead end 
+PASS  spawn is inside a Central Plaza block 
+PASS  spawn is at least 20 m from every curb, road and block edge x=-41.25 z=-41.25
+PASS  spawn clear of every road and junction 
+PASS  spawn surface is the plaza pavement height 
+PASS  character spawn position matches: feet start 0.3 m above the plaza 
+PASS  Phase 1 demo yard and step test area are outside the city yard x=260
+PASS  the layout is deterministic (two builds are identical) 
+PASS  ids are unique 
+ALL PASS
+$ bun run ./scripts/verify-city-geometry.ts
+PASS  surface: positions, normals and colours are finite 
+PASS  surface: normals are unit length 
+PASS  surface: indices valid 
+PASS  surface: triangles wind to match their normals (front faces point the right way) 
+PASS  markings: positions, normals and colours are finite 
+PASS  markings: normals are unit length 
+PASS  markings: indices valid 
+PASS  markings: triangles wind to match their normals (front faces point the right way) 
+PASS  two merged meshes only (2 draw calls for the whole road network) 
+PASS  triangle budget is small (< 15,000 in total) surface 898 + markings 2784
+PASS  geometry builds in well under a second 12.6 ms
+PASS  surface spans the +/-170 m city and rises no higher than the sidewalk 
+PASS  markings stay inside the city and 8 mm above the asphalt (no z-fighting) y=0.0380
+PASS  every marking lies on a road, never on a junction, sidewalk or lot 1392 marking quads
+PASS  no two markings overlap each other (no coplanar z-fighting) worst overlap 0.0e+0 m2
+PASS  both yellow and white paint are present 176 yellow, 1216 white
+PASS  crosswalks exist on the roads at major intersections 40 roads with crosswalk stripes
+PASS  markings are symmetric about the city (same paint count left and right) 
+PASS  rendered surface has no holes anywhere in the city 13689 rays, 0 missed
+PASS  rendered surface height equals the layout (and so the colliders) everywhere max error 2.6e-7 m over 13689 points
+PASS  markings are hit from above at their painted height 
+PASS  asphalt, curb, sidewalk and every district tint appear in the surface mesh 
+ALL PASS
+$ bun run ./scripts/verify-city-physics.tsx
+PASS  spawn: lands on the Central Plaza pavement and rests there y=1.059 (want 1.060)
+PASS  spawn: stays where it spawned (no sliding off curbs) 
+PASS  spawn: in the plaza, far from every curb 
+PASS  few physics objects inside the city: 3 bodies (ground, city, player) and about 60 colliders 3 bodies, 59 colliders
+PASS  no holes: every point of the city floor has a collider under it 13689 rays
+PASS  collider surface height equals the visible surface height everywhere max error 4.3e-7 m
+PASS  no invisible barriers: nothing stands above the visible surface (ray from the side at 1 m) 
+PASS  demo yard: the 30 m teal tower collider is where it was, shifted into the yard top at y=30.00
+PASS  and nothing is left standing at the old position inside the city 
+PASS  road -> plaza curb: walked up without jumping y 0.929 -> 1.059 after 170 steps
+PASS  road -> curb -> sidewalk -> lot (walk west): ends in the lot, 0.13 m curbs climbed and descended x=-91.9 peak y=1.073
+PASS    the sidewalk crossing never launches the character (vertical speed capped) peak vertical speed 3.50 m/s
+PASS  sprinting over the curb works too end y=0.929 x=-91.7
+PASS  sprint along the main avenue through 5 junctions (x = -150 to +150): flat, no seams max step 0.0001 m, x=138
+PASS  sprint along a secondary road end to end (z = -150 to +150): no seams max step 0.0001 m, z=138
+PASS  diagonal sprint across the central intersection corner is stable max step 0.038 m
+PASS  jump from road onto the plaza lands cleanly y=0.929
+PASS  every curb step is within the step-up limit 
+PASS  character recovery respawns on the plaza and settles y=1.059
+ALL PASS
+$ bun run ./scripts/verify-environment.ts
+PASS  road network is unchanged (25 junctions, 40 roads, 80 lanes, 188 movements) 
+PASS  road geometry fingerprint is unchanged fingerprint 4003.6
+PASS  about 20 buildings 20 buildings
+PASS  all nine building types are used office, brick-commercial, apartment, house, garage, showroom, workshop, convenience-store, warehouse
+PASS  building ids are unique and stable 
+PASS  downtown: 2 offices and 3 brick blocks 
+PASS  residential: 4 houses and 2 apartment blocks 
+PASS  motor row: garage, showroom, workshop and store 
+PASS  industrial: 3 warehouses and a workshop 
+PASS  riverside has a cafe, central plaza has no buildings 
+PASS  every building sits in a lot of its own district 
+PASS  building-01 office: footprint and all visible parts are inside the lot MERIDIAN TOWER
+PASS  building-01: nothing touches a road, junction or sidewalk 
+PASS  building-01: sits on the ground (lowest point y=0) with the right height top 56.0 m
+PASS  building-01: entrance faces the street, 15.0 m of clear approach 
+PASS  building-01: nothing solid blocks the approach to the door 
+PASS  building-02 brick-commercial: footprint and all visible parts are inside the lot Dough & Daisy Bakery
+PASS  building-02: nothing touches a road, junction or sidewalk 
+PASS  building-02: sits on the ground (lowest point y=0) with the right height top 15.5 m
+PASS  building-02: entrance faces the street, 9.5 m of clear approach 
+PASS  building-02: nothing solid blocks the approach to the door 
+PASS  building-03 brick-commercial: footprint and all visible parts are inside the lot Lumen Books
+PASS  building-03: nothing touches a road, junction or sidewalk 
+PASS  building-03: sits on the ground (lowest point y=0) with the right height top 19.5 m
+PASS  building-03: entrance faces the street, 9.5 m of clear approach 
+PASS  building-03: nothing solid blocks the approach to the door 
+PASS  building-04 office: footprint and all visible parts are inside the lot ALTAMAR GROUP
+PASS  building-04: nothing touches a road, junction or sidewalk 
+PASS  building-04: sits on the ground (lowest point y=0) with the right height top 64.0 m
+PASS  building-04: entrance faces the street, 13.0 m of clear approach 
+PASS  building-04: nothing solid blocks the approach to the door 
+PASS  building-05 brick-commercial: footprint and all visible parts are inside the lot Rustic Pour Coffee
+PASS  building-05: nothing touches a road, junction or sidewalk 
+PASS  building-05: sits on the ground (lowest point y=0) with the right height top 13.5 m
+PASS  building-05: entrance faces the street, 9.5 m of clear approach 
+PASS  building-05: nothing solid blocks the approach to the door 
+PASS  building-06 apartment: footprint and all visible parts are inside the lot BIRCHWOOD
+PASS  building-06: nothing touches a road, junction or sidewalk 
+PASS  building-06: sits on the ground (lowest point y=0) with the right height top 16.7 m
+PASS  building-06: entrance faces the street, 7.5 m of clear approach 
+PASS  building-06: nothing solid blocks the approach to the door 
+PASS  building-07 house: footprint and all visible parts are inside the lot house
+PASS  building-07: nothing touches a road, junction or sidewalk 
+PASS  building-07: sits on the ground (lowest point y=0) with the right height top 7.3 m
+PASS  building-07: entrance faces the street, 8.5 m of clear approach 
+PASS  building-07: nothing solid blocks the approach to the door 
+PASS  building-08 house: footprint and all visible parts are inside the lot house
+PASS  building-08: nothing touches a road, junction or sidewalk 
+PASS  building-08: sits on the ground (lowest point y=0) with the right height top 7.3 m
+PASS  building-08: entrance faces the street, 8.5 m of clear approach 
+PASS  building-08: nothing solid blocks the approach to the door 
+PASS  building-09 apartment: footprint and all visible parts are inside the lot LINDEN COURT
+PASS  building-09: nothing touches a road, junction or sidewalk 
+PASS  building-09: sits on the ground (lowest point y=0) with the right height top 16.7 m
+PASS  building-09: entrance faces the street, 9.0 m of clear approach 
+PASS  building-09: nothing solid blocks the approach to the door 
+PASS  building-10 house: footprint and all visible parts are inside the lot house
+PASS  building-10: nothing touches a road, junction or sidewalk 
+PASS  building-10: sits on the ground (lowest point y=0) with the right height top 7.3 m
+PASS  building-10: entrance faces the street, 8.5 m of clear approach 
+PASS  building-10: nothing solid blocks the approach to the door 
+PASS  building-11 house: footprint and all visible parts are inside the lot house
+PASS  building-11: nothing touches a road, junction or sidewalk 
+PASS  building-11: sits on the ground (lowest point y=0) with the right height top 7.3 m
+PASS  building-11: entrance faces the street, 8.5 m of clear approach 
+PASS  building-11: nothing solid blocks the approach to the door 
+PASS  building-12 garage: footprint and all visible parts are inside the lot TORQUE & CO.
+PASS  building-12: nothing touches a road, junction or sidewalk 
+PASS  building-12: sits on the ground (lowest point y=0) with the right height top 10.2 m
+PASS  building-12: entrance faces the street, 19.2 m of clear approach 
+PASS  building-12: nothing solid blocks the approach to the door 
+PASS  building-13 showroom: footprint and all visible parts are inside the lot STRATUS MOTORS
+PASS  building-13: nothing touches a road, junction or sidewalk 
+PASS  building-13: sits on the ground (lowest point y=0) with the right height top 9.3 m
+PASS  building-13: entrance faces the street, 20.0 m of clear approach 
+PASS  building-13: nothing solid blocks the approach to the door 
+PASS  building-14 workshop: footprint and all visible parts are inside the lot GEARHEAD TUNING
+PASS  building-14: nothing touches a road, junction or sidewalk 
+PASS  building-14: sits on the ground (lowest point y=0) with the right height top 11.0 m
+PASS  building-14: entrance faces the street, 16.0 m of clear approach 
+PASS  building-14: nothing solid blocks the approach to the door 
+PASS  building-15 convenience-store: footprint and all visible parts are inside the lot Daybreak Mart
+PASS  building-15: nothing touches a road, junction or sidewalk 
+PASS  building-15: sits on the ground (lowest point y=0) with the right height top 6.8 m
+PASS  building-15: entrance faces the street, 7.5 m of clear approach 
+PASS  building-15: nothing solid blocks the approach to the door 
+PASS  building-16 warehouse: footprint and all visible parts are inside the lot HARBORLIGHT FREIGHT
+PASS  building-16: nothing touches a road, junction or sidewalk 
+PASS  building-16: sits on the ground (lowest point y=0) with the right height top 13.7 m
+PASS  building-16: entrance faces the street, 20.0 m of clear approach 
+PASS  building-16: nothing solid blocks the approach to the door 
+PASS  building-17 warehouse: footprint and all visible parts are inside the lot BLUECRATE LOGISTICS
+PASS  building-17: nothing touches a road, junction or sidewalk 
+PASS  building-17: sits on the ground (lowest point y=0) with the right height top 12.7 m
+PASS  building-17: entrance faces the street, 20.0 m of clear approach 
+PASS  building-17: nothing solid blocks the approach to the door 
+PASS  building-18 workshop: footprint and all visible parts are inside the lot FORGE & FIX
+PASS  building-18: nothing touches a road, junction or sidewalk 
+PASS  building-18: sits on the ground (lowest point y=0) with the right height top 11.0 m
+PASS  building-18: entrance faces the street, 14.4 m of clear approach 
+PASS  building-18: nothing solid blocks the approach to the door 
+PASS  building-19 warehouse: footprint and all visible parts are inside the lot IRONWOOD SUPPLY
+PASS  building-19: nothing touches a road, junction or sidewalk 
+PASS  building-19: sits on the ground (lowest point y=0) with the right height top 14.7 m
+PASS  building-19: entrance faces the street, 20.0 m of clear approach 
+PASS  building-19: nothing solid blocks the approach to the door 
+PASS  building-20 convenience-store: footprint and all visible parts are inside the lot Willow Bend Cafe
+PASS  building-20: nothing touches a road, junction or sidewalk 
+PASS  building-20: sits on the ground (lowest point y=0) with the right height top 6.8 m
+PASS  building-20: entrance faces the street, 11.5 m of clear approach 
+PASS  building-20: nothing solid blocks the approach to the door 
+PASS  buildings never overlap (at least 2 m between footprints) closest gap 3.0 m
+PASS  business names are fictional originals MERIDIAN TOWER | Dough & Daisy Bakery | Lumen Books | ALTAMAR GROUP | Rustic Pour Coffee | BIRCHWOOD | LINDEN COURT | TORQUE & CO. | STRATUS MOTORS | GEARHEAD TUNING | Daybreak Mart | HARBORLIGHT FREIGHT | BLUECRATE LOGISTICS | FORGE & FIX | IRONWOOD SUPPLY | Willow Bend Cafe
+PASS  shops, offices, garages and warehouses all carry a sign 
+PASS  props are all inside the city floor and never on a road or junction 
+PASS  no prop overlaps a building or another prop 0 overlaps
+PASS  colliders never overlap each other (buildings, trunks, benches, containers...) 
+PASS  lot objects (containers, tire stacks, fences, utility boxes, pavilion, monument) stay off the sidewalks 
+PASS  no collider stands on a road or junction 
+PASS  every collider has a positive height and rests on its surface 
+PASS  sidewalk props leave at least 1.1 m of the 2.5 m sidewalk free narrowest free width 1.17 m
+PASS  no solid object sits in a block-corner zone (crosswalk landings stay open) 
+PASS  player spawn: 24 x 24 m around it is free of every collider 
+PASS  player spawn: inside the plaza block, paved 
+PASS  downtown: street trees, benches, bins, lamps and planters 
+PASS  residential: fenced yards, trees and driveways 
+PASS  motor row: parking markings, tire stacks, lamps 
+PASS  industrial: containers, yard fence, hydrants and lamps 
+PASS  riverside: trees, benches, pavilion, promenade lamps 
+PASS  central plaza: monument, benches, planters, trees 
+PASS  stop signs and bollards-or-hydrants exist as road furniture 
+PASS  river reserve is a large open strip (>= 2,000 m2) inside the riverside lots 
+PASS  river reserve stays empty: no props, buildings, colliders or lawn on it 
+PASS  base paint (lawn, paving, pads) never overlaps itself: no z-fighting 95 pieces
+PASS  line paint (parking, safety lines) never overlaps itself 63 pieces
+PASS  paint never covers a road, junction or sidewalk 
+PASS  layout is deterministic (two builds are identical) 
+PASS  collider count is modest (< 600, one physics body) 444 colliders for 413 props and 20 buildings
+ALL PASS
+$ bun run ./scripts/verify-environment-geometry.ts
+PASS  downtown: finite, unit normals, valid indices, front faces match normals 5622 triangles
+PASS  residential: finite, unit normals, valid indices, front faces match normals 4172 triangles
+PASS  motor-row: finite, unit normals, valid indices, front faces match normals 1726 triangles
+PASS  industrial: finite, unit normals, valid indices, front faces match normals 4638 triangles
+PASS  riverside: finite, unit normals, valid indices, front faces match normals 2670 triangles
+PASS  central-plaza: finite, unit normals, valid indices, front faces match normals 1982 triangles
+PASS  paint-base: finite, unit normals, valid indices, front faces match normals 190 triangles
+PASS  paint-lines: finite, unit normals, valid indices, front faces match normals 126 triangles
+PASS  signs: finite, unit normals, valid indices, front faces match normals 32 triangles
+PASS  draw calls: 6 district meshes + 2 paint + 1 signs + 3 instanced tree meshes = 12 
+PASS  triangle budget (< 40,000 for every building and prop) 21126 triangles
+PASS  geometry is built once, quickly (< 500 ms) 60 ms
+PASS  trees are instanced data, not meshes: round + conifer counts match the layout 136 instances
+PASS  tree instances are sane (scale, finite, on a surface) 
+PASS  every building rests on y = 0 (no floating structures) 
+PASS  every window pane faces away from its building, on all four street orientations 2124 glass triangles, worst building 100.0% outward
+PASS  every prop stands exactly on the surface under it 0 floating
+PASS  one sign quad per sign, with UVs inside the atlas 16 signs
+PASS  every sign has text, a board colour and a plausible shape 
+PASS  signs face outward, toward the street 
+ALL PASS
+$ bun run ./scripts/verify-environment-physics.tsx
+PASS  spawn: rests on the plaza, not inside anything y=1.059
+PASS  spawn: free to walk north (moved 5.4 m in 1.5 s) 
+PASS  spawn: free to walk south (moved 5.4 m in 1.5 s) 
+PASS  spawn: free to walk west (moved 5.4 m in 1.5 s) 
+PASS  spawn: free to walk east (moved 5.4 m in 1.5 s) 
+PASS  physics budget: all environment colliders share one body 503 colliders inside the city (444 environment)
+PASS  building-01 office: collider top 48.0 m and solid on all four sides 
+PASS  building-02 brick-commercial: collider top 13.9 m and solid on all four sides 
+PASS  building-03 brick-commercial: collider top 17.9 m and solid on all four sides 
+PASS  building-04 office: collider top 56.0 m and solid on all four sides 
+PASS  building-05 brick-commercial: collider top 11.9 m and solid on all four sides 
+PASS  building-06 apartment: collider top 17.0 m and solid on all four sides 
+PASS  building-07 house: collider top 6.0 m and solid on all four sides 
+PASS  building-08 house: collider top 6.0 m and solid on all four sides 
+PASS  building-09 apartment: collider top 17.0 m and solid on all four sides 
+PASS  building-10 house: collider top 6.0 m and solid on all four sides 
+PASS  building-11 house: collider top 6.0 m and solid on all four sides 
+PASS  building-12 garage: collider top 8.5 m and solid on all four sides 
+PASS  building-13 showroom: collider top 8.0 m and solid on all four sides 
+PASS  building-14 workshop: collider top 7.6 m and solid on all four sides 
+PASS  building-15 convenience-store: collider top 5.6 m and solid on all four sides 
+PASS  building-16 warehouse: collider top 13.2 m and solid on all four sides 
+PASS  building-17 warehouse: collider top 12.2 m and solid on all four sides 
+PASS  building-18 workshop: collider top 7.6 m and solid on all four sides 
+PASS  building-19 warehouse: collider top 14.2 m and solid on all four sides 
+PASS  building-20 convenience-store: collider top 5.6 m and solid on all four sides 
+PASS  building-01: walk to the entrance from 8 m away, stop at the wall (gap 0.30 m) 
+PASS  building-02: walk to the entrance from 6 m away, stop at the wall (gap 0.30 m) 
+PASS  building-03: walk to the entrance from 6 m away, stop at the wall (gap 0.30 m) 
+PASS  building-04: walk to the entrance from 8 m away, stop at the wall (gap 0.30 m) 
+PASS  building-05: walk to the entrance from 6 m away, stop at the wall (gap 0.30 m) 
+PASS  building-06: walk to the entrance from 4 m away, stop at the wall (gap 0.30 m) 
+PASS  building-07: walk to the entrance from 5 m away, stop at the wall (gap 0.30 m) 
+PASS  building-08: walk to the entrance from 5 m away, stop at the wall (gap 0.30 m) 
+PASS  building-09: walk to the entrance from 6 m away, stop at the wall (gap 0.30 m) 
+PASS  building-10: walk to the entrance from 5 m away, stop at the wall (gap 0.30 m) 
+PASS  building-11: walk to the entrance from 5 m away, stop at the wall (gap 0.30 m) 
+PASS  building-12: walk to the entrance from 6 m away, stop at the wall (gap 0.30 m) 
+PASS  building-13: walk to the entrance from 7 m away, stop at the wall (gap 0.30 m) 
+PASS  building-14: walk to the entrance from 8 m away, stop at the wall (gap 0.30 m) 
+PASS  building-15: walk to the entrance from 4 m away, stop at the wall (gap 0.30 m) 
+PASS  building-16: walk to the entrance from 7 m away, stop at the wall (gap 0.30 m) 
+PASS  building-17: walk to the entrance from 8 m away, stop at the wall (gap 0.30 m) 
+PASS  building-18: walk to the entrance from 6 m away, stop at the wall (gap 0.30 m) 
+PASS  building-19: walk to the entrance from 8 m away, stop at the wall (gap 0.30 m) 
+PASS  building-20: walk to the entrance from 8 m away, stop at the wall (gap 0.30 m) 
+PASS  no collider on any of the 10 road lines at 0.4 / 1.0 / 1.9 m height (every lane stays open) 0 blocked rays
+PASS  downtown north sidewalk: sprint along it past lamps, trees and benches without being blocked x=-13.4 z=-151.3
+PASS  riverside south sidewalk: sprint along it past lamps, trees and benches without being blocked x=-13.4 z=151.3
+PASS  residential east sidewalk: sprint along it past lamps, trees and benches without being blocked x=-86.4 z=-13.5
+PASS  tree trunk: walking straight into it stops the player (tree-round-007) 
+PASS  bench: walking straight into it stops the player (bench-011) 
+PASS  container: walking straight into it stops the player (container-239) 
+PASS  street lamp: walking straight into it stops the player (streetlight-002) 
+PASS  planter: walking straight into it stops the player (planter-015) 
+ALL PASS
+$ bun run ./scripts/verify-world-time.ts
+PASS  fresh clock starts automatically at 10 AM; period and 12-hour formatting
+PASS  30 real minutes per full day at 30, 60 and 144 FPS; midnight wrap
+PASS  pause/resume, developer changes, hidden tabs and invalid/stall deltas
+PASS  subscribers update only at minute boundaries or explicit edits and unsubscribe cleanly
+PASS  separate versioned persistence validates corrupt/unsupported settings and restores pause
+PASS  streetlights blend monotonically through sunrise/sunset and stay bounded over 24 hours
+PASS  sky, fog, sun direction/intensity remain continuous at boundaries and midnight
+PASS  window and lamp masks are deterministic on merged geometry; only selected surfaces emit
+ALL PASS (8 world-time groups)
+$ bun run ./scripts/verify-city-finalization.tsx
+PASS  four stable Motor Row entrances, tied to existing buildings and parking pads 
+PASS  garage approach aligns with its existing 5.2 m right roll-up bay 
+PASS  parking entrances connect to the existing aisle, with no parking stripe across the approach 
+PASS  garage-bay: flush road/lot crossing with untouched sidewalk beyond shoulders 
+PASS  garage-bay: continuous pedestrian shoulders, slope <= 0.13 / 1.5 
+PASS  garage-bay: no props or colliders block clear approach or sloped shoulders 
+PASS  garage-bay: player road to driveway crosses without barrier, jump or fall 
+PASS  garage-bay: player driveway to road crosses without barrier, jump or fall 
+PASS  garage-bay: sprint east over both pedestrian shoulders max vertical step 0.0248 m
+PASS  garage-bay: sprint west over both pedestrian shoulders max vertical step 0.0281 m
+PASS  showroom: flush road/lot crossing with untouched sidewalk beyond shoulders 
+PASS  showroom: continuous pedestrian shoulders, slope <= 0.13 / 1.5 
+PASS  showroom: no props or colliders block clear approach or sloped shoulders 
+PASS  showroom: player road to driveway crosses without barrier, jump or fall 
+PASS  showroom: player driveway to road crosses without barrier, jump or fall 
+PASS  showroom: sprint east over both pedestrian shoulders max vertical step 0.0222 m
+PASS  showroom: sprint west over both pedestrian shoulders max vertical step 0.0224 m
+PASS  north-parking: flush road/lot crossing with untouched sidewalk beyond shoulders 
+PASS  north-parking: continuous pedestrian shoulders, slope <= 0.13 / 1.5 
+PASS  north-parking: no props or colliders block clear approach or sloped shoulders 
+PASS  north-parking: player road to driveway crosses without barrier, jump or fall 
+PASS  north-parking: player driveway to road crosses without barrier, jump or fall 
+PASS  north-parking: sprint east over both pedestrian shoulders max vertical step 0.0400 m
+PASS  north-parking: sprint west over both pedestrian shoulders max vertical step 0.0357 m
+PASS  south-parking: flush road/lot crossing with untouched sidewalk beyond shoulders 
+PASS  south-parking: continuous pedestrian shoulders, slope <= 0.13 / 1.5 
+PASS  south-parking: no props or colliders block clear approach or sloped shoulders 
+PASS  south-parking: player road to driveway crosses without barrier, jump or fall 
+PASS  south-parking: player driveway to road crosses without barrier, jump or fall 
+PASS  south-parking: sprint east over both pedestrian shoulders max vertical step 0.0474 m
+PASS  south-parking: sprint west over both pedestrian shoulders max vertical step 0.0265 m
+PASS  dense real-mesh vs Rapier sampling: no holes or invisible curb barriers max error 7.65e-7 m
+PASS  all 40 roads remain open at low vehicle bumper height 
+PASS  right-hand lane graph preserved: 80 lane edges and every movement stays connected 
+PASS  same collision budget: 444 environment + 57 city + ground + player; three fixed bodies 503 colliders, 3 fixed bodies
+PASS  all 20 buildings and 413 existing props remain 
+PASS  night lighting attributes remain attached to all six merged district meshes 
+ALL PASS
+$ bun run ./scripts/verify-camera-collision.ts
+PASS  real Rapier wall sweep gives the same 30 cm centre clearance as the old flat-wall ray (within 1 mm solver tolerance) 3.5997 m
+PASS  camera cannot ease beyond the safe wall distance on the first obstructed frame 
+PASS  tight spaces respect collision even below the former 0.9 m minimum 
+PASS  dynamic player/crate bodies and sensors never pull in the camera 
+PASS  camera volume catches grazing walls a centre ray misses 
+PASS  parallel nearby walls do not cause unnecessary pull-in 
+PASS  camera releases smoothly and independently of 30/60/144 FPS 
+PASS  80 actual building facade sweeps leave no intersecting camera volume 0 penetrations
+ALL PASS
+$ bun run ./scripts/verify-vehicle.ts
+PASS  original procedural coupe has finite geometry, four wheels and a 1.4 m visual height
+PASS  fixed-step forward acceleration and 22 m/s cap; no sideways drift on straight road
+PASS  active brake is stronger than coasting; handbrake stops the chassis
+PASS  S brakes forward travel before reversing; reverse is capped at 7 m/s
+PASS  steering is speed-dependent, reverses direction in reverse, and stays upright
+PASS  wheel travel comes from resolved chassis movement; reverse changes roll direction
+PASS  driver inputs are ignored while parked, and control-mode changes clear held/queued keys
+PASS  physics results agree at 30/60/144 render FPS with the existing fixed 60 Hz step
+PASS  designated Motor Row parking spawn is clear of all existing static objects
+PASS  vehicle stops against the actual garage facade; wheel animation stops when pushing a wall
+PASS  vehicle collides with a substantial container using its existing environment dimensions
+PASS  all 40 real road segments support grounded upright driving in existing right-hand lanes
+PASS  existing 0.13 m uncut curb does not launch or roll the grounded chassis
+PASS  arcade left turn through actual four-way junction J22
+PASS  arcade left turn through actual t junction J20
+PASS  garage-bay: real chassis traverses the Phase 2.4 curb cut
+PASS  showroom: real chassis traverses the Phase 2.4 curb cut
+PASS  north-parking: real chassis traverses the Phase 2.4 curb cut
+PASS  south-parking: real chassis traverses the Phase 2.4 curb cut
+PASS  entry/exit uses real bodies, clear ground, speed gating and blocked-exit protection
+PASS  entry cannot reach through a building wall
+PASS  camera director selects exactly one camera and preserves creator/debug precedence
+ALL PASS (22 vehicle groups)
+$ bun run ./scripts/verify-vehicle-integration.tsx
+PASS  one actual coupe body with six colliders alongside the original player 
+PASS  walking camera remains active before entry 
+PASS  nearby pedestrian receives a contextual E hint 
+PASS  E is ignored while creator owns input 
+PASS  E enters via shared listener and disables the pedestrian collider/body 
+PASS  entry clears walking throttle/jump so there is no stuck acceleration 
+PASS  OS key repeat cannot re-activate walking keys after the mode reset 
+PASS  pedestrian visual hides while the vehicle camera takes over 
+PASS  real mounted vehicle advances through Rapier; pedestrian body stays non-interfering 
+PASS  player-following world systems receive the interpolated vehicle location 
+PASS  actual wheel meshes roll with travel 
+PASS  front wheel steer meshes respond while rear axle stays straight 
+PASS  browser focus loss releases throttle, steering, handbrake and E queue 
+PASS  vehicle camera has a finite real pose 
+PASS  handbrake stops the mounted vehicle before exit 
+PASS  E exits, restores the pedestrian body, visual and walking camera 
+PASS  exit preserves the parked car pose 
+PASS  exit lands on real valid ground instead of chassis or a building 
+PASS  walking resumes through the original controller after exit 
+ALL PASS
+$ bun run ./scripts/verify-vehicle-variety.ts
+PASS  exactly three unique definitions with meaningful size, mass and handling differences
+PASS  VEXTRIDE Street Coupe: original finite model, four wheels, correct overall proportions
+PASS  VEXTRIDE City Sedan: original finite model, four wheels, correct overall proportions
+PASS  VEXTRIDE Utility Pickup: original finite model, four wheels, correct overall proportions
+PASS  all three spawns are clear, independent, on actual paving, and outside lanes/sidewalks/entrances
+PASS  street-coupe: acceleration, speed cap, ground stability, passive/active braking
+PASS  street-coupe: reverse, steering direction, actual wheel travel and parking sleep
+PASS  city-sedan: acceleration, speed cap, ground stability, passive/active braking
+PASS  city-sedan: reverse, steering direction, actual wheel travel and parking sleep
+PASS  utility-pickup: acceleration, speed cap, ground stability, passive/active braking
+PASS  utility-pickup: reverse, steering direction, actual wheel travel and parking sleep
+PASS  measured acceleration and turning radius identify coupe/sedan/pickup, not just colors
+PASS  pickup cargo bed is visually and physically open above its recessed floor
+PASS  street-coupe: solid actual garage collision and all 40 existing road segments
+PASS  street-coupe: substantial container remains collidable
+PASS  street-coupe: grounded traversal of garage-bay curb cut
+PASS  street-coupe: grounded traversal of showroom curb cut
+PASS  street-coupe: grounded traversal of north-parking curb cut
+PASS  street-coupe: grounded traversal of south-parking curb cut
+PASS  city-sedan: solid actual garage collision and all 40 existing road segments
+PASS  city-sedan: substantial container remains collidable
+PASS  city-sedan: grounded traversal of garage-bay curb cut
+PASS  city-sedan: grounded traversal of showroom curb cut
+PASS  city-sedan: grounded traversal of north-parking curb cut
+PASS  city-sedan: grounded traversal of south-parking curb cut
+PASS  utility-pickup: solid actual garage collision and all 40 existing road segments
+PASS  utility-pickup: substantial container remains collidable
+PASS  utility-pickup: grounded traversal of garage-bay curb cut
+PASS  utility-pickup: grounded traversal of showroom curb cut
+PASS  utility-pickup: grounded traversal of north-parking curb cut
+PASS  utility-pickup: grounded traversal of south-parking curb cut
+PASS  industrial pickup can drive straight from its actual apron over the existing curb onto the west road
+PASS  a sleeping parked sedan remains dynamically collidable and wakes on impact
+PASS  nearest valid E interaction, dimension-aware safe exits and sequential vehicle switching retain other poses
+ALL PASS (34 vehicle-variety groups)
+$ bun run ./scripts/verify-vehicle-fleet.tsx
+PASS  three actual vehicle bodies coexist with the original pedestrian 
+PASS  all parked bodies sleep after settling 
+PASS  three distinct models each retain four independent wheel groups 
+PASS  paint slots and brake lights are independent while glass remains shared 
+PASS  street-coupe: approaching on foot shows its own E hint 
+PASS  street-coupe: E selects only this vehicle and wakes it 
+PASS  street-coupe: HUD definition and chase target refer to occupied vehicle 
+PASS  street-coupe: only the occupied body accelerates 
+PASS  street-coupe: actual wheel group rolls from resolved travel 
+PASS  street-coupe: braking does not illuminate unoccupied brake lights 
+PASS  street-coupe: exit restores original walking with capsule on valid ground 
+PASS  street-coupe: all prior parked vehicles retain poses and remain visible 
+PASS  walk from street-coupe to next vehicle without a selection menu 
+PASS  city-sedan: approaching on foot shows its own E hint 
+PASS  city-sedan: E selects only this vehicle and wakes it 
+PASS  city-sedan: HUD definition and chase target refer to occupied vehicle 
+PASS  city-sedan: only the occupied body accelerates 
+PASS  city-sedan: actual wheel group rolls from resolved travel 
+PASS  city-sedan: braking does not illuminate unoccupied brake lights 
+PASS  city-sedan: exit restores original walking with capsule on valid ground 
+PASS  city-sedan: all prior parked vehicles retain poses and remain visible 
+PASS  walk from city-sedan to next vehicle without a selection menu 
+PASS  utility-pickup: approaching on foot shows its own E hint 
+PASS  utility-pickup: E selects only this vehicle and wakes it 
+PASS  utility-pickup: HUD definition and chase target refer to occupied vehicle 
+PASS  utility-pickup: only the occupied body accelerates 
+PASS  utility-pickup: actual wheel group rolls from resolved travel 
+PASS  utility-pickup: braking does not illuminate unoccupied brake lights 
+PASS  utility-pickup: exit restores original walking with capsule on valid ground 
+PASS  utility-pickup: all prior parked vehicles retain poses and remain visible 
+PASS  all three unoccupied bodies can return to sleep 
+PASS  camera pose remains finite across every entry/exit hand-over 
+ALL PASS
+$ bun run ./scripts/verify-driving-polish.ts
+PASS  street-coupe: high-speed steering reduces angle and response without hurting parking steering
+PASS  street-coupe: throttle ramp, smooth release, reliable reverse and simultaneous pedals brake
+PASS  street-coupe: handbrake overrides W, releases grip smoothly, settles without spin
+PASS  street-coupe: normal traction removes lateral slip faster than handbrake traction
+PASS  street-coupe: integration at 60 and 120 Hz gives comparable acceleration/braking
+PASS  street-coupe: actual curb-cut braking turns stay grounded, upright and collidable
+PASS  street-coupe: support and all chassis shapes validated against real city at spawn
+PASS  street-coupe: sustained overturn + one-second hold restores last safe pose only
+PASS  city-sedan: high-speed steering reduces angle and response without hurting parking steering
+PASS  city-sedan: throttle ramp, smooth release, reliable reverse and simultaneous pedals brake
+PASS  city-sedan: handbrake overrides W, releases grip smoothly, settles without spin
+PASS  city-sedan: normal traction removes lateral slip faster than handbrake traction
+PASS  city-sedan: integration at 60 and 120 Hz gives comparable acceleration/braking
+PASS  city-sedan: actual curb-cut braking turns stay grounded, upright and collidable
+PASS  city-sedan: support and all chassis shapes validated against real city at spawn
+PASS  city-sedan: sustained overturn + one-second hold restores last safe pose only
+PASS  utility-pickup: high-speed steering reduces angle and response without hurting parking steering
+PASS  utility-pickup: throttle ramp, smooth release, reliable reverse and simultaneous pedals brake
+PASS  utility-pickup: handbrake overrides W, releases grip smoothly, settles without spin
+PASS  utility-pickup: normal traction removes lateral slip faster than handbrake traction
+PASS  utility-pickup: integration at 60 and 120 Hz gives comparable acceleration/braking
+PASS  utility-pickup: actual curb-cut braking turns stay grounded, upright and collidable
+PASS  utility-pickup: support and all chassis shapes validated against real city at spawn
+PASS  utility-pickup: sustained overturn + one-second hold restores last safe pose only
+PASS  normal driving, parking, handbrake, or walking cannot use R as teleport
+PASS  airborne falling is not classified as stationary stuck or settled overturned
+PASS  real wall blockage gives a short throttle-release window; moving away cancels it
+PASS  other vehicle blocks checkpoint; safe original spawn is validated as fallback
+PASS  blocked checkpoint and spawn fail safely without moving vehicle or resetting active ID
+PASS  release of R cancels partial recovery hold and requires another full second
+PASS  brake/reverse signals use motion and pedal direction, including W braking reverse
+ALL PASS (31 driving polish groups)
+$ bun run ./scripts/verify-vehicle-endurance.ts
+INFO street-coupe: 108000 mixed steps, peak 21.99 m/s, peak Y 0.529, body/collider counts 3/23
+PASS  street-coupe: 30 simulated minutes of mixed driving remain finite, grounded and bounded
+PASS  street-coupe: identical fixed-step replay at synthetic 15/30/60/144 rendering FPS
+PASS  street-coupe: repeated pedal/direction changes never latch brake or reverse lamps
+INFO city-sedan: 108000 mixed steps, peak 17.99 m/s, peak Y 0.579, body/collider counts 3/23
+PASS  city-sedan: 30 simulated minutes of mixed driving remain finite, grounded and bounded
+PASS  city-sedan: identical fixed-step replay at synthetic 15/30/60/144 rendering FPS
+PASS  city-sedan: repeated pedal/direction changes never latch brake or reverse lamps
+INFO utility-pickup: 108000 mixed steps, peak 14.99 m/s, peak Y 0.679, body/collider counts 3/23
+PASS  utility-pickup: 30 simulated minutes of mixed driving remain finite, grounded and bounded
+PASS  utility-pickup: identical fixed-step replay at synthetic 15/30/60/144 rendering FPS
+PASS  utility-pickup: repeated pedal/direction changes never latch brake or reverse lamps
+PASS  collision-corrected vehicle handoff keeps focus centered; unobstructed orientation unchanged
+PASS  CCD chassis respects representative actual building/furniture shapes
+ALL PASS (11 endurance groups)
+$ bun run ./scripts/verify-vehicle-stability.tsx
+PASS  removing one car does not dispose materials shared by surviving vehicles dispose events 0
+PASS  entry resets held throttle and selects the coupe 
+PASS  pedestrian disabled before active unmount 
+PASS  active-car removal clears driving ownership and held inputs 
+PASS  active-car removal restores pedestrian body 
+PASS  removed body is not retained in registry 
+PASS  cycle 0: validated approach exists 
+PASS  cycle 0: nearest car selected and held steering cleared 
+PASS  cycle 0: E repeat cannot exit 
+PASS  P debug context updates cannot detach an occupied car 
+PASS  cycle 0: focus loss resets throttle and settles 
+PASS  cycle 0: safe exit restores walking and clears steering 
+PASS  cycle 1: validated approach exists 
+PASS  cycle 1: nearest car selected and held steering cleared 
+PASS  cycle 1: E repeat cannot exit 
+PASS  cycle 1: focus loss resets throttle and settles 
+PASS  cycle 1: safe exit restores walking and clears steering 
+PASS  cycle 2: validated approach exists 
+PASS  cycle 2: nearest car selected and held steering cleared 
+PASS  cycle 2: E repeat cannot exit 
+PASS  cycle 2: focus loss resets throttle and settles 
+PASS  cycle 2: safe exit restores walking and clears steering 
+PASS  cycle 3: validated approach exists 
+PASS  cycle 3: nearest car selected and held steering cleared 
+PASS  cycle 3: E repeat cannot exit 
+PASS  cycle 3: focus loss resets throttle and settles 
+PASS  cycle 3: safe exit restores walking and clears steering 
+PASS  cycle 4: validated approach exists 
+PASS  cycle 4: nearest car selected and held steering cleared 
+PASS  cycle 4: E repeat cannot exit 
+PASS  cycle 4: focus loss resets throttle and settles 
+PASS  cycle 4: safe exit restores walking and clears steering 
+PASS  cycle 5: validated approach exists 
+PASS  cycle 5: nearest car selected and held steering cleared 
+PASS  cycle 5: E repeat cannot exit 
+PASS  cycle 5: focus loss resets throttle and settles 
+PASS  cycle 5: safe exit restores walking and clears steering 
+PASS  cycle 6: validated approach exists 
+PASS  cycle 6: nearest car selected and held steering cleared 
+PASS  cycle 6: E repeat cannot exit 
+PASS  cycle 6: focus loss resets throttle and settles 
+PASS  cycle 6: safe exit restores walking and clears steering 
+PASS  cycle 7: validated approach exists 
+PASS  cycle 7: nearest car selected and held steering cleared 
+PASS  cycle 7: E repeat cannot exit 
+PASS  cycle 7: focus loss resets throttle and settles 
+PASS  cycle 7: safe exit restores walking and clears steering 
+PASS  cycle 8: validated approach exists 
+PASS  cycle 8: nearest car selected and held steering cleared 
+PASS  cycle 8: E repeat cannot exit 
+PASS  cycle 8: focus loss resets throttle and settles 
+PASS  cycle 8: safe exit restores walking and clears steering 
+PASS  cycle 9: validated approach exists 
+PASS  cycle 9: nearest car selected and held steering cleared 
+PASS  cycle 9: E repeat cannot exit 
+PASS  cycle 9: focus loss resets throttle and settles 
+PASS  cycle 9: safe exit restores walking and clears steering 
+PASS  cycle 10: validated approach exists 
+PASS  cycle 10: nearest car selected and held steering cleared 
+PASS  cycle 10: E repeat cannot exit 
+PASS  cycle 10: focus loss resets throttle and settles 
+PASS  cycle 10: safe exit restores walking and clears steering 
+PASS  cycle 11: validated approach exists 
+PASS  cycle 11: nearest car selected and held steering cleared 
+PASS  cycle 11: E repeat cannot exit 
+PASS  cycle 11: focus loss resets throttle and settles 
+PASS  cycle 11: safe exit restores walking and clears steering 
+PASS  remount 0: all vehicle references removed 
+PASS  remount 0: geometry released and body/collider/callback counts stable geometry disposals 24/24; material disposals 12/15
+PASS  remount 1: all vehicle references removed 
+PASS  remount 1: geometry released and body/collider/callback counts stable geometry disposals 24/24; material disposals 12/15
+PASS  remount 2: all vehicle references removed 
+PASS  remount 2: geometry released and body/collider/callback counts stable geometry disposals 24/24; material disposals 12/15
+PASS  remount 3: all vehicle references removed 
+PASS  remount 3: geometry released and body/collider/callback counts stable geometry disposals 24/24; material disposals 12/15
+PASS  camera remains finite after repeated switches/remounts 
+PASS  full unmount releases shared material once and removes all window listeners 
+ALL PASS
+$ bun run ./scripts/verify-npcs.ts
+PASS  exactly Marcus/Mechanic and Maya/Dispatcher have unique IDs and three grounded dialogue lines
+PASS  marcus: actual city support, shape clearance, public access and no road/driveway/spawn obstruction
+PASS  marcus: actual player capsule stops at the fixed NPC instead of walking through
+PASS  marcus: five finite merged parts form a grounded humanoid with separate idle pivots
+PASS  marcus: bounded time-based idle is stable through a full simulated hour at 30/60/144 FPS
+PASS  marcus: range, elevation and actual solid-wall occlusion prevent remote E
+PASS  marcus: E opens once, stops horizontal motion, advances then closes and resets inputs
+PASS  maya: actual city support, shape clearance, public access and no road/driveway/spawn obstruction
+PASS  maya: actual player capsule stops at the fixed NPC instead of walking through
+PASS  maya: five finite merged parts form a grounded humanoid with separate idle pivots
+PASS  maya: bounded time-based idle is stable through a full simulated hour at 30/60/144 FPS
+PASS  maya: range, elevation and actual solid-wall occlusion prevent remote E
+PASS  maya: E opens once, stops horizontal motion, advances then closes and resets inputs
+PASS  NPC/car deterministic ties favor car; nearer NPC consumes E exclusively
+PASS  equal-distance NPCs use stable IDs even when registry insertion order changes
+PASS  creator prevents dialogue and normal coordinator does not steal its E queue
+ALL PASS (16 NPC groups)
+$ bun run ./scripts/verify-npc-integration.tsx
+PASS  exactly two NPC bodies and five meshes each mounted 
+PASS  marcus: named role hint from shared E coordinator 
+PASS  marcus: one E opens only dialogue and clears held movement 
+PASS  marcus: dialogue blocks fresh movement and jump, including controller inertia 
+PASS  marcus: repeated E cannot advance or enter a car 
+PASS  marcus: Escape closes and releases controls 
+PASS  marcus: closing requires a fresh movement press 
+PASS  marcus: original walking resumes 
+PASS  marcus: Character Creator takes priority and closes dialogue 
+PASS  maya: named role hint from shared E coordinator 
+PASS  maya: one E opens only dialogue and clears held movement 
+PASS  maya: dialogue blocks fresh movement and jump, including controller inertia 
+PASS  maya: repeated E cannot advance or enter a car 
+PASS  maya: Escape closes and releases controls 
+PASS  maya: closing requires a fresh movement press 
+PASS  maya: original walking resumes 
+PASS  maya: Character Creator takes priority and closes dialogue 
+PASS  remount 0: dialogue closes, registry clears, assets dispose exactly once 
+PASS  remount 0: bodies, colliders, callbacks and listeners plateau 
+PASS  remount 1: dialogue closes, registry clears, assets dispose exactly once 
+PASS  remount 1: bodies, colliders, callbacks and listeners plateau 
+PASS  remount 2: dialogue closes, registry clears, assets dispose exactly once 
+PASS  remount 2: bodies, colliders, callbacks and listeners plateau 
+PASS  remount 3: dialogue closes, registry clears, assets dispose exactly once 
+PASS  remount 3: bodies, colliders, callbacks and listeners plateau 
+PASS  walking away from NPCs still enters the real coupe 
+PASS  dialogue cannot open while driving 
+PASS  vehicle exit still restores walking 
+PASS  camera stays finite without a dialogue camera replacement 
+PASS  final unmount leaves no NPC references/dialogue/listeners 
+ALL PASS
+$ bun run ./scripts/verify-ambient.ts
+PASS  fixed population: exactly two traffic cars and three noninteractive walkers with unique separate IDs
+PASS  ambient-coupe: graph-connected legal directed loop, continuous heading and full swept chassis clearance
+INFO ambient-coupe: 2 loops, max 8.00 m/s, max heading step 0.0112
+PASS  ambient-coupe: three minutes of actual-city loops, smooth speed caps, orientation, wheel movement and constant resources
+PASS  ambient-coupe: stationary obstruction yields with following gap and resumes when removed
+PASS  ambient-coupe: player's dynamic car ahead is never overlapped or actively pushed
+PASS  ambient-sedan: graph-connected legal directed loop, continuous heading and full swept chassis clearance
+INFO ambient-sedan: 2 loops, max 7.00 m/s, max heading step 0.0112
+PASS  ambient-sedan: three minutes of actual-city loops, smooth speed caps, orientation, wheel movement and constant resources
+PASS  ambient-sedan: stationary obstruction yields with following gap and resumes when removed
+PASS  ambient-sedan: player's dynamic car ahead is never overlapped or actively pushed
+PASS  ambient-plaza: entire waypoint corridor is supported pavement, clear of props/named NPCs, outside roads
+PASS  ambient-plaza: two minutes of walking, endpoint pauses, smooth turns and bounded gait
+PASS  ambient-plaza: local capsule sweep stops before player-sized obstacle and resumes
+PASS  ambient-downtown: entire waypoint corridor is supported pavement, clear of props/named NPCs, outside roads
+PASS  ambient-downtown: two minutes of walking, endpoint pauses, smooth turns and bounded gait
+PASS  ambient-downtown: local capsule sweep stops before player-sized obstacle and resumes
+PASS  ambient-residential: entire waypoint corridor is supported pavement, clear of props/named NPCs, outside roads
+PASS  ambient-residential: two minutes of walking, endpoint pauses, smooth turns and bounded gait
+PASS  ambient-residential: local capsule sweep stops before player-sized obstacle and resumes
+PASS  synthetic 15/30/60/144 FPS schedules produce the same fixed-step ambient state
+ALL PASS (19 ambient groups)
+$ bun run ./scripts/verify-ambient-integration.tsx
+PASS  exact five ambient bodies are kinematic and never enter playable/NPC registries 
+PASS  both real traffic cars move and roll wheels 
+PASS  three pedestrian rigs animate and stay grounded 
+PASS  marcus: unchanged named dialogue works with moving ambient agents 
+PASS  maya: unchanged named dialogue works with moving ambient agents 
+PASS  ambient traffic cannot be entered and never enables vehicle HUD/dialogue 
+PASS  original playable coupe and chase camera retain ownership 
+PASS  normal player vehicle exit still works 
+PASS  P context rerender cannot reset traffic to its spawn 
+PASS  remount 0: all ambient references clear and geometry releases geometry events 144/144; unique materials 39
+PASS  remount 0: bodies/colliders/callbacks/listeners plateau 
+PASS  remount 1: all ambient references clear and geometry releases geometry events 144/144; unique materials 39
+PASS  remount 1: bodies/colliders/callbacks/listeners plateau 
+PASS  remount 2: all ambient references clear and geometry releases geometry events 144/144; unique materials 39
+PASS  remount 2: bodies/colliders/callbacks/listeners plateau 
+PASS  camera remains finite and only player cameras are mounted 
+PASS  full teardown clears ambient references and window listeners 
+ALL PASS
+$ bun run ./scripts/verify-missions.ts
+PASS  exactly two definitions, First Contact retains two unique valid talk objectives, actual NPC metadata targets
+PASS  acceptance is required; wrong giver and premature objective acknowledgements are ignored
+PASS  explicit ordered acknowledgements progress Marcus -> Maya -> completed only once
+PASS  duplicate, nonfinite and stale dialogue sessions cannot skip objectives
+PASS  HUD/waypoint select real Marcus then Maya and disappear after completion
+PASS  compass and distance are explicitly straight-line and work independently of travel mode
+PASS  real Maya E conversation alone, normal Continue/Close and decline never start a mission
+PASS  explicit accept through actual Maya interaction activates once and resets held inputs
+PASS  correct Marcus conversation does not progress until acknowledged; early close is safe
+PASS  Maya cannot finish early; final acknowledgement completes once with no restart
+PASS  wrong NPC, missing body, stale session and remote dialogue cannot accept or acknowledge
+PASS  all three driving modes and creator state refuse conversation progression without corrupting mission
+PASS  ordinary NPC lines and dialogue progression remain intact after mission completion
+ALL PASS (13 mission groups)
+$ bun run ./scripts/verify-mission-integration.tsx
+PASS  mounted new session starts with zero SC and empty history 
+PASS  walking E opens garage and clears held movement without NPC dialogue 
+PASS  open garage blocks walking and duplicate E without camera replacement 
+PASS  shared Escape closes garage and restores cleared input 
+PASS  creator takes precedence and closes the garage 
+PASS  marcus: shared E opens original on-foot dialogue 
+PASS  Marcus cannot accept before Maya; ordinary lines remain 
+PASS  maya: shared E opens original on-foot dialogue 
+PASS  opening Maya dialogue never grants Street Cash 
+PASS  talking to Maya does not automatically accept 
+PASS  declining restores walking and leaves mission available 
+PASS  maya: shared E opens original on-foot dialogue 
+PASS  acceptance activates Marcus objective and clears dialogue input 
+PASS  first HUD waypoint references actual Marcus definition 
+PASS  creator open leaves mission coherent 
+PASS  marcus: shared E opens original on-foot dialogue 
+PASS  NPC unmount closes dialogue and invalidates stale mission acknowledgement 
+PASS  NPC remount preserves active objective with fresh registry bodies 
+PASS  street-coupe: mission travel uses original vehicle ownership 
+PASS  street-coupe: driving cannot acknowledge a dialogue objective 
+PASS  street-coupe: E exits only, never progresses mission 
+PASS  city-sedan: mission travel uses original vehicle ownership 
+PASS  city-sedan: driving cannot acknowledge a dialogue objective 
+PASS  city-sedan: E exits only, never progresses mission 
+PASS  utility-pickup: mission travel uses original vehicle ownership 
+PASS  utility-pickup: driving cannot acknowledge a dialogue objective 
+PASS  utility-pickup: E exits only, never progresses mission 
+PASS  marcus: shared E opens original on-foot dialogue 
+PASS  repeated E cannot acknowledge Marcus 
+PASS  focus loss cannot progress mission 
+PASS  early Escape retains Marcus objective 
+PASS  marcus: shared E opens original on-foot dialogue 
+PASS  explicit Marcus acknowledgement updates objective and waypoint once 
+PASS  maya: shared E opens original on-foot dialogue 
+PASS  return conversation alone does not complete 
+PASS  final acknowledgement completes with confirmation and no stale waypoint 
+PASS  First Contact completion credits exactly 150 SC 
+PASS  maya: shared E opens original on-foot dialogue 
+PASS  completed mission cannot restart; Maya normal dialogue retained 
+PASS  marcus: shared E opens original on-foot dialogue 
+PASS  second mission decline leaves First Contact completed 
+PASS  marcus: shared E opens original on-foot dialogue 
+PASS  Marcus acceptance unlocks the first driving gate only 
+PASS  marcus: shared E opens original on-foot dialogue 
+PASS  early Marcus report cannot skip checkpoints 
+PASS  street-coupe: checkpoint travel enters only the selected player vehicle 
+PASS  street-coupe: actual post-physics movement advances its ordered gate 
+PASS  street-coupe: safe exit and vehicle switching preserve checkpoint progress 
+PASS  city-sedan: checkpoint travel enters only the selected player vehicle 
+PASS  city-sedan: actual post-physics movement advances its ordered gate 
+PASS  city-sedan: safe exit and vehicle switching preserve checkpoint progress 
+PASS  utility-pickup: checkpoint travel enters only the selected player vehicle 
+PASS  utility-pickup: actual post-physics movement advances its ordered gate 
+PASS  utility-pickup: safe exit and vehicle switching preserve checkpoint progress 
+PASS  all driving checkpoints still leave balance at First Contact reward 
+PASS  third gate selects actual Marcus return target 
+PASS  marcus: shared E opens original on-foot dialogue 
+PASS  final on-foot acknowledgement completes second mission exactly once 
+PASS  Shakedown report credits 300 SC for a 450 SC total 
+PASS  NPC remount cannot duplicate either reward 
+PASS  combined mission history and one observer survive remount 
+PASS  street-coupe: garage approach enters the real car 
+PASS  street-coupe: physical parking and safe exit confirm exclusive bay occupancy 
+PASS  city-sedan: garage approach enters the real car 
+PASS  city-sedan: physical parking and safe exit confirm exclusive bay occupancy 
+PASS  two parked vehicles coexist without duplicate bay or vehicle assignments 
+PASS  garage terminal opens for parked respray after both missions 
+PASS  paid Coupe respray succeeds 
+PASS  125 SC debit and actual mounted body paint update together 
+PASS  respray preserves exact car transform and parking 
+PASS  double confirmation cannot charge the same operation again 
+PASS  paid Sedan respray succeeds independently 
+PASS  Sedan material changes without repainting Coupe or Pickup 
+PASS  driving away clears only the departed bay 
+PASS  other parked car retains its independent transform 
+PASS  recovery revision revokes parked status and cannot reconfirm inside the bay 
+PASS  recovered stationary bay cannot spoof a new drive-in 
+PASS  Pickup also earns real parking eligibility {"position":{"x":120.40013122558594,"y":0.6789305806159973,"z":-144.0012664794922},"velocity":{"x":0,"y":0,"z":0},"ownership":{"driving":false,"activeVehicleId":null,"hint":"E — Enter VEXTRIDE Utility Pickup","recoveryHint":""},"occupancy":{"motor-row-bay-1":"utility-pickup"}}
+PASS  paid Pickup respray succeeds 
+PASS  actual Pickup paint and 75 SC remaining are consistent 
+PASS  insufficient cash rejects with unchanged snapshot and paint 
+PASS  garage actions preserve both completed mission histories 
+PASS  removing fleet releases private paint slots and each body material 
+PASS  fleet remount restores session paints without new transactions 
+PASS  garage remount 0: terminal body, occupancy and all six GPU resources release 
+PASS  garage remount 0: callbacks, bodies, colliders and listeners plateau 
+PASS  garage remount 1: terminal body, occupancy and all six GPU resources release 
+PASS  garage remount 1: callbacks, bodies, colliders and listeners plateau 
+PASS  garage remount 2: terminal body, occupancy and all six GPU resources release 
+PASS  garage remount 2: callbacks, bodies, colliders and listeners plateau 
+PASS  ambient traffic/pedestrians continue through mission with fixed population 
+PASS  mission adds no bodies, colliders, callbacks or input listeners 
+PASS  camera stays finite through walking, driving and dialogues 
+PASS  teardown leaves no dialogue/NPC/ambient references or window listeners 
+PASS  economy survives component teardown without duplicating rewards or losing paint selections 
+PASS  session mission completion survives component teardown without restarting 
+ALL PASS
+$ bun run ./scripts/verify-shakedown.ts
+PASS  exactly two distinct missions; First Contact dialogue and ordered objectives retained
+PASS  locked until First Contact completion, one active mission, explicit expected giver acceptance
+PASS  three unique gates derive from connected existing lanes and legal right turns, north parking access upstream
+PASS  swept gate detects only correct direction, speed, lane alignment and height
+PASS  checkpoint order, duplicate frames and ordinary dialogue cannot skip gates
+PASS  current checkpoint HUD marker changes A/B/C then actual Marcus, preserving completed history
+PASS  street-coupe: real Rapier driving crosses all actual road gates with approved controller and no collider changes
+PASS  city-sedan: real Rapier driving crosses all actual road gates with approved controller and no collider changes
+PASS  utility-pickup: real Rapier driving crosses all actual road gates with approved controller and no collider changes
+PASS  walking, ambient-only motion, creator, revision changes and remount cannot spoof occupied-vehicle gate
+ALL PASS (10 shakedown groups)
+$ bun run ./scripts/verify-garage.ts
+PASS  exterior kiosk is on actual ground, outside solids, Marcus range, driveway and sidewalks
+PASS  two existing north-pad stalls have paved chassis-sized clearance and independent approach corridors
+PASS  full oriented footprint rejects partial, sideways, tilted, airborne and nonfinite placement
+PASS  procedural terminal and merged bay markers are finite, bounded and disposable
+PASS  three-vehicle overview uses actual dimensions, limits and neutral availability labels
+PASS  real Rapier E opens once on foot, resets held input and cannot interact through a wall
+PASS  driving, creator and NPC dialogue take priority; Marcus cannot lose his E target to the kiosk
+PASS  street-coupe: physical drive-in, safe E exit, stable detection and drive-away update real bay status
+PASS  city-sedan: physical drive-in, safe E exit, stable detection and drive-away update real bay status
+PASS  utility-pickup: physical drive-in, safe E exit, stable detection and drive-away update real bay status
+PASS  recovery, stationary spawn/remount and unoccupied/ambient-style entry cannot spoof legitimate parking
+ALL PASS (11 garage groups)
+$ bun run ./scripts/verify-economy.ts
+PASS  new session starts with integer zero SC, empty ledger, factory paints and exactly two rewards
+PASS  completion and reward publish atomically; acceptance, wrong NPC and partial objectives never earn
+PASS  Shakedown earns only after final report; two completed missions produce 450 SC once
+PASS  central integer ledger rejects negative, fractional, nonfinite, overflow, duplicates and insufficient debits without mutation
+PASS  three original factory paints and two distinct additional presets per model
+PASS  street-coupe: genuine Rapier parking permits atomic 125 SC debit and actual isolated material change
+PASS  city-sedan: genuine Rapier parking permits atomic 125 SC debit and actual isolated material change
+PASS  utility-pickup: genuine Rapier parking permits atomic 125 SC debit and actual isolated material change
+PASS  invalid vehicle/ambient/color, unparked, stale UI, driving, creator, dialogue and away-from-terminal reject unchanged
+PASS  confirm rechecks actual movement and recovery before the next 10 Hz parking publication
+PASS  insufficient funds and cancelled/absent operations preserve both paint and ledger
+ALL PASS (11 economy groups)
+$ bun run ./scripts/verify-persistence.ts
+PASS  empty storage initializes once, writes a bounded versioned snapshot after world validation only
+PASS  marcus: mission/objective/reward history hydrates coherently without replaying rewards
+PASS  maya: mission/objective/reward history hydrates coherently without replaying rewards
+PASS  first-done: mission/objective/reward history hydrates coherently without replaying rewards
+PASS  gate-0: mission/objective/reward history hydrates coherently without replaying rewards
+PASS  gate-1: mission/objective/reward history hydrates coherently without replaying rewards
+PASS  gate-2: mission/objective/reward history hydrates coherently without replaying rewards
+PASS  report: mission/objective/reward history hydrates coherently without replaying rewards
+PASS  done: mission/objective/reward history hydrates coherently without replaying rewards
+PASS  both completed missions cannot restart or mint SC after reload; saved operation IDs remain consumed
+PASS  actual Rapier drive-in + paid respray restore pose, legitimate occupancy, balance and actual paint with no charge
+PASS  building/airborne/out-of-bounds positions fall back independently without discarding economy
+PASS  overlapping saved playable vehicles resolve to separate safe existing spawns
+PASS  invalid or conflicting garage claims are discarded, never treated as a new drive-in
+PASS  malformed/future/inconsistent core saves are preserved, blocked from rewards/spending and require explicit reset
+PASS  invalid IDs, amounts, duplicate entries, unlock dependencies and paint/claimed history inconsistencies reject
+PASS  unreadable/quota-limited storage cannot falsely report a durable save or partially reset progress
+PASS  StrictMode-like reconnect is idempotent, subscriptions/listeners release and lifecycle flush is throttled
+PASS  restored active objective accepts fresh dialogue sessions and still rejects wrong NPC and duplicate acknowledgement
+PASS  external-tab save changes pause writes and rewards without clobbering the new stored record
+ALL PASS (20 persistence groups)
+$ bun run ./scripts/verify-wallet.ts
+PASS  Arc Mainnet, verified token address, separate native precision and exact ERC-20 formatting
+PASS  Reader verifies exact chain and address, calls only ERC-20 balanceOf, and accepts real zero
+PASS  HTTP timeout rejects instead of producing a fabricated balance
+PASS  Guest startup causes no wallet calls, and missing, rejected and failed connections are distinct
+PASS  Explicit calls deduplicate prompts, reject Testnet balance reads, and handle switch refusal, unknown chain and unsupported wallets
+PASS  Account changes ignore stale bigint results and RPC errors clear the balance
+PASS  Chain changes invalidate pending reads, provider disconnect and remount remove every session listener
+PASS  Wallet uses only connection, inspection and explicit switch methods, with no economy mutation
+$ bun run ./scripts/verify-transfer.ts
+PASS  Recipient rules and exact six-decimal parsing reject unsafe input without rounding
+PASS  Affordability compares one balance against amount plus gas without double counting
+PASS  Real Viem preflight checks simulation, gas margin, fee floor, wrong RPC chain and insufficient gas
+PASS  Receipt checks require matching hash, chain, sender, contract, outcome and exact Transfer log
+PASS  Disconnected, wrong chain, changed account and cancelled review cannot reach wallet submission
+PASS  Fee increase requires fresh review, double confirm cannot send twice, and rejection never retries
+PASS  Timeout keeps duplicate lock, a late hash tracks across disconnect, and only direct USDC calldata is submitted
+$ bun run ./scripts/verify-transfer-history.ts
+PASS  ARC ERC-20 evidence deduplicates identical log indexes and rejects ambiguity, wrong emitter, block, recipient or amount
+PASS  Exact transaction input, sender, chain and hash reject replacement mismatch; public inspection uses reads only
+PASS  Reload restores valid records, isolates sender and chain and refuses corrupt, contradictory or duplicate records
+PASS  Reconnect only checks its own known hash and never retries a pending send
+PASS  Hashless recovery uses exact mined intent after its block anchor and never reuses a history hash
+PASS  Quota failure blocks wallet handoff and wrong-network reconnect pauses history checks
+$ bun run ./scripts/verify-hardening.tsx
+PASS  One eligibility ray per coordinator step, with immediate obstruction checks and unchanged E entry
+PASS  Three tree remounts reuse leaf materials while mounted and dispose all owned assets once per teardown
+$ bun run ./scripts/verify-road-render.tsx
+PASS  Actual grid shader footprint matches terrain bounds without undersurface overflow, and Rapier ground stays intact

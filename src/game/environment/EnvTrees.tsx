@@ -1,4 +1,4 @@
-import { memo, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Color, CylinderGeometry, ConeGeometry, IcosahedronGeometry, MeshStandardMaterial, Object3D, type InstancedMesh } from 'three'
 import { PAL, pick } from './envPalette'
 import type { TreeInstance } from './envGeometry'
@@ -50,6 +50,16 @@ function EnvTreesImpl({ trees }: { trees: readonly TreeInstance[] }) {
     fillInstances(rounds.current, roundList, PAL.leaf)
     fillInstances(conifers.current, coniferList, PAL.conifer)
   }, [trees, roundList, coniferList])
+
+  // The instanced meshes own their instance buffers. These supplied assets
+  // are shared by the meshes and belong to this component.
+  useEffect(() => () => {
+    assets.trunk.dispose()
+    assets.round.dispose()
+    assets.conifer.dispose()
+    assets.woodMaterial.dispose()
+    assets.leafMaterial.dispose()
+  }, [assets])
 
   return (
     <group name="city-trees">

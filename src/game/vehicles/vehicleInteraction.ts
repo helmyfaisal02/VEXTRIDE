@@ -11,11 +11,22 @@ const IDENTITY = { x: 0, y: 0, z: 0, w: 1 }
 const BRAKE_HINT = 'Brake to stop before exiting'
 
 export function canEnter(physics: Physics, car: RapierRigidBody, player: RapierRigidBody, definition: VehicleDefinition = COUPE): boolean {
-  const p = player.translation(), v = car.translation(), velocity = car.linvel()
-  if (Math.hypot(p.x - v.x, p.z - v.z) > definition.entryRange || Math.abs(p.y - v.y) > 2 || Math.hypot(velocity.x, velocity.z) > definition.exitSpeed) return false
-  const dx = v.x - p.x, dz = v.z - p.z, len = Math.hypot(dx, dz)
-  if (len < 0.01) return true
-  return !physics.world.castRay(new physics.rapier.Ray({ x: p.x, y: p.y + 0.4, z: p.z }, { x: dx / len, y: 0, z: dz / len }), len, true, physics.rapier.QueryFilterFlags.EXCLUDE_SENSORS, undefined, undefined, player, collider => collider.parent()?.handle !== car.handle)
+  const p = player.translation(), v = car.translation()
+  return canEnterAt(physics, car, player, definition, p, v, Math.hypot(v.x - p.x, v.z - p.z))
+}
+
+function canEnterAt(
+  physics: Physics, car: RapierRigidBody, player: RapierRigidBody, definition: VehicleDefinition,
+  p: ReturnType<RapierRigidBody['translation']>, v: ReturnType<RapierRigidBody['translation']>, distance: number,
+): boolean {
+  if (distance > definition.entryRange || Math.abs(p.y - v.y) > 2) return false
+  const velocity = car.linvel()
+  if (Math.hypot(velocity.x, velocity.z) > definition.exitSpeed) return false
+  if (distance < 0.01) return true
+  return !physics.world.castRay(new physics.rapier.Ray(
+    { x: p.x, y: p.y + 0.4, z: p.z },
+    { x: (v.x - p.x) / distance, y: 0, z: (v.z - p.z) / distance },
+  ), distance, true, physics.rapier.QueryFilterFlags.EXCLUDE_SENSORS, undefined, undefined, player, collider => collider.parent()?.handle !== car.handle)
 }
 
 /** Real ground normal, capsule clearance, and an unobstructed path out; no guessed surface Y. */
@@ -48,19 +59,28 @@ export function nearestVehicle(physics: Physics, player: RapierRigidBody) {
   let distance = Infinity
   const p=player.translation()
   for(const entry of vehicleRegistry.values()) {
-    if(!entry.body || !entry.body.isValid() || !canEnter(physics,entry.body,player,entry.definition)) continue
-    const v=entry.body.translation(),d=Math.hypot(p.x-v.x,p.z-v.z)
-    if(d<distance){nearest=entry;distance=d}
+    const car = entry.body
+    if (!car?.isValid()) continue
+    const v = car.translation(), d = Math.hypot(p.x - v.x, p.z - v.z)
+    if (d < distance && canEnterAt(physics, car, player, entry.definition, p, v, d)) {
+      nearest = entry
+      distance = d
+    }
   }
   return nearest
 }
 
 /** One coordinator consumes E once, independently of how many cars are rendered. */
-export function processVehicleInteraction(physics: Physics): void {
+export function processVehicleInteraction(
+  physics: Physics, walkingSelection?: NonNullable<ReturnType<typeof nearestVehicle>> | null,
+): void {
   const player=vehicleRuntime.pedestrian
   if(!player)return
   const store=useVehicleStore.getState()
-  const selected=store.driving && store.activeVehicleId ? vehicleRegistry.get(store.activeVehicleId) : nearestVehicle(physics,player)
+  // The coordinator already checked range, speed and occlusion this step.
+  // Null means it found no eligible car. Standalone callers can omit the result.
+  const selected = store.driving && store.activeVehicleId ? vehicleRegistry.get(store.activeVehicleId)
+    : walkingSelection === undefined ? nearestVehicle(physics, player) : walkingSelection
   const car=selected?.body, definition=selected?.definition
   if(!inputState.interactQueued){
     if(!store.driving)store.setHint(selected ? `E — Enter ${selected.definition.name}` : '')

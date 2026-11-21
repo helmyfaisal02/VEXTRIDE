@@ -1,0 +1,245 @@
+{
+  "reports": [
+    {
+      "name": "long-night",
+      "camera": [
+        0.6522931871789056,
+        6.091828586233439,
+        -130.84426263385538
+      ],
+      "depth": 24,
+      "calls": 127,
+      "triangles": 36096,
+      "geometries": 218,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "long-night-hidden",
+      "camera": [
+        0.99999902769437,
+        6.684820987774178,
+        -133.02388992526315
+      ],
+      "depth": 24,
+      "calls": 126,
+      "triangles": 36094,
+      "geometries": 218,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "long-night-finite",
+      "camera": [
+        0.9999999999966326,
+        6.695730388162267,
+        -133.05201867600576
+      ],
+      "depth": 24,
+      "calls": 127,
+      "triangles": 36096,
+      "geometries": 218,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "long-day",
+      "camera": [
+        1.0000000000000016,
+        6.695948663607313,
+        -133.05258144006552
+      ],
+      "depth": 24,
+      "calls": 173,
+      "triangles": 37730,
+      "geometries": 218,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "long-day-hidden",
+      "camera": [
+        1.0000000000000016,
+        6.695949192045318,
+        -133.05258280249964
+      ],
+      "depth": 24,
+      "calls": 172,
+      "triangles": 37728,
+      "geometries": 218,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "long-day-finite",
+      "camera": [
+        1.0000000000000016,
+        6.695949205581039,
+        -133.05258283739784
+      ],
+      "depth": 24,
+      "calls": 173,
+      "triangles": 37730,
+      "geometries": 218,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "bakery-long",
+      "camera": [
+        -51.5637875502383,
+        5.367573272134689,
+        -74.05705184821453
+      ],
+      "depth": 24,
+      "calls": 132,
+      "triangles": 28682,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "bakery-long-hidden",
+      "camera": [
+        -51.567357388484126,
+        5.367573272136629,
+        -74.05365614842182
+      ],
+      "depth": 24,
+      "calls": 131,
+      "triangles": 28680,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "bakery-long-finite",
+      "camera": [
+        -51.56735741369386,
+        5.367573272136677,
+        -74.05365612444189
+      ],
+      "depth": 24,
+      "calls": 132,
+      "triangles": 28682,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "wide-storefront",
+      "camera": [
+        -36.00001104309029,
+        7.852850272381472,
+        -41.39381510792197
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "wide-storefront-hidden",
+      "camera": [
+        -36.000000000151005,
+        7.8528506312769855,
+        -41.39374056808181
+      ],
+      "depth": 24,
+      "calls": 98,
+      "triangles": 25620,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "wide-storefront-finite",
+      "camera": [
+        -36,
+        7.8528506312818935,
+        -41.39374056706254
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "plaza-zoom",
+      "camera": [
+        -21.268710693308634,
+        8.719655083536983,
+        -43.45906442717313
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "plaza-zoom-hidden",
+      "camera": [
+        -21.178184713656336,
+        8.719655083536983,
+        -43.46729406168698
+      ],
+      "depth": 24,
+      "calls": 98,
+      "triangles": 25620,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "plaza-zoom-finite",
+      "camera": [
+        -21.178183475776045,
+        8.719655083536983,
+        -43.46729417422155
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,430 @@
+{
+  "mode": "after",
+  "scenarios": [
+    {
+      "name": "initial",
+      "render": {
+        "calls": 99,
+        "triangles": 25622,
+        "geometries": 136,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "physicsCallbacks": [
+        13,
+        3
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 1,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 1
+      },
+      "heap": 70013961
+    },
+    {
+      "name": "walk-sprint",
+      "render": {
+        "calls": 99,
+        "triangles": 25622,
+        "geometries": 136,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "physicsCallbacks": [
+        13,
+        3
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 1,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 1
+      },
+      "heap": 70252189
+    },
+    {
+      "name": "night",
+      "render": {
+        "calls": 99,
+        "triangles": 25622,
+        "geometries": 136,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "physicsCallbacks": [
+        13,
+        3
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 1,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 1
+      },
+      "heap": 86143028
+    },
+    {
+      "name": "maya-dialogue",
+      "render": {
+        "calls": 104,
+        "triangles": 25898,
+        "geometries": 136,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "physicsCallbacks": [
+        13,
+        3
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 1,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 1
+      },
+      "heap": 82700345
+    },
+    {
+      "name": "garage",
+      "render": {
+        "calls": 69,
+        "triangles": 20474,
+        "geometries": 158,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "physicsCallbacks": [
+        13,
+        3
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 1,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 1
+      },
+      "heap": 86986572
+    },
+    {
+      "name": "driving",
+      "render": {
+        "calls": 19,
+        "triangles": 10926,
+        "geometries": 158,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "physicsCallbacks": [
+        13,
+        3
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 1,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 4
+      },
+      "heap": 67798592
+    },
+    {
+      "name": "extended-world",
+      "render": {
+        "calls": 64,
+        "triangles": 12552,
+        "geometries": 158,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "physicsCallbacks": [
+        13,
+        3
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 1,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 4,
+        "vextride.world-time.v1": 1
+      },
+      "heap": 66376150
+    },
+    {
+      "name": "unmount-0",
+      "render": null,
+      "scene": [
+        0,
+        0
+      ],
+      "physicsCallbacks": null,
+      "frames": 0,
+      "bodies": 0,
+      "colliders": 0,
+      "listeners": [
+        18,
+        1
+      ],
+      "contextLost": 0,
+      "roots": 0,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 4,
+        "vextride.world-time.v1": 2
+      },
+      "heap": 69174989,
+      "treeDisposals": {
+        "geometry": 3,
+        "material": 2
+      },
+      "retainedContextLostListeners": 1
+    },
+    {
+      "name": "remount-0",
+      "render": {
+        "calls": 99,
+        "triangles": 25622,
+        "geometries": 197,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "physicsCallbacks": [
+        13,
+        3
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 1,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 4,
+        "vextride.world-time.v1": 2
+      },
+      "heap": 74277797
+    },
+    {
+      "name": "unmount-1",
+      "render": null,
+      "scene": [
+        0,
+        0
+      ],
+      "physicsCallbacks": null,
+      "frames": 0,
+      "bodies": 0,
+      "colliders": 0,
+      "listeners": [
+        18,
+        1
+      ],
+      "contextLost": 0,
+      "roots": 0,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 4,
+        "vextride.world-time.v1": 3
+      },
+      "heap": 82212898,
+      "treeDisposals": {
+        "geometry": 3,
+        "material": 2
+      },
+      "retainedContextLostListeners": 1
+    },
+    {
+      "name": "remount-1",
+      "render": {
+        "calls": 99,
+        "triangles": 25622,
+        "geometries": 197,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "physicsCallbacks": [
+        13,
+        3
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 1,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 4,
+        "vextride.world-time.v1": 3
+      },
+      "heap": 91621402
+    },
+    {
+      "name": "extended-active",
+      "render": {
+        "calls": 106,
+        "triangles": 27392,
+        "geometries": 275,
+        "textures": 2
+      },
+      "scene": [
+        275,
+        112
+      ],
+      "physicsCallbacks": [
+        13,
+        3
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 1,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 2,
+        "vextride.guest.progress.v1": 4,
+        "vextride.world-time.v1": 6
+      },
+      "heap": 67007224
+    },
+    {
+      "name": "restored-webgl",
+      "render": {
+        "calls": 106,
+        "triangles": 27392,
+        "geometries": 142,
+        "textures": 2
+      },
+      "scene": [
+        275,
+        112
+      ],
+      "physicsCallbacks": [
+        13,
+        3
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 2,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 2,
+        "vextride.guest.progress.v1": 4,
+        "vextride.world-time.v1": 7
+      },
+      "heap": 71327126
+    }
+  ],
+  "errors": [],
+  "production": {
+    "creatorMs": 20747,
+    "readyMs": 23336,
+    "walletMs": 1060,
+    "initialJs": [
+      "/assets/index-DQpj8pLw.js",
+      "/assets/rapier-DVCvfZ9g.js",
+      "/assets/three-CQosuols.js"
+    ],
+    "walletRequest": "/assets/ArcWalletContent-CDC9DZuh.js",
+    "walletListeners": 0
+  },
+  "walletChunkFailure": {
+    "worldFailed": false,
+    "isolated": true,
+    "expectedFailureErrors": []
+  },
+  "idleTaskMs": 1032.543,
+  "extendedActionMs": 55940,
+  "webglContextRecovery": true
+}

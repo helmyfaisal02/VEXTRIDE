@@ -7,7 +7,16 @@ import { useVehicleStore } from '../vehicles/vehicleState'
 import { useGarageStore } from '../garage/garageState'
 import { useDialogueStore } from '../interactions/dialogueState'
 
-const ArcWalletContent = lazy(() => import('./ArcWalletContent'))
+function WalletLoadFailure() {
+  return (
+    <p role="status" className="mt-4 text-sm text-amber-100">
+      Wallet panel could not load. Reload the page to try the wallet again.
+    </p>
+  )
+}
+
+// A failed optional chunk must leave the world and dialog controls available.
+const ArcWalletContent = lazy(() => import('./ArcWalletContent').catch(() => ({ default: WalletLoadFailure })))
 
 export interface WalletPanelControls {
   canClose: () => boolean

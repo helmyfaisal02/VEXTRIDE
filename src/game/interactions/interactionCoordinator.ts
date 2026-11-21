@@ -50,6 +50,6 @@ export function processInteraction(physics:Physics){
   vehicle.setHint('');dialogue.setHint(`E — Talk to ${target.npc.definition.name} · ${target.npc.definition.role}`)
   if(inputState.interactQueued){inputState.interactQueued=false;dialogue.open(target.npc.definition)}
  }else{
-  garage.setHint('');dialogue.setHint('');processVehicleInteraction(physics)
+  garage.setHint('');dialogue.setHint('');processVehicleInteraction(physics,target?.kind==='vehicle'?target.car:null)
  }
 }

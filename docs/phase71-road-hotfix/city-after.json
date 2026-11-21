@@ -1,0 +1,496 @@
+{
+  "reports": [
+    {
+      "name": "long-night",
+      "camera": [
+        0.9858267039711205,
+        6.473367345492405,
+        -132.45218948992894
+      ],
+      "depth": 24,
+      "calls": 127,
+      "triangles": 36096,
+      "geometries": 166,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "long-day",
+      "camera": [
+        0.9999999999317892,
+        6.695389036397668,
+        -133.05113859291095
+      ],
+      "depth": 24,
+      "calls": 127,
+      "triangles": 36096,
+      "geometries": 166,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "bakery-long",
+      "camera": [
+        -51.56457530480723,
+        5.367571583535304,
+        -74.05630068626047
+      ],
+      "depth": 24,
+      "calls": 132,
+      "triangles": 28682,
+      "geometries": 187,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "storefront-close-night",
+      "camera": [
+        -39.00001367419106,
+        3.4272497610691888,
+        -67.200729895413
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 187,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "storefront-close-day",
+      "camera": [
+        -39.00000000000031,
+        3.4272515387145717,
+        -67.20063417603797
+      ],
+      "depth": 24,
+      "calls": 99,
+      "triangles": 25622,
+      "geometries": 187,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "plaza-night",
+      "camera": [
+        -11.07782899327168,
+        4.587443161603868,
+        -8.994670592954371
+      ],
+      "depth": 24,
+      "calls": 104,
+      "triangles": 25898,
+      "geometries": 187,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "intersection-day",
+      "camera": [
+        -6.258821051252918,
+        6.303041468537227,
+        -66.46705493304484
+      ],
+      "depth": 24,
+      "calls": 53,
+      "triangles": 23988,
+      "geometries": 187,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "residential-day",
+      "camera": [
+        -77.21636273129593,
+        3.2337217786260326,
+        -117.99942568376353
+      ],
+      "depth": 24,
+      "calls": 109,
+      "triangles": 23948,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "residential-night",
+      "camera": [
+        -73.70959795625636,
+        5.130266980658052,
+        -117.99999999999848
+      ],
+      "depth": 24,
+      "calls": 102,
+      "triangles": 23660,
+      "geometries": 239,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "garage-bay-day",
+      "camera": [
+        102.19948565317027,
+        3.835299082805866,
+        -72.85545836316695
+      ],
+      "depth": 24,
+      "calls": 74,
+      "triangles": 20774,
+      "geometries": 246,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "garage-bay-night",
+      "camera": [
+        104.47831784451549,
+        4.285991455357356,
+        -70.18996569909709
+      ],
+      "depth": 24,
+      "calls": 74,
+      "triangles": 20774,
+      "geometries": 246,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "showroom-day",
+      "camera": [
+        129.99992325051406,
+        3.835299082805866,
+        -72.85535207342292
+      ],
+      "depth": 24,
+      "calls": 67,
+      "triangles": 20366,
+      "geometries": 246,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "showroom-night",
+      "camera": [
+        132.13755748258177,
+        4.122100040826354,
+        -70.76517536432596
+      ],
+      "depth": 24,
+      "calls": 69,
+      "triangles": 20474,
+      "geometries": 246,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "north-parking-day",
+      "camera": [
+        114.00004417236116,
+        3.835299082805866,
+        -164.64443120593018
+      ],
+      "depth": 24,
+      "calls": 122,
+      "triangles": 32910,
+      "geometries": 251,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "north-parking-night",
+      "camera": [
+        116.27015489858064,
+        4.276483750987918,
+        -167.27666511274975
+      ],
+      "depth": 24,
+      "calls": 162,
+      "triangles": 37980,
+      "geometries": 251,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "south-parking-day",
+      "camera": [
+        123.99997239227427,
+        3.835299082805866,
+        4.644217246055849
+      ],
+      "depth": 24,
+      "calls": 85,
+      "triangles": 25970,
+      "geometries": 251,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "south-parking-night",
+      "camera": [
+        126.27015489857901,
+        4.276483750987918,
+        7.276665112744893
+      ],
+      "depth": 24,
+      "calls": 78,
+      "triangles": 27652,
+      "geometries": 251,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "garage-parking",
+      "camera": [
+        120.00000993666124,
+        6.529587301927292,
+        -129.36071703372548
+      ],
+      "depth": 24,
+      "calls": 60,
+      "triangles": 14512,
+      "geometries": 251,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "outside-demo-yard",
+      "camera": [
+        258.0007786726002,
+        1.6005204897040106,
+        -21.79514686675419
+      ],
+      "depth": 24,
+      "calls": 25,
+      "triangles": 10672,
+      "geometries": 269,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "moving-coupe-night",
+      "camera": [
+        3.0001393084647745,
+        3.7813595263722117,
+        -97.89880074481167
+      ],
+      "depth": 24,
+      "calls": 82,
+      "triangles": 28496,
+      "geometries": 269,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    },
+    {
+      "name": "walking-downtown-after-exit",
+      "camera": [
+        4.605256335971388,
+        4.093761186215322,
+        -59.68862346557907
+      ],
+      "depth": 24,
+      "calls": 123,
+      "triangles": 29320,
+      "geometries": 269,
+      "roadTriangles": 898,
+      "markingTriangles": 2784,
+      "gridExpanded": false,
+      "bodies": 47,
+      "colliders": 565,
+      "frames": 22,
+      "grid": true,
+      "ground": true,
+      "lights": 3
+    }
+  ],
+  "diagnostics": [
+    {
+      "name": "main road at 02:27",
+      "roi": [
+        470,
+        375,
+        805,
+        735
+      ],
+      "depth": 24,
+      "currentAgainstHidden": 0,
+      "expandedAgainstHidden": 2920
+    },
+    {
+      "name": "same main road in daylight",
+      "roi": [
+        470,
+        375,
+        805,
+        735
+      ],
+      "depth": 24,
+      "currentAgainstHidden": 0,
+      "expandedAgainstHidden": 3227
+    },
+    {
+      "name": "night street by retail façades",
+      "roi": [
+        360,
+        435,
+        910,
+        710
+      ],
+      "depth": 24,
+      "currentAgainstHidden": 0,
+      "expandedAgainstHidden": 6747
+    },
+    {
+      "name": "terrain outside the city",
+      "roi": [
+        470,
+        460,
+        805,
+        735
+      ],
+      "depth": 24,
+      "currentAgainstHidden": 787,
+      "expandedAgainstHidden": 0
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,17 @@
+64 |     const vertex = new THREE.Vector3(positions.getX(i), positions.getZ(i), positions.getY(i))
+65 |     result.expandByPoint(vertex.multiplyScalar(expansion).applyMatrix4(grid.matrixWorld))
+66 |   }
+67 |   const terrain = new THREE.Box3().setFromObject(ground)
+68 |   for (const axis of ['x', 'z'] as const) {
+69 |     assert.ok(Math.abs(result.min[axis] - terrain.min[axis]) < 1e-6, `Grid extends past terrain on ${axis} minimum`)
+                ^
+AssertionError: Grid extends past terrain on x minimum
+ generatedMessage: false,
+     actual: false,
+   expected: true,
+   operator: "==",
+       code: "ERR_ASSERTION"
+
+      at /home/deseti213/projects/vextride/[eval]:69:12
+
+Bun v1.3.14 (Linux x64)

@@ -1,0 +1,309 @@
+{
+  "mode": "before-dev",
+  "scenarios": [
+    {
+      "name": "initial",
+      "render": {
+        "calls": 99,
+        "triangles": 25622,
+        "geometries": 198,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 2,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 1
+      },
+      "heap": 69992249
+    },
+    {
+      "name": "walk-sprint",
+      "render": {
+        "calls": 99,
+        "triangles": 25622,
+        "geometries": 198,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 2,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 1
+      },
+      "heap": 67054453
+    },
+    {
+      "name": "night",
+      "render": {
+        "calls": 99,
+        "triangles": 25622,
+        "geometries": 198,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 2,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 1
+      },
+      "heap": 84021834
+    },
+    {
+      "name": "maya-dialogue",
+      "render": {
+        "calls": 104,
+        "triangles": 25898,
+        "geometries": 198,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 2,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 1
+      },
+      "heap": 81032999
+    },
+    {
+      "name": "garage",
+      "render": {
+        "calls": 69,
+        "triangles": 20474,
+        "geometries": 220,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 2,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 1
+      },
+      "heap": 73072491
+    },
+    {
+      "name": "driving",
+      "render": {
+        "calls": 19,
+        "triangles": 10926,
+        "geometries": 220,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 2,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 3
+      },
+      "heap": 80217464
+    },
+    {
+      "name": "extended-world",
+      "render": {
+        "calls": 64,
+        "triangles": 12552,
+        "geometries": 220,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 2,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 3,
+        "vextride.world-time.v1": 1
+      },
+      "heap": 66642598
+    },
+    {
+      "name": "unmount-0",
+      "render": null,
+      "scene": [
+        0,
+        0
+      ],
+      "frames": 0,
+      "bodies": 0,
+      "colliders": 0,
+      "listeners": [
+        18,
+        1
+      ],
+      "contextLost": 0,
+      "roots": 0,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 3,
+        "vextride.world-time.v1": 2
+      },
+      "heap": 69467517,
+      "treeDisposals": {
+        "geometry": 0,
+        "material": 0
+      },
+      "retainedContextLostListeners": 2
+    },
+    {
+      "name": "remount-0",
+      "render": {
+        "calls": 99,
+        "triangles": 25622,
+        "geometries": 197,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 2,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 3,
+        "vextride.world-time.v1": 2
+      },
+      "heap": 65422337
+    },
+    {
+      "name": "unmount-1",
+      "render": null,
+      "scene": [
+        0,
+        0
+      ],
+      "frames": 0,
+      "bodies": 0,
+      "colliders": 0,
+      "listeners": [
+        18,
+        1
+      ],
+      "contextLost": 0,
+      "roots": 0,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 3,
+        "vextride.world-time.v1": 3
+      },
+      "heap": 67868882,
+      "treeDisposals": {
+        "geometry": 0,
+        "material": 0
+      },
+      "retainedContextLostListeners": 2
+    },
+    {
+      "name": "remount-1",
+      "render": {
+        "calls": 99,
+        "triangles": 25622,
+        "geometries": 197,
+        "textures": 2
+      },
+      "scene": [
+        269,
+        110
+      ],
+      "frames": 22,
+      "bodies": 47,
+      "colliders": 565,
+      "listeners": [
+        29,
+        4
+      ],
+      "contextLost": 2,
+      "roots": 1,
+      "writes": {
+        "vextride:guest:character": 1,
+        "vextride.guest.progress.v1": 3,
+        "vextride.world-time.v1": 3
+      },
+      "heap": 94586082
+    }
+  ],
+  "errors": [],
+  "idleTaskMs": 1036.987
+}
