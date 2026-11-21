@@ -10,7 +10,13 @@ import type { EconomySnapshot } from './economyState'
 import { transact,type EconomyResult } from './economyTransactions'
 export interface ResprayRequest{operationId:string;vehicleId:string;paintId:string}
 let operationSequence=0
-export const newResprayOperationId=()=>`respray:${++operationSequence}`
+const restoredOperations=new Set<string>()
+export function restoreRespraySequence(ids:readonly string[]){restoredOperations.clear();for(const id of ids)if(/^respray:[1-9]\d*$/.test(id))restoredOperations.add(id)}
+export function newResprayOperationId(){
+ let id:string
+ do{if(!Number.isSafeInteger(operationSequence+1))operationSequence=0;id=`respray:${++operationSequence}`}while(restoredOperations.has(id))
+ return id
+}
 /** One synchronous guarded logical purchase; caller commits paint and ledger in one store write. */
 export function respray(economy:EconomySnapshot,request:ResprayRequest):EconomyResult{
  if(!VEHICLES.some(v=>v.id===request.vehicleId))return {ok:false,message:'Choose an existing playable vehicle.'}

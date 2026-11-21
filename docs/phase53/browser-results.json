@@ -1,0 +1,106 @@
+{
+  "checks": [
+    "Fresh guest begins with 0 SC and safe on-foot startup",
+    "Reload restores First Contact objective without a reward",
+    "Restored mission accepts a fresh Marcus dialogue session",
+    "First Contact earns exactly 150 SC",
+    "Original Coupe remains enterable",
+    "Actual driving clears checkpoint A only",
+    "Reload during Shakedown restores checkpoint B, 150 SC and walking mode",
+    "Saved road position restores stationary",
+    "Remaining physical gates advance to report only",
+    "Both legitimately completed missions earn 450 SC",
+    "Ordinary reverse steering clears the existing lot pole",
+    "Parking alignment corrected with normal reverse steering",
+    "Coupe physically reaches garage bay",
+    "Actual drive-in/exit earns Bay 1 parking",
+    "One paid respray leaves 325 SC and exactly three transactions",
+    "Balance, ledger and both completed missions survive reload",
+    "Actual purchased paint and legitimate parking restore",
+    "Parked transform restored inside its original bay",
+    "Browser process reopening restores earned 325 SC and valid parked paint",
+    "Driving away clears restored parking without changing cash",
+    "Second reload retains 325 SC, three transactions and no stale bay",
+    "Closing and reopening the actual browser profile restores progress",
+    "Paint persists across full browser reopening",
+    "Resource counts and ambient population remain unchanged",
+    "No runtime or shader errors"
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:5173/favicon.ico"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:5173/favicon.ico"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:5173/favicon.ico"
+    }
+  ],
+  "final": {
+    "bodies": 47,
+    "colliders": 565,
+    "ambient": 5,
+    "saveStatus": {
+      "status": "saved",
+      "message": "Guest progress saved locally.",
+      "restoring": false,
+      "blocked": false,
+      "savedAt": 1795254798039
+    },
+    "progress": {
+      "missionId": "motor-row-shakedown",
+      "status": "COMPLETED",
+      "objectiveId": null,
+      "completed": [
+        "first-contact",
+        "motor-row-shakedown"
+      ],
+      "lastDialogueSession": -1
+    },
+    "economy": {
+      "balance": 325,
+      "sequence": 3,
+      "transactions": [
+        {
+          "id": "mission:first-contact",
+          "type": "EARN",
+          "amount": 150,
+          "reason": "First Contact Complete",
+          "missionId": "first-contact",
+          "sequence": 1,
+          "balanceAfter": 150
+        },
+        {
+          "id": "mission:motor-row-shakedown",
+          "type": "EARN",
+          "amount": 300,
+          "reason": "Motor Row Shakedown Complete",
+          "missionId": "motor-row-shakedown",
+          "sequence": 2,
+          "balanceAfter": 450
+        },
+        {
+          "id": "respray:1",
+          "type": "SPEND",
+          "amount": 125,
+          "reason": "Body respray — Ember Red",
+          "vehicleId": "street-coupe",
+          "paintId": "ember",
+          "sequence": 3,
+          "balanceAfter": 325
+        }
+      ],
+      "paints": {
+        "street-coupe": "ember",
+        "city-sedan": "factory",
+        "utility-pickup": "factory"
+      }
+    }
+  },
+  "notes": "Actual complete physical journeys for BOTH missions, partial-mission reloads, real drive-in/parking/respray, refresh twice and full browser-profile close/reopen. No harness body teleport, forced velocity or direct store mutation. Built-in game hydration restores saved car poses; player legitimately returns to pedestrian spawn. Camera yaw and normal keyboard/UI input are automated. Parking automation was resumed in the same live session after stopping against an existing light pole; ordinary reverse and steering cleared it. Chromium SwiftShader, not hardware FPS."
+}

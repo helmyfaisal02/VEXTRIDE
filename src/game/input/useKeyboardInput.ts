@@ -1,3 +1,4 @@
+import { isRestoringProgress } from '../persistence/persistenceRuntime'
 import { useEffect } from 'react'
 import { isTypingTarget } from '../shared/dom'
 import { useCharacterStore } from '../state/characterStore'
@@ -57,6 +58,7 @@ function setKey(code: string, down: boolean): void {
 export function useKeyboardInput(): void {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
+      if(isRestoringProgress())return
       // The character creator owns the keyboard while it is open.
       if (useCharacterStore.getState().menuOpen) return
       const dialogue=useDialogueStore.getState()

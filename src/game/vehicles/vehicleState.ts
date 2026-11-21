@@ -15,7 +15,7 @@ export const useVehicleStore = create<{
   setHint:(hint)=>set(s=>s.hint===hint?s:{hint}),
 }))
 export function createVehicleState(definition: VehicleDefinition) {
-  return {position:new Vector3(definition.spawn.x,definition.spawn.y,definition.spawn.z),yaw:definition.spawnYaw,speed:0,steering:0,wheelRoll:0,grounded:false,recoveryRevision:0}
+  return {position:new Vector3(definition.spawn.x,definition.spawn.y,definition.spawn.z),yaw:definition.spawnYaw,speed:0,steering:0,wheelRoll:0,grounded:false,recoveryRevision:0,restorationRevision:0}
 }
 export const vehicleRegistry = new Map(VEHICLES.map(definition=>[definition.id,{definition,body:null as RapierRigidBody|null,state:createVehicleState(definition)}]))
 export const getVehicleRuntime = (id: VehicleId) => vehicleRegistry.get(id)!

@@ -1,0 +1,22 @@
+{
+  "checks": [
+    "Fresh guest begins with 0 SC and safe on-foot startup",
+    "Reload restores First Contact objective without a reward",
+    "Restored mission accepts a fresh Marcus dialogue session",
+    "First Contact earns exactly 150 SC",
+    "Original Coupe remains enterable",
+    "Actual driving clears checkpoint A only",
+    "Reload during Shakedown restores checkpoint B, 150 SC and walking mode",
+    "Saved road position restores stationary",
+    "Remaining physical gates advance to report only",
+    "Both legitimately completed missions earn 450 SC"
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:5173/favicon.ico"
+    }
+  ],
+  "error": "Error: Drive blocked {\"r\":{\"x\":117.84793090820312,\"y\":0.5289313793182373,\"z\":-134.35801696777344,\"yaw\":-1.7975223179088837,\"speed\":-0.0007305827136596449},\"index\":14}"
+}

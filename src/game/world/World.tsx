@@ -1,3 +1,5 @@
+import { ProgressDriver } from '../persistence/ProgressDriver'
+import { useProgressSaveStore } from '../persistence/persistenceRuntime'
 import { memo, useEffect } from 'react'
 import { CityColliders, CityRoads, DEMO_YARD_ORIGIN } from '../city'
 import { EnvColliders, EnvironmentView } from '../environment'
@@ -16,10 +18,11 @@ import { VehicleSystem } from '../vehicles'
 
 /** Marks the game ready once Rapier's WASM has initialised and the world mounted. */
 function ReadySignal() {
+  const restoring=useProgressSaveStore(s=>s.restoring)
   useEffect(() => {
-    useGameStore.getState().setPhase('ready')
+    useGameStore.getState().setPhase(restoring?'loading':'ready')
     return () => useGameStore.getState().setPhase('loading')
-  }, [])
+  }, [restoring])
   return null
 }
 
@@ -45,6 +48,7 @@ function WorldImpl() {
         <Props />
       </group>
       <StepTestArea />
+      <ProgressDriver />
       <ReadySignal />
     </>
   )

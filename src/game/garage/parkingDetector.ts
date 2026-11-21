@@ -1,3 +1,4 @@
+import type { SavedParking } from '../persistence/persistenceSchema'
 import type { useRapier,RapierRigidBody } from '@react-three/rapier'
 import type { VehicleDefinition,VehicleId } from '../vehicles/vehicleConfig'
 import { vehicleRegistry,useVehicleStore } from '../vehicles/vehicleState'
@@ -9,6 +10,17 @@ type Physics=Pick<ReturnType<typeof useRapier>,'world'|'rapier'>
 type Boxes=InstanceType<Physics['rapier']['Cuboid']>[]
 interface ParkingProof{body:RapierRigidBody;revision:number;bay:GarageParkingBay;physics:Physics;boxes:Boxes}
 const confirmedParking=new Map<VehicleId,ParkingProof>()
+const restoredClaims=new Map<VehicleId,{record:SavedParking;body:RapierRigidBody;revision:number}>()
+/** Only the startup coordinator supplies schema- and world-validated prior drive-in records. */
+export function queueRestoredParking(records:readonly SavedParking[]){
+ restoredClaims.clear()
+ for(const record of records){const r=vehicleRegistry.get(record.vehicleId);if(r?.body?.isValid())restoredClaims.set(record.vehicleId,{record,body:r.body,revision:r.state.recoveryRevision})}
+}
+export function savedParkingRecords():SavedParking[]{
+ const records:SavedParking[]=[]
+ for(const [id,proof] of confirmedParking)if(isConfirmedParked(id)){const p=proof.body.translation();records.push({vehicleId:id,bayId:proof.bay.id,source:'drive-in',pose:{x:p.x,y:p.y,z:p.z,yaw:bodyYaw(proof.body)}})}
+ return records
+}
 function stationary(body:RapierRigidBody){const v=body.linvel(),a=body.angvel();return Math.hypot(v.x,v.z)<.15&&Math.abs(v.y)<.15&&Math.hypot(a.x,a.y,a.z)<.15}
 function supportedClear(physics:Physics,body:RapierRigidBody,d:VehicleDefinition,bay:GarageParkingBay,boxes:Boxes){
  const p=body.translation(),q=body.rotation(),yaw=bodyYaw(body),flags=physics.rapier.QueryFilterFlags.EXCLUDE_SENSORS
@@ -50,7 +62,7 @@ export function createParkingDetector(){
  const histories=new Map<VehicleId,History>()
  const shapes=new Map<VehicleId,InstanceType<Physics['rapier']['Cuboid']>[]>()
  return {
-  clear(){confirmedParking.clear();histories.clear();shapes.clear();elapsed=0;useGarageStore.getState().publish({})},
+  clear(){restoredClaims.clear();confirmedParking.clear();histories.clear();shapes.clear();elapsed=0;useGarageStore.getState().publish({})},
   step(physics:Physics,dt:number){
    if(!Number.isFinite(dt)||dt<=0)return
    elapsed+=dt;if(elapsed<.1-1e-6)return
@@ -66,9 +78,15 @@ export function createParkingDetector(){
     }
     const moved=Math.hypot(p.x-h.x,p.z-h.z),credible=delta<=.15&&moved<=Math.max(speed,h.speed)*delta+.06
     if(!credible){h.arrived=null;h.outside=!bay}
-    if(!bay){h.arrived=null;h.outside=true;h.settled=0}
+    if(!bay){restoredClaims.delete(id);h.arrived=null;h.outside=true;h.settled=0}
     else{
      const occupied=ownership.driving&&ownership.activeVehicleId===id
+     const claim=restoredClaims.get(id)
+     if(claim){
+      const pose=claim.record.pose
+      if(claim.body!==body||claim.revision!==r.state.recoveryRevision||claim.record.bayId!==bay.id||Math.hypot(p.x-pose.x,p.z-pose.z)>.08||Math.abs(Math.atan2(Math.sin(yaw-pose.yaw),Math.cos(yaw-pose.yaw)))>.03||occupied)restoredClaims.delete(id)
+      else if(stationary(body))h.arrived=bay.id
+     }
      if(occupied&&h.outside&&h.bay!==bay.id&&credible&&moved>.005&&speed>.15)h.arrived=bay.id
      let safe=stationary(body)&&h.arrived===bay.id&&!occupied&&credible
      let boxes=shapes.get(id)
@@ -77,7 +95,7 @@ export function createParkingDetector(){
       safe=supportedClear(physics,body,r.definition,bay,boxes)
      }
      h.settled=safe?h.settled+delta:0
-     if(h.settled>=1&&!occupancy[bay.id]&&boxes){occupancy[bay.id]=id;proofs.set(id,{body,revision:r.state.recoveryRevision,bay,physics,boxes})}
+     if(h.settled>=1&&!occupancy[bay.id]&&boxes){occupancy[bay.id]=id;restoredClaims.delete(id);proofs.set(id,{body,revision:r.state.recoveryRevision,bay,physics,boxes})}
     }
     h.x=p.x;h.z=p.z;h.speed=speed;h.bay=bay?.id??null
    }

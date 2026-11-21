@@ -1,4 +1,4 @@
-import type { useRapier, RapierRigidBody } from '@react-three/rapier'
+import type { useRapier, RapierRigidBody,RapierCollider } from '@react-three/rapier'
 import { inputState, resetInput } from '../input/inputState'
 import { GROUND_SIZE } from '../shared/constants'
 import { vehicleWheels, type VehicleDefinition } from './vehicleConfig'
@@ -20,14 +20,14 @@ export type RecoveryState=ReturnType<typeof createRecoveryState>
  * A small clearance skin rejects wall-adjacent checkpoints; sensors/self are ignored.
  * A ground ray cannot promote a building roof to a recovery surface.
  */
-export function safeRecoveryPose(physics:Physics,body:RapierRigidBody,d:VehicleDefinition,pose:RecoveryPose):RecoveryPose|null {
+export function safeRecoveryPose(physics:Physics,body:RapierRigidBody,d:VehicleDefinition,pose:RecoveryPose,filter?:(collider:RapierCollider)=>boolean):RecoveryPose|null {
   if(!Object.values(pose).every(Number.isFinite)||Math.abs(pose.x)>GROUND_SIZE/2-d.length||Math.abs(pose.z)>GROUND_SIZE/2-d.length)return null
   const c=Math.cos(pose.yaw),s=Math.sin(pose.yaw),ground=pose.y-d.rideHeight
   const flags=physics.rapier.QueryFilterFlags.EXCLUDE_SENSORS
   let lo=Infinity,hi=-Infinity
   for(const point of [{x:0,z:0},...vehicleWheels(d)]) {
     const x=pose.x+c*point.x+s*point.z,z=pose.z-s*point.x+c*point.z
-    const hit=physics.world.castRayAndGetNormal(new physics.rapier.Ray({x,y:ground+.65,z},{x:0,y:-1,z:0}),1.3,true,flags,undefined,undefined,body)
+    const hit=physics.world.castRayAndGetNormal(new physics.rapier.Ray({x,y:ground+.65,z},{x:0,y:-1,z:0}),1.3,true,flags,undefined,undefined,body,filter)
     if(!hit||hit.normal.y<.85||hit.collider.parent()?.isDynamic())return null
     const y=ground+.65-hit.timeOfImpact
     if(Math.abs(y-ground)>.35)return null
@@ -36,7 +36,7 @@ export function safeRecoveryPose(physics:Physics,body:RapierRigidBody,d:VehicleD
   if(hi-lo>.18)return null
   const result={...pose,y:hi+d.rideHeight+.04}
   const q={x:0,y:Math.sin(pose.yaw/2),z:0,w:Math.cos(pose.yaw/2)}
-  const clear=(x:number,y:number,z:number,shape:InstanceType<Physics['rapier']['Cuboid']>|InstanceType<Physics['rapier']['Ball']>)=>!physics.world.intersectionWithShape({x:result.x+c*x+s*z,y:result.y+y,z:result.z-s*x+c*z},q,shape,flags,undefined,undefined,body)
+  const clear=(x:number,y:number,z:number,shape:InstanceType<Physics['rapier']['Cuboid']>|InstanceType<Physics['rapier']['Ball']>)=>!physics.world.intersectionWithShape({x:result.x+c*x+s*z,y:result.y+y,z:result.z-s*x+c*z},q,shape,flags,undefined,undefined,body,filter)
   for(const collider of d.colliders)if(!clear(...collider.position,new physics.rapier.Cuboid(...collider.half.map(v=>v+.04) as [number,number,number])))return null
   for(const x of[-d.probeTrack,d.probeTrack])for(const z of[-d.wheelbase/2,d.wheelbase/2])if(!clear(x,d.runnerRadius-d.rideHeight,z,new physics.rapier.Ball(d.runnerRadius)))return null
   return result

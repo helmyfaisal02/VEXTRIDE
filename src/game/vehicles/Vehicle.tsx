@@ -27,7 +27,7 @@ function VehicleImpl({definition,shared}: {definition:VehicleDefinition;shared:S
   const physics=useRapier(),body=useRef<RapierRigidBody>(null),visual=useRef<Group>(null)
   const steerGroups=useRef<Array<Group|null>>([]),rollGroups=useRef<Array<Group|null>>([])
   const sim=useRef(createVehicleSim(physics.rapier)),runtime=useRef(getVehicleRuntime(definition.id))
-  const recovery=useRef(createRecoveryState())
+  const recovery=useRef(createRecoveryState()),restoration=useRef(0)
   const [reverseLamp]=useState(()=>{
     const geometry=new GeometryBuilder()
     for(const side of [-1,1])modelBox(geometry,side*definition.width*.24,definition.modelType==='pickup'?.12:.035,definition.length/2+.028,.13,.07,.016,'#f5f8ff')
@@ -61,6 +61,7 @@ function VehicleImpl({definition,shared}: {definition:VehicleDefinition;shared:S
   useBeforePhysicsStep(()=>{
     if(!body.current)return
     runtime.current.body=body.current
+    if(restoration.current!==runtime.current.state.restorationRevision){sim.current=createVehicleSim(physics.rapier);recovery.current=createRecoveryState();restoration.current=runtime.current.state.restorationRevision}
     const state=useVehicleStore.getState()
     const occupied=state.driving&&state.activeVehicleId===definition.id&&!useCharacterStore.getState().menuOpen
     stepRecovery(recovery.current,physics,body.current,definition,sim.current,occupied,FIXED_DT)

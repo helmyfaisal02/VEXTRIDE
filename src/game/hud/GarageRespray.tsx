@@ -30,7 +30,7 @@ export function GarageRespray({vehicleId,name,parked}:{vehicleId:VehicleId;name:
    }}>Confirm respray — {STREET_CASH.resprayPrice} SC</button><button type="button" className={button} onClick={cancel}>Cancel respray</button>
   </div></div>:<button ref={review} type="button" disabled={!parked} className={`${button} mt-3`} onClick={()=>{setResult(null);setPending({operationId:newResprayOperationId(),vehicleId,paintId:selected})}}>Review respray</button>}
   {result&&<p role={result.ok?'status':'alert'} className="mt-3 text-sm" data-testid="respray-result">{result.message}</p>}
-  <p className="mt-3 text-[11px] text-white/55">Street Cash is fictional game currency. Balance, activity and resprays reset on refresh.</p>
+  <p className="mt-3 text-[11px] text-white/55">Street Cash is fictional game currency. Check Guest Progress below for local-save status.</p>
  </section>
 }
 export function GarageEconomyHistory(){

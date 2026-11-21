@@ -1,0 +1,23 @@
+{
+  "checks": [
+    "Fresh guest begins with 0 SC and safe on-foot startup",
+    "Reload restores First Contact objective without a reward",
+    "Restored mission accepts a fresh Marcus dialogue session",
+    "First Contact earns exactly 150 SC",
+    "Original Coupe remains enterable",
+    "Actual driving clears checkpoint A only",
+    "Reload during Shakedown restores checkpoint B, 150 SC and walking mode",
+    "Saved road position restores stationary",
+    "Remaining physical gates advance to report only",
+    "Both legitimately completed missions earn 450 SC",
+    "Ordinary reverse steering clears the existing lot pole"
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:5173/favicon.ico"
+    }
+  ],
+  "error": "Error: Parking alignment missed {\"x\":120.54490661621094,\"y\":0.5289313793182373,\"z\":-145.0758056640625,\"yaw\":-0.37059838452448857,\"speed\":1.2679703355843313,\"steering\":0.18400997371602845,\"fits\":false}"
+}

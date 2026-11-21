@@ -16,6 +16,7 @@ import './console-capture'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
+import { guestPersistence } from './game/persistence/persistenceCoordinator'
 import { installShareSync } from './lib/share'
 import './index.css'
 
@@ -64,6 +65,7 @@ const StudioWatermark = () => (
 )
 
 installShareSync()
+guestPersistence.initialize()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -1,3 +1,4 @@
+import { GuestProgressSettings } from './GuestProgressSettings'
 import { GarageRespray,GarageEconomyHistory } from './GarageRespray'
 import { useEffect,useRef,useState } from 'react'
 import { GARAGE } from '../garage/garageConfig'
@@ -24,6 +25,7 @@ function OpenGaragePanel(){
    </div>
    <GarageRespray key={vehicle.id} vehicleId={vehicle.id} name={vehicle.name} parked={!!vehicle.bayId}/>
    <GarageEconomyHistory/>
+   <GuestProgressSettings/>
    <div className="mt-4 flex flex-wrap gap-3 text-xs text-white/70">{GARAGE.bays.map(b=><p key={b.id}>{b.name}: {occupancy[b.id]?catalog.find(v=>v.id===occupancy[b.id])?.name:'Available'}</p>)}</div>
    <p id="garage-help" className="mt-4 text-xs leading-relaxed text-white/65">The teal corner markers identify two existing stalls in the north parking lot behind the garage. Drive fully inside, align with the stall, stop and exit. Parking confirms after one stationary second. Drive away to free the bay. Esc to close.</p>
   </section>

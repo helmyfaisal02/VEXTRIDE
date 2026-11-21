@@ -1,3 +1,4 @@
+import { canMutateGuestProgress } from '../persistence/persistenceRuntime'
 import { initialEconomyState,type EconomySnapshot } from '../economy/economyState'
 import { rewardMissionCompletion } from '../economy/missionRewards'
 import { respray,type ResprayRequest } from '../economy/garageResprayService'
@@ -37,14 +38,14 @@ export function reduceMission(progress:MissionProgress,event:MissionEvent):Missi
  if(event.missionId!==progress.missionId||!objective?.npcId||event.objectiveId!==objective.id||event.npcId!==objective.npcId)return progress
  return advance({...progress,lastDialogueSession:event.session})
 }
-/** Session-only. Current progress retains the Phase 4.3 API; completed IDs retain independent history. */
+/** One coherent guest-progress atom. Hydration restores this snapshot without invoking reward actions. */
 export const useMissionStore=create<{
  progress:MissionProgress;completionNotice:boolean;economy:EconomySnapshot
  confirmRespray:(request:ResprayRequest)=>{ok:boolean;message:string}
  transition:(event:MissionEvent)=>boolean;dismissCompletion:()=>void
 }>((set,get)=>({
  progress:initialMissionProgress(),completionNotice:false,economy:initialEconomyState(),
- confirmRespray:request=>{const result=respray(get().economy,request);if(!result.ok)return result;set({economy:result.economy});return {ok:true,message:"Respray complete — 125 SC spent."}},
- transition:(event)=>{const previous=get().progress,next=reduceMission(previous,event);if(next===previous)return false;set({progress:next,completionNotice:next.status==='COMPLETED',economy:rewardMissionCompletion(get().economy,previous,next)});return true},
+ confirmRespray:request=>{if(!canMutateGuestProgress())return {ok:false,message:'Guest progress is not ready. Check local save settings.'};const result=respray(get().economy,request);if(!result.ok)return result;set({economy:result.economy});return {ok:true,message:"Respray complete — 125 SC spent."}},
+ transition:(event)=>{if(!canMutateGuestProgress())return false;const previous=get().progress,next=reduceMission(previous,event);if(next===previous)return false;set({progress:next,completionNotice:next.status==='COMPLETED',economy:rewardMissionCompletion(get().economy,previous,next)});return true},
  dismissCompletion:()=>set(s=>s.completionNotice?{completionNotice:false}:s),
 }))

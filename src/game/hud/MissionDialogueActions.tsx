@@ -1,3 +1,4 @@
+import { useProgressSaveStore } from '../persistence/persistenceRuntime'
 import { useEffect,useRef,useState } from 'react'
 import type { NPCId } from '../npcs/npcConfig'
 import { FIRST_CONTACT,missionDefinition } from '../missions/missionDefinitions'
@@ -6,8 +7,10 @@ import { acceptMission,declineMission,acknowledgeObjective } from '../missions/m
 const button='rounded-lg bg-white/15 px-3 py-2 text-sm hover:bg-white/25 focus-visible:outline focus-visible:outline-2'
 /** Additive mission section; the NPC's normal three dialogue lines are never replaced. */
 export function MissionDialogueActions({npcId,session}:{npcId:NPCId;session:number}){
+ const blocked=useProgressSaveStore(s=>s.blocked)
  const progress=useMissionStore(s=>s.progress),[offering,setOffering]=useState(false),accept=useRef<HTMLButtonElement>(null)
  useEffect(()=>{if(offering)accept.current?.focus()},[offering])
+ if(blocked)return null
  const offer=availableMission(progress,npcId)
  if(offer){
   return <div className="mb-4 rounded-xl border border-white/15 p-3" data-testid="mission-offer">

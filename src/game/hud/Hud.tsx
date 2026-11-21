@@ -6,6 +6,7 @@ import { useCharacterStore } from '../state/characterStore'
 import { useGameStore } from '../state/gameStore'
 import { CharacterCreator } from './CharacterCreator'
 import { WorldTimeHud } from './WorldTimeHud'
+import { GuestSaveWarning } from './GuestProgressSettings'
 import { EconomyHud } from './EconomyHud'
 import { GaragePanel } from './GaragePanel'
 import { MissionHud } from './MissionHud'
@@ -169,6 +170,7 @@ export function Hud() {
       <Brand />
       <WorldTimeHud />
       <EconomyHud />
+      <GuestSaveWarning />
       <VehicleHud />
       <NPCDialogue />
       <MissionHud />
