@@ -2,8 +2,10 @@ import { toHex, type Hash } from 'viem'
 import { createStore } from 'zustand/vanilla'
 import { ARC_MAINNET, parseChainId } from './arcConfig'
 import { createTransferRpc, transferData, type TransferQuote } from './transferRpc'
-import { isTransactionHash, TransferCheckError, validateTransfer, type TransferIntent } from './transferValidation'
+import { isTransactionHash, TransferCheckError, validateTransfer } from './transferValidation'
 import { inspectWallet, providerErrorCode } from './walletProvider'
+import { createTransferHistory, forAccount, isUnresolved, recordIntent, TRANSFER_KEY } from './transferHistory'
+import type { TransferRecord } from './transferHistory'
 import { walletSession } from './walletSession'
 
 type Status = 'idle' | 'validating' | 'review' | 'wallet' | 'rejected' | 'submitted' |
@@ -20,29 +22,45 @@ interface TransferState {
 const initial: TransferState = { status: 'idle', message: '', quote: null, hash: null, checking: false }
 type Wallet = Pick<typeof walletSession, 'getTransferContext' | 'refresh'>
 
-export function createTransferSession(wallet: Wallet, rpc: ReturnType<typeof createTransferRpc>, walletTimeout = 90_000) {
+type Exclusive = <T>(action: () => T | Promise<T>) => Promise<T>
+
+function memoryHistory() {
+  let raw: string | null = null
+  return createTransferHistory(() => ({
+    getItem: () => raw,
+    setItem: (_key, value) => { raw = value },
+  }))
+}
+
+export function createTransferSession(
+  wallet: Wallet,
+  rpc: Pick<ReturnType<typeof createTransferRpc>, 'quote' | 'verify'>,
+  walletTimeout = 90_000,
+  history = memoryHistory(),
+  exclusive: Exclusive = async action => await action(),
+) {
   const store = createStore<TransferState>(() => initial)
   let revision = 0
-  let submissionIntent: TransferIntent | null = null
+  let operationId: string | undefined
+  let handoff = false
+  let checkingId: string | undefined
   let reviewedContext: ReturnType<Wallet['getTransferContext']> = null
 
   function locked() {
-    const { status, hash } = store.getState()
-    return status === 'wallet' || status === 'submitted' || status === 'pending' ||
-      status === 'unknown' || (status === 'rpc-error' && hash !== null)
+    const sender = wallet.getTransferContext()?.address ?? null
+    return handoff || forAccount(history.store.getState().records, sender).some(isUnresolved)
   }
 
   function clearDraft() {
-    if (locked()) return
+    if (handoff) return
     revision++
     reviewedContext = null
-    submissionIntent = null
-    store.setState(initial)
+    operationId = undefined
+    store.setState({ ...initial, checking: !!checkingId })
   }
 
   function invalidateWallet() {
-    // An outstanding handoff can still return a hash on its original chain.
-    if (!locked()) clearDraft()
+    if (!handoff) clearDraft()
   }
 
   async function checkWallet(context: NonNullable<ReturnType<Wallet['getTransferContext']>>) {
@@ -64,6 +82,7 @@ export function createTransferSession(wallet: Wallet, rpc: ReturnType<typeof cre
   }
 
   async function review(recipient: string, amount: string) {
+    history.sync()
     if (locked() || store.getState().status === 'validating') return
     clearDraft()
     const current = revision
@@ -84,24 +103,65 @@ export function createTransferSession(wallet: Wallet, rpc: ReturnType<typeof cre
     }
   }
 
-  async function refreshStatus() {
-    const { hash, checking, status } = store.getState()
-    const intent = submissionIntent
-    if (!hash || !intent || checking || status === 'confirmed' || status === 'reverted') return
+  async function refreshStatus(id = operationId, candidate?: string): Promise<boolean> {
+    history.sync()
+    const context = wallet.getTransferContext()
+    const record = history.store.getState().records.find(item => item.id === id)
+    const hash = record?.hash ?? candidate?.trim()
+    if (!context || !record || context.address !== record.sender ||
+        !isTransactionHash(hash) || checkingId || (!record.hash && record.status !== 'unknown' && record.status !== 'awaiting') ||
+        (!record.hash && handoff)) return false
+
+    checkingId = record.id
     store.setState({ checking: true })
     try {
-      const outcome = await rpc.receipt(hash, intent)
-      store.setState({
-        status: outcome,
-        message: outcome === 'unknown' ? 'Arc returned a receipt that could not verify this transfer. Check the explorer.' : '',
+      const observed = await rpc.verify(hash, recordIntent(record))
+      const outcome = 'block' in observed && observed.block <= BigInt(record.head)
+        ? { status: 'unknown' as const } : observed
+      if (!context.isCurrent()) return false
+      const terminal = 'block' in outcome
+      if (!isUnresolved(record)) {
+        const matching = terminal && outcome.status === record.status && outcome.block.toString() === record.block &&
+          (outcome.status !== 'confirmed' || outcome.logIndex === record.logIndex)
+        if (matching) history.markVerified(record)
+        return matching
+      }
+      if (!record.hash && !terminal) return false
+
+      const status = outcome.status === 'pending' && history.now() - record.createdAt > 30 * 60 * 1000
+        ? 'unknown' : outcome.status
+      const saved = await exclusive(() => {
+        if (!context.isCurrent()) return null
+        return history.update(record.id, {
+          status, hash: hash.toLowerCase() as Hash,
+          checkedAt: Math.max(history.now(), record.createdAt),
+          block: terminal ? outcome.block.toString() : null,
+          logIndex: outcome.status === 'confirmed' ? outcome.logIndex : null,
+        })
       })
-      if (outcome === 'confirmed' || outcome === 'reverted') {
-        submissionIntent = null
+      if (!saved) return false
+      if (operationId === record.id) store.setState({ status, hash: saved.hash })
+      if (terminal && context.isCurrent() && saved.hash === hash.toLowerCase() &&
+          saved.status === outcome.status && saved.block === outcome.block.toString() &&
+          (outcome.status !== 'confirmed' || saved.logIndex === outcome.logIndex)) {
+        history.markVerified(saved)
         void wallet.refresh()
       }
+      return terminal || !!record.hash
     } catch {
-      store.setState({ status: 'rpc-error', message: 'Receipt unavailable. The transaction may still be pending. Check again or use the explorer.' })
+      if (context.isCurrent() && record.hash && isUnresolved(record)) {
+        try {
+          await exclusive(() => {
+            if (context.isCurrent()) history.update(record.id, {
+              status: 'unavailable', checkedAt: Math.max(history.now(), record.createdAt),
+            })
+          })
+        } catch { /* A read remains retryable when the browser journal is unavailable. */ }
+        if (operationId === record.id) store.setState({ status: 'rpc-error' })
+      }
+      return false
     } finally {
+      checkingId = undefined
       store.setState({ checking: false })
     }
   }
@@ -131,45 +191,79 @@ export function createTransferSession(wallet: Wallet, rpc: ReturnType<typeof cre
       return
     }
 
-    // Consume the review before handing off. An account change or a timeout
-    // cannot authorize another send. The returned hash still belongs to this intent.
-    submissionIntent = intent
-    store.setState({ status: 'wallet' })
-    const timer = setTimeout(() => {
-      store.setState({
-        status: 'unknown',
-        message: 'The wallet has not returned a hash. Check wallet activity before attempting another transfer.',
-      })
-    }, walletTimeout)
+    let timer: ReturnType<typeof setTimeout> | undefined
+    let id: string | undefined
     try {
-      const result = await context.provider.request({
-        method: 'eth_sendTransaction',
-        params: [{
-          chainId: ARC_MAINNET.chainIdHex, from: intent.sender,
-          to: ARC_MAINNET.usdcAddress, data: transferData(intent), value: '0x0',
-          type: '0x2', gas: toHex(latest.gas), maxFeePerGas: toHex(latest.maxFeePerGas),
-          maxPriorityFeePerGas: '0x0',
-        }],
-      })
-      if (!isTransactionHash(result)) throw new Error('Invalid transaction hash')
-      store.setState({ status: 'submitted', hash: result, message: '' })
-      void refreshStatus()
-    } catch (error) {
-      if (providerErrorCode(error) === 4001) {
-        submissionIntent = null
-        store.setState({ status: 'rejected', message: 'The wallet declined this transfer. A new review is required to try again.' })
-      } else {
-        store.setState({
-          status: 'unknown',
-          message: 'No valid hash was returned. Check wallet activity before attempting another transfer.',
+      const request = await exclusive(async () => {
+        if (current !== revision || handoff) return null
+        await checkWallet(context)
+        if (current !== revision || handoff) return null
+
+        let record: TransferRecord
+        try {
+          record = history.begin(intent, latest.head)
+        } catch {
+          history.sync()
+          throw new TransferCheckError('Cannot reserve this transfer. Resolve any pending activity and check local storage.')
+        }
+
+        id = record.id
+        operationId = id
+        handoff = true
+        store.setState({ status: 'wallet' })
+        timer = setTimeout(() => {
+          store.setState({ status: 'unknown' })
+          void exclusive(() => history.update(record.id, { status: 'unknown' })).catch(() => {})
+        }, walletTimeout)
+
+        // The lock is held for reservation and dispatch, then released while the extension prompts.
+        const send = async () => context.provider.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            chainId: ARC_MAINNET.chainIdHex, from: intent.sender,
+            to: ARC_MAINNET.usdcAddress, data: transferData(intent), value: '0x0',
+            type: '0x2', gas: toHex(latest.gas), maxFeePerGas: toHex(latest.maxFeePerGas),
+            maxPriorityFeePerGas: '0x0',
+          }],
         })
-      }
-    } finally {
+        return { id: record.id, result: send().then(value => ({ value }), (error: unknown) => ({ error })) }
+      })
+      if (!request) return
+      const result = await request.result
       clearTimeout(timer)
+      if ('error' in result) throw result.error
+      if (!isTransactionHash(result.value)) throw new Error('Invalid transaction hash')
+      const hash = result.value.toLowerCase() as Hash
+      const saved = await exclusive(() => history.update(request.id, { status: 'submitted', hash }))
+      if (!saved || saved.hash !== hash) throw new Error('Duplicate or unavailable transaction hash')
+      handoff = false
+      store.setState({ status: 'submitted', hash, message: '' })
+      void refreshStatus(request.id)
+    } catch (error) {
+      clearTimeout(timer)
+      if (!id) {
+        if (current === revision) failPreflight(error)
+        return
+      }
+      const status = providerErrorCode(error) === 4001 ? 'rejected' : 'unknown'
+      const recordId = id
+      try {
+        await exclusive(() => history.update(recordId, { status }))
+      } catch { /* The reserved operation stays unresolved on disk. */ }
+      handoff = false
+      store.setState({ status })
+    } finally {
+      if (id) handoff = false
     }
   }
 
-  return { store, clearDraft, invalidateWallet, review, confirm, refreshStatus, locked }
+  return { store, history, clearDraft, invalidateWallet, review, confirm, refreshStatus, locked }
 }
 
-export const transferSession = createTransferSession(walletSession, createTransferRpc())
+export const transferRpc = createTransferRpc()
+export const transferSession = createTransferSession(walletSession, transferRpc, 90_000,
+  createTransferHistory(() => window.localStorage),
+  action => navigator.locks
+    ? navigator.locks.request(TRANSFER_KEY, action)
+    : Promise.reject(new TransferCheckError('Transfer history locking is unavailable in this browser.')),
+)

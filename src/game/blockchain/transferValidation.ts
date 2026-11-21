@@ -36,4 +36,4 @@ export function assertAffordable(erc20: bigint, native: bigint, amount: bigint, 
 }
 
 export const isTransactionHash = (result: unknown): result is Hash =>
-  typeof result === 'string' && /^0x[0-9a-f]{64}$/i.test(result) && !/^0x0+$/i.test(result)
+  typeof result === 'string' && /^0x[0-9a-fA-F]{64}$/.test(result) && !/^0x0+$/i.test(result)

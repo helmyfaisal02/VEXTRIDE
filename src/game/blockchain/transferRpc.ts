@@ -1,14 +1,14 @@
 import {
-  createPublicClient, decodeEventLog, encodeFunctionData, http, parseAbi,
-  TransactionReceiptNotFoundError, type Hash, type Transport,
+  createPublicClient, encodeFunctionData, http, parseAbi,
+  type Hash, type Transport,
 } from 'viem'
 import { ARC_MAINNET, parseChainId } from './arcConfig'
+import { observeTransfer, verifyIntent } from './transferVerification'
 import { assertAffordable, TransferCheckError, type TransferIntent } from './transferValidation'
 
 const usdcAbi = parseAbi([
   'function balanceOf(address owner) view returns (uint256)',
   'function transfer(address recipient, uint256 amount) returns (bool)',
-  'event Transfer(address indexed from, address indexed to, uint256 value)',
 ])
 
 const MIN_ARC_FEE_PER_GAS = 20_000_000_000n
@@ -19,9 +19,8 @@ export interface TransferQuote {
   gas: bigint
   maxFeePerGas: bigint
   fee: bigint
+  head: bigint
 }
-
-export type ReceiptOutcome = 'pending' | 'confirmed' | 'reverted' | 'unknown'
 
 export const transferData = (intent: TransferIntent) => encodeFunctionData({
   abi: usdcAbi, functionName: 'transfer', args: [intent.recipient, intent.amount],
@@ -45,13 +44,14 @@ export function createTransferRpc(transport: Transport = http(ARC_MAINNET.rpcUrl
       client.getBalance({ address: intent.sender }),
     ])
     assertAffordable(available, native, intent.amount, 0n)
-    const [simulation, estimate, suggestion] = await Promise.all([
+    const [simulation, estimate, suggestion, head] = await Promise.all([
       client.simulateContract({
         account: intent.sender, address: token, abi: usdcAbi,
         functionName: 'transfer', args: [intent.recipient, intent.amount],
       }),
       client.estimateGas({ account: intent.sender, to: token, data: transferData(intent) }),
       client.getGasPrice(),
+      client.getBlockNumber({ cacheTime: 0 }),
     ])
     if (simulation.result !== true || estimate <= 0n || suggestion <= 0n) {
       throw new TransferCheckError('Arc could not simulate or estimate this transfer.')
@@ -61,36 +61,21 @@ export function createTransferRpc(transport: Transport = http(ARC_MAINNET.rpcUrl
     const maxFeePerGas = suggestion < MIN_ARC_FEE_PER_GAS ? MIN_ARC_FEE_PER_GAS : suggestion
     const fee = gas * maxFeePerGas
     assertAffordable(available, native, intent.amount, fee)
-    return { intent, available, gas, maxFeePerGas, fee }
+    return { intent, available, gas, maxFeePerGas, fee, head }
   }
 
-  async function receipt(hash: Hash, intent: TransferIntent): Promise<ReceiptOutcome> {
+  async function inspect(hash: Hash) {
     await verifyChain()
-    let receipt
-    try {
-      receipt = await client.getTransactionReceipt({ hash })
-    } catch (error) {
-      if (error instanceof TransactionReceiptNotFoundError) return 'pending'
-      throw error
-    }
-    if (receipt.transactionHash?.toLowerCase() !== hash.toLowerCase() ||
-        receipt.from?.toLowerCase() !== intent.sender.toLowerCase() ||
-        receipt.to?.toLowerCase() !== token || !receipt.blockHash || receipt.blockNumber == null) return 'unknown'
-    if (receipt.status === 'reverted') return 'reverted'
-    if (receipt.status !== 'success') return 'unknown'
-    // Arc exposes the six-decimal Transfer event at the ERC-20 interface.
-    const matched = receipt.logs.some(log => {
-      if (log.address.toLowerCase() !== token || log.removed) return false
-      try {
-        const event = decodeEventLog({ abi: usdcAbi, eventName: 'Transfer', data: log.data, topics: log.topics })
-        return event.args.from.toLowerCase() === intent.sender.toLowerCase() &&
-          event.args.to.toLowerCase() === intent.recipient.toLowerCase() && event.args.value === intent.amount
-      } catch {
-        return false
-      }
-    })
-    return matched ? 'confirmed' : 'unknown'
+    return observeTransfer(client, hash)
   }
 
-  return { quote, receipt }
+  async function verify(hash: Hash, intent: TransferIntent) {
+    return verifyIntent(await inspect(hash), intent, transferData(intent))
+  }
+
+  async function receipt(hash: Hash, intent: TransferIntent) {
+    return (await verify(hash, intent)).status
+  }
+
+  return { quote, receipt, inspect, verify }
 }

@@ -6,6 +6,7 @@ import { injectedWallet } from './walletProvider'
 import { walletSession } from './walletSession'
 import { transferSession } from './transferSession'
 import { SendUsdc } from './SendUsdc'
+import { TransferActivity } from './TransferActivity'
 import type { WalletPanelControls } from './ArcWallet'
 
 const action = 'rounded-lg bg-white/15 px-3 py-2 text-xs font-semibold hover:bg-white/25 focus-visible:outline focus-visible:outline-2 disabled:opacity-50'
@@ -103,6 +104,7 @@ export default function ArcWalletContent({ open, registerControls }: {
     </div>
     <SendUsdc open={open} canSend={onArc && !!address && !state.requestPending}
       walletKey={address} balance={state.balance} />
+    <TransferActivity sender={address} onArc={onArc} open={open} />
     </>
   )
 }

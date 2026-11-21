@@ -37,6 +37,7 @@ const log = {
 }
 let chain = '0x13b2', simulation = 1n, balance = 10_000_000n, gasPrice = 19_000_000_000n
 let receipt: object | null = null
+let transaction: object | null = null
 const rpcCalls: string[] = []
 const rpc = createTransferRpc(custom({
   request({method, params}: {method:string;params?:unknown}) {
@@ -46,6 +47,8 @@ const rpc = createTransferRpc(custom({
       case 'eth_getBalance': return Promise.resolve(toHex(usdcToNative(balance)))
       case 'eth_estimateGas': return Promise.resolve(toHex(50_000n))
       case 'eth_gasPrice': return Promise.resolve(toHex(gasPrice))
+      case 'eth_blockNumber': return Promise.resolve('0xf')
+      case 'eth_getTransactionByHash': return Promise.resolve(transaction)
       case 'eth_getTransactionReceipt': return Promise.resolve(receipt)
       case 'eth_call': {
         assert.ok(Array.isArray(params))
@@ -73,10 +76,13 @@ chain = '0x13b2'
 pass('Real Viem preflight checks simulation, gas margin, fee floor, wrong RPC chain and insufficient gas')
 
 assert.equal(await rpc.receipt(hash, intent), 'pending')
-const validReceipt = {transactionHash:hash, from:sender, to:ARC_MAINNET.usdcAddress, blockHash:hash, blockNumber:'0x10', status:'0x1',logs:[log]}
+const mined = { blockHash: hash, blockNumber: '0x10', transactionIndex: '0x0' }
+transaction = { hash, from: sender, to: ARC_MAINNET.usdcAddress, input: transferData(intent), value: '0x0', chainId: '0x13b2', ...mined }
+const verifiedLog = { ...log, ...mined, transactionHash: hash, logIndex: '0x1' }
+const validReceipt = {transactionHash:hash, from:sender, to:ARC_MAINNET.usdcAddress, ...mined, status:'0x1',logs:[verifiedLog]}
 receipt = validReceipt
 assert.equal(await rpc.receipt(hash, intent), 'confirmed')
-receipt = {...validReceipt,logs:[{...log,data:word(42n)}]}
+receipt = {...validReceipt,logs:[{...verifiedLog,data:word(42n)}]}
 assert.equal(await rpc.receipt(hash,intent),'unknown')
 receipt = {...validReceipt,status:'0x0',logs:[]}
 assert.equal(await rpc.receipt(hash, intent), 'reverted')
@@ -111,7 +117,7 @@ let fee = initialQuote.fee
 let receiptError = false
 const session = createTransferSession(wallet,{
   quote: () => Promise.resolve({...initialQuote, fee}),
-  receipt: () => receiptError ? Promise.reject(new Error('timeout')) : Promise.resolve('pending'),
+  verify: () => receiptError ? Promise.reject(new Error('timeout')) : Promise.resolve({ status: 'pending' }),
 }, 100)
 const state = session.store.getState
 const proposal = (): TransferQuote => {
@@ -174,8 +180,11 @@ await session.review(recipient,'1.234567')
 assert.equal(sends,2)
 settle(hash)
 await request
-await until(()=>state().status==='pending')
+assert.equal(state().status,'submitted')
 assert.equal(state().hash,hash)
+await wallet.connect(provider)
+await session.refreshStatus()
+assert.equal(state().status,'pending')
 receiptError = true
 await session.refreshStatus()
 assert.equal(state().status,'rpc-error')
@@ -187,6 +196,6 @@ assert.deepEqual(call?.params?.[0],{
   chainId:'0x13b2',from:sender,to:ARC_MAINNET.usdcAddress,data:transferData(intent),value:'0x0',type:'0x2',
   gas:toHex(initialQuote.gas),maxFeePerGas:toHex(initialQuote.maxFeePerGas),maxPriorityFeePerGas:'0x0',
 })
-assert.ok(rpcCalls.every(method => ['eth_chainId','eth_getBalance','eth_estimateGas','eth_gasPrice','eth_getTransactionReceipt','eth_call'].includes(method)))
+assert.ok(rpcCalls.every(method => ['eth_chainId','eth_getBalance','eth_estimateGas','eth_gasPrice','eth_getTransactionReceipt','eth_getTransactionByHash','eth_blockNumber','eth_call'].includes(method)))
 assert.equal(useMissionStore.getState(),gameBefore)
 pass('Timeout keeps duplicate lock, a late hash tracks across disconnect, and only direct USDC calldata is submitted')

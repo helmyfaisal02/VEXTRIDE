@@ -17,7 +17,7 @@
     "verify:character": "bun run ./scripts/verify-character.ts",
     "verify:settings": "bun run ./scripts/verify-character-settings.ts",
     "verify:model": "bun run ./scripts/verify-character-model.tsx",
-    "verify:all": "bun run verify:character && bun run verify:settings && bun run verify:model && bun run verify:input && bun run verify:camera && bun run verify:player && bun run verify:city && bun run verify:city-geometry && bun run verify:city-physics && bun run verify:environment && bun run verify:environment-geometry && bun run verify:environment-physics && bun run verify:world-time && bun run verify:city-finalization && bun run verify:camera-collision && bun run verify:vehicle && bun run verify:vehicle-integration && bun run verify:vehicle-variety && bun run verify:vehicle-fleet && bun run verify:driving-polish && bun run verify:vehicle-endurance && bun run verify:vehicle-stability && bun run verify:npcs && bun run verify:npc-integration && bun run verify:ambient && bun run verify:ambient-integration && bun run verify:missions && bun run verify:mission-integration && bun run verify:shakedown && bun run verify:garage && bun run verify:economy && bun run verify:persistence && bun run verify:wallet && bun run verify:transfer",
+    "verify:all": "bun run verify:character && bun run verify:settings && bun run verify:model && bun run verify:input && bun run verify:camera && bun run verify:player && bun run verify:city && bun run verify:city-geometry && bun run verify:city-physics && bun run verify:environment && bun run verify:environment-geometry && bun run verify:environment-physics && bun run verify:world-time && bun run verify:city-finalization && bun run verify:camera-collision && bun run verify:vehicle && bun run verify:vehicle-integration && bun run verify:vehicle-variety && bun run verify:vehicle-fleet && bun run verify:driving-polish && bun run verify:vehicle-endurance && bun run verify:vehicle-stability && bun run verify:npcs && bun run verify:npc-integration && bun run verify:ambient && bun run verify:ambient-integration && bun run verify:missions && bun run verify:mission-integration && bun run verify:shakedown && bun run verify:garage && bun run verify:economy && bun run verify:persistence && bun run verify:wallet && bun run verify:transfer && bun run verify:transfer-history",
     "verify:vehicle-variety": "bun run ./scripts/verify-vehicle-variety.ts",
     "verify:vehicle-fleet": "bun run ./scripts/verify-vehicle-fleet.tsx",
     "verify:vehicle": "bun run ./scripts/verify-vehicle.ts",
@@ -49,7 +49,8 @@
     "verify:economy": "bun run ./scripts/verify-economy.ts",
     "verify:persistence": "bun run ./scripts/verify-persistence.ts",
     "verify:wallet": "bun run ./scripts/verify-wallet.ts",
-    "verify:transfer": "bun run ./scripts/verify-transfer.ts"
+    "verify:transfer": "bun run ./scripts/verify-transfer.ts",
+    "verify:transfer-history": "bun run ./scripts/verify-transfer-history.ts"
   },
   "dependencies": {
     "@circle-fin/adapter-viem-v2": "^1.19.2",

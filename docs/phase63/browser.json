@@ -1,0 +1,25 @@
+{
+  "logs": [
+    "Desktop double-click produces one mocked send; refresh and reconnect restore pending status with account and network isolation",
+    "Full browser-profile reopening restores history; transient outage remains recoverable and exact receipt verifies on mobile",
+    "Hashless unknown survives reload with no retry; an old history hash cannot be reused and a verified matching hash resolves it",
+    "Signed-out public hash lookup uses no wallet calls and stays out of history and input, gameplay save and physics counts remain intact"
+  ],
+  "errors": [],
+  "warnings": [
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED"
+  ],
+  "methods": [
+    "eth_chainId",
+    "eth_call",
+    "eth_getBalance",
+    "eth_gasPrice",
+    "eth_blockNumber",
+    "eth_estimateGas",
+    "eth_getTransactionByHash",
+    "eth_getTransactionReceipt"
+  ]
+}
