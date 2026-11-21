@@ -30,6 +30,16 @@ export const inputState: InputState = {
   interactQueued: false,
 }
 
+let walletPanelOpen = false
+
+export const isWalletPanelOpen = () => walletPanelOpen
+
+export function setWalletPanelOpen(open: boolean) {
+  if (walletPanelOpen === open) return
+  walletPanelOpen = open
+  resetInput()
+}
+
 export function resetInput(): void {
   inputState.recoveryHeld = false
   inputState.forward = false

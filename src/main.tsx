@@ -20,8 +20,7 @@ import { guestPersistence } from './game/persistence/persistenceCoordinator'
 import { installShareSync } from './lib/share'
 import './index.css'
 
-// Phase 1.1 is a pure 3D engine test: wallet and chain providers (see
-// src/config.ts) are intentionally not mounted until the Arc phase.
+// The optional Arc Wallet owns its injected connection independently of game startup.
 
 // Studio logo SVG
 const StudioLogo = () => (

@@ -4,7 +4,7 @@ import { useBeforePhysicsStep, useRapier, type RapierRigidBody } from '@react-th
 import { Vector3, type Group } from 'three'
 import { useGarageStore } from '../garage/garageState'
 import { useDialogueStore } from '../interactions/dialogueState'
-import { inputState } from '../input'
+import { inputState, isWalletPanelOpen } from '../input/inputState'
 import { dampAngle } from '../shared/math'
 import { createStepProbeResult, probeGround, type CharacterProbe } from './characterProbes'
 import { createCharacterSim, stepCharacter, type CharacterSim } from './characterSim'
@@ -60,7 +60,7 @@ export function useCharacterController(
     }
     if (wasDriving.current) { sim.current = createCharacterSim(); wasDriving.current = false }
 
-    if(useDialogueStore.getState().active||useGarageStore.getState().open){
+    if(useDialogueStore.getState().active||useGarageStore.getState().open||isWalletPanelOpen()){
       wasTalking.current=true
       const velocity=body.linvel()
       body.setLinvel({x:0,y:velocity.y,z:0},true)

@@ -229,7 +229,8 @@ if (DEV) window.addEventListener('message', (e: MessageEvent<MessageData>) => {
 const NOISE = ['/_vite/', '/@vite/', '/@id/', '/node_modules/.vite/', 'chrome-extension://', 'localhost:5173'];
 
 function isNoise(url: string): boolean {
-  return NOISE.some((p) => url.includes(p));
+  // Arc Wallet's balance query contains the connected address in calldata.
+  return host(url) === 'rpc.mainnet.arc.io' || NOISE.some((p) => url.includes(p));
 }
 
 // ---------------------------------------------------------------------------
@@ -429,7 +430,8 @@ function patchProvider(provider: EIP1193Provider | undefined): void {
 
   provider.request = async (args: { method: string; params?: unknown[] }): Promise<unknown> => {
     const ts = Date.now();
-    if (!_enabled) return _request(args);
+    if (!_enabled || args.method === 'eth_requestAccounts' || args.method === 'eth_accounts'
+        || args.method === 'wallet_switchEthereumChain') return _request(args);
 
     const method = args.method;
     const params = (args.params ?? []);

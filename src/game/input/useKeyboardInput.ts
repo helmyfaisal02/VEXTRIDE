@@ -4,7 +4,7 @@ import { isTypingTarget } from '../shared/dom'
 import { useCharacterStore } from '../state/characterStore'
 import { useGarageStore } from '../garage/garageState'
 import { useDialogueStore } from '../interactions/dialogueState'
-import { inputState, resetInput } from './inputState'
+import { inputState, isWalletPanelOpen, resetInput } from './inputState'
 
 /** Keys whose default browser behaviour (page scroll) must be suppressed in play. */
 const BLOCKED_DEFAULTS = new Set([
@@ -58,7 +58,7 @@ function setKey(code: string, down: boolean): void {
 export function useKeyboardInput(): void {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if(isRestoringProgress())return
+      if(isRestoringProgress() || isWalletPanelOpen())return
       // The character creator owns the keyboard while it is open.
       if (useCharacterStore.getState().menuOpen) return
       const dialogue=useDialogueStore.getState()

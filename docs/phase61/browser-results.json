@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "Guest WebGL gameplay, no injected wallet, held-input release, Escape and restored focus/walking",
+    "Mobile dialog fits and Testnet is identified without any balance query",
+    "Explicit provider prompts, declined/unknown-chain switch, Arc detection and deliberate address copy",
+    "Account change, real zero, refresh after RPC failure, wrong-chain balance clearing and listener cleanup",
+    "Saved missions, SC, ledger, paint and parking intact; fixture E routes to garage and Maya; 47 bodies and 565 colliders",
+    "Browser smoke test uses a mocked injected zero address and actual Arc Mainnet RPC (HTTP 200 twice)"
+  ],
+  "errors": [],
+  "warnings": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: net::ERR_FAILED"
+  ]
+}

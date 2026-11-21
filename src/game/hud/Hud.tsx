@@ -1,5 +1,7 @@
 import { memo, useEffect, useRef } from 'react'
 import { UserRound } from 'lucide-react'
+import { ArcWallet } from '../blockchain/ArcWallet'
+import { isWalletPanelOpen } from '../input/inputState'
 import { isTypingTarget } from '../shared/dom'
 import { subscribePerf } from '../shared/perfStats'
 import { useCharacterStore } from '../state/characterStore'
@@ -150,7 +152,7 @@ function LoadingVeil() {
 function useDebugHotkeys() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return
+      if (isWalletPanelOpen() || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return
       // Letters typed into the name field must never trigger debug shortcuts.
       if (isTypingTarget(e.target)) return
       const store = useGameStore.getState()
@@ -178,6 +180,7 @@ export function Hud() {
       <PerfReadout />
       <Controls />
       <CharacterButton />
+      <ArcWallet />
       <CreatorGate />
       <LoadingVeil />
     </div>

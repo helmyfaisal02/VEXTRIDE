@@ -1,6 +1,6 @@
 import { isRestoringProgress } from '../persistence/persistenceRuntime'
 import type { useRapier,RapierRigidBody } from '@react-three/rapier'
-import { inputState,resetInput } from '../input/inputState'
+import { inputState,isWalletPanelOpen,resetInput } from '../input/inputState'
 import { useCharacterStore } from '../state/characterStore'
 import { nearestVehicle,processVehicleInteraction } from '../vehicles/vehicleInteraction'
 import { useVehicleStore,vehicleRuntime } from '../vehicles/vehicleState'
@@ -33,7 +33,7 @@ export function walkingTarget(physics:Physics,player:RapierRigidBody){
  return canUseGarage(physics,player)&&Math.hypot(GARAGE.terminal.x-p.x,GARAGE.terminal.z-p.z)<distance?{kind:'garage' as const}:selected
 }
 export function processInteraction(physics:Physics){
- if(isRestoringProgress()){resetInput();return}
+ if(isRestoringProgress()||isWalletPanelOpen()){resetInput();return}
  const dialogue=useDialogueStore.getState(),vehicle=useVehicleStore.getState(),garage=useGarageStore.getState()
  if(useCharacterStore.getState().menuOpen){if(dialogue.active)dialogue.close();if(garage.open)garage.close();garage.setHint('');return}
  if(vehicle.driving){if(garage.open)garage.close();garage.setHint('');if(dialogue.active)dialogue.close();dialogue.setHint('');processVehicleInteraction(physics);return}

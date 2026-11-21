@@ -1,5 +1,5 @@
 import { useEffect, useState, useSyncExternalStore } from 'react'
-import { resetInput } from '../input/inputState'
+import { isWalletPanelOpen, resetInput } from '../input/inputState'
 import { isTypingTarget } from '../shared/dom'
 import { useCharacterStore } from '../state/characterStore'
 import { formatWorldTime, timePeriod, worldClock } from '../world/worldTime'
@@ -12,7 +12,7 @@ export function WorldTimeHud() {
   useEffect(() => {
     if (!import.meta.env.DEV) return
     const toggle = (event: KeyboardEvent) => {
-      if (event.repeat || event.ctrlKey || event.altKey || event.metaKey || isTypingTarget(event.target)) return
+      if (isWalletPanelOpen() || event.repeat || event.ctrlKey || event.altKey || event.metaKey || isTypingTarget(event.target)) return
       if (event.shiftKey && event.code === 'KeyT') {
         event.preventDefault()
         resetInput()
