@@ -4,6 +4,9 @@ import { ARC_MAINNET } from './arcConfig'
 import { formatUsdc } from './usdcBalance'
 import { injectedWallet } from './walletProvider'
 import { walletSession } from './walletSession'
+import { transferSession } from './transferSession'
+import { SendUsdc } from './SendUsdc'
+import type { WalletPanelControls } from './ArcWallet'
 
 const action = 'rounded-lg bg-white/15 px-3 py-2 text-xs font-semibold hover:bg-white/25 focus-visible:outline focus-visible:outline-2 disabled:opacity-50'
 const statusText = {
@@ -14,8 +17,12 @@ const statusText = {
   error: 'Could not connect to the wallet. Try again.',
 }
 
-export default function ArcWalletContent() {
+export default function ArcWalletContent({ open, registerControls }: {
+  open: boolean
+  registerControls: (controls: WalletPanelControls | null) => void
+}) {
   const state = useStore(walletSession.store)
+  const awaitingWallet = useStore(transferSession.store, state => state.status === 'wallet')
   const copyGeneration = useRef(0)
   const [copyFeedback, setCopyFeedback] = useState<{ address: string; text: string }>()
   const onArc = state.chainId === ARC_MAINNET.chain.id
@@ -23,10 +30,22 @@ export default function ArcWalletContent() {
   const network = onArc ? ARC_MAINNET.label : state.chainId === 5042002 ? 'Arc Testnet'
     : state.chainId === 1 ? 'Ethereum Mainnet' : `Chain ${state.chainId}`
 
-  useEffect(() => () => {
-    copyGeneration.current++
-    walletSession.disconnect()
-  }, [])
+  useEffect(() => {
+    registerControls({
+      canClose: () => transferSession.store.getState().status !== 'wallet',
+      cancelDraft: () => transferSession.clearDraft(),
+    })
+    const unsubscribe = walletSession.store.subscribe((next, previous) => {
+      if (next.address !== previous.address || next.chainId !== previous.chainId ||
+          next.connection !== previous.connection) transferSession.invalidateWallet()
+    })
+    return () => {
+      registerControls(null)
+      unsubscribe()
+      transferSession.clearDraft()
+      walletSession.disconnect()
+    }
+  }, [registerControls])
 
   async function copyAddress(value: string) {
     const generation = ++copyGeneration.current
@@ -77,11 +96,13 @@ export default function ArcWalletContent() {
     )}
     <div className="mt-4">
       {state.connection === 'connected' || state.connection === 'connecting' ? (
-        <button type="button" className={action} onClick={walletSession.disconnect}>Disconnect</button>
+        <button type="button" className={action} disabled={awaitingWallet} onClick={walletSession.disconnect}>Disconnect</button>
       ) : (
         <button type="button" className={action} disabled={state.requestPending} onClick={() => void walletSession.connect(injectedWallet())}>Connect Wallet</button>
       )}
     </div>
+    <SendUsdc open={open} canSend={onArc && !!address && !state.requestPending}
+      walletKey={address} balance={state.balance} />
     </>
   )
 }

@@ -1,11 +1,27 @@
+import type { Address, Hex } from 'viem'
+
 type ProviderEvent = 'accountsChanged' | 'chainChanged' | 'disconnect'
 type Listener = () => void
 
+interface UsdcWalletTransaction {
+  chainId: string
+  from: Address
+  to: Address
+  data: Hex
+  value: '0x0'
+  type: '0x2'
+  gas: Hex
+  maxFeePerGas: Hex
+  maxPriorityFeePerGas: '0x0'
+}
+
+type WalletRequest =
+  | { method: 'eth_requestAccounts' | 'eth_accounts' | 'eth_chainId'; params?: never }
+  | { method: 'wallet_switchEthereumChain'; params: readonly [{ chainId: string }] }
+  | { method: 'eth_sendTransaction'; params: readonly [UsdcWalletTransaction] }
+
 export interface WalletProvider {
-  request(args: {
-    method: 'eth_requestAccounts' | 'eth_accounts' | 'eth_chainId' | 'wallet_switchEthereumChain'
-    params?: readonly [{ chainId: string }]
-  }): Promise<unknown>
+  request(args: WalletRequest): Promise<unknown>
   on(event: ProviderEvent, listener: Listener): void
   removeListener(event: ProviderEvent, listener: Listener): void
 }

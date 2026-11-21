@@ -141,7 +141,16 @@ export function createWalletSession(readBalance = readArcUsdc) {
     }
   }
 
-  return { store, connect, disconnect, refresh, switchNetwork }
+  function getTransferContext() {
+    const activeProvider = provider
+    const { connection, address, chainId } = store.getState()
+    if (!activeProvider || !address || connection !== 'connected' || requestPending ||
+        chainId !== ARC_MAINNET.chain.id) return null
+    const current = revision
+    return { provider: activeProvider, address, isCurrent: () => current === revision }
+  }
+
+  return { store, connect, disconnect, refresh, switchNetwork, getTransferContext }
 }
 
 export const walletSession = createWalletSession()

@@ -431,7 +431,7 @@ function patchProvider(provider: EIP1193Provider | undefined): void {
   provider.request = async (args: { method: string; params?: unknown[] }): Promise<unknown> => {
     const ts = Date.now();
     if (!_enabled || args.method === 'eth_requestAccounts' || args.method === 'eth_accounts'
-        || args.method === 'wallet_switchEthereumChain') return _request(args);
+        || args.method === 'wallet_switchEthereumChain' || args.method === 'eth_sendTransaction') return _request(args);
 
     const method = args.method;
     const params = (args.params ?? []);

@@ -1,0 +1,8 @@
+{
+  "checks": [
+    "Desktop wrong-chain block, failed simulation, double click, rejection, pending across chain switch, reverted receipt, movement and unchanged save",
+    "375px mobile review, pending→confirmed, explorer, exact send calldata, movement and unchanged save"
+  ],
+  "errors": [],
+  "warnings": []
+}
