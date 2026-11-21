@@ -30,8 +30,8 @@ function fixture(){
 const acceptEvent={kind:'accept' as const,missionId:FIRST_CONTACT.id,npcId:'maya' as const,session:1}
 const marcusEvent={kind:'acknowledge' as const,missionId:FIRST_CONTACT.id,npcId:'marcus' as const,objectiveId:'meet-marcus' as const,session:2}
 const mayaEvent={kind:'acknowledge' as const,missionId:FIRST_CONTACT.id,npcId:'maya' as const,objectiveId:'return-to-maya' as const,session:3}
-test('exactly one definition, two unique valid talk objectives, actual NPC metadata targets',()=>{
- assert.equal(MISSIONS.length,1);assert.equal(FIRST_CONTACT.title,'First Contact');assert.equal(FIRST_CONTACT.id,'first-contact')
+test('exactly two definitions, First Contact retains two unique valid talk objectives, actual NPC metadata targets',()=>{
+ assert.equal(MISSIONS.length,2);assert.equal(FIRST_CONTACT.title,'First Contact');assert.equal(FIRST_CONTACT.id,'first-contact')
  assert.equal(new Set(FIRST_CONTACT.objectives.map(o=>o.id)).size,2)
  assert.deepEqual(FIRST_CONTACT.objectives.map(o=>o.npcId),['marcus','maya'])
  for(const o of FIRST_CONTACT.objectives){assert.ok(NPCS.includes(objectiveNPC(o)));assert.ok(o.text.length>10&&o.acknowledgement.length>30&&o.action.length>5)}

@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "Mobile second mission offer focuses Accept",
+    "Mobile dialogue fits viewport",
+    "Mobile objective includes current checkpoint only",
+    "Mobile mission tracker fits viewport",
+    "Creator hides mission tracker",
+    "Creator preserves active mission and First Contact history",
+    "Refresh resets both session mission states",
+    "Existing character persistence survives reload",
+    "Mobile checks have no runtime errors"
+  ],
+  "errors": [],
+  "notes": "375x812 UI/Creator/reload fixtures. First Contact completion and player proximity are fixture setup, not physical mission journey evidence."
+}

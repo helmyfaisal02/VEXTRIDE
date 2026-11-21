@@ -1,0 +1,16 @@
+{
+  "checks": [
+    "Night fixture uses real coupe E entry",
+    "Night mission objective and vehicle HUD remain readable",
+    "World time developer controls preserve objective",
+    "Chase camera orbit and zoom preserve mission",
+    "F P C shortcuts preserve mission and occupied vehicle",
+    "All three player cars and five ambient agents remain mounted"
+  ],
+  "javascriptExceptions": [],
+  "shaderErrors": [],
+  "consoleWarnings": [
+    "Existing favicon.ico HTTP 404. The harness initially classified this as a generic console failure; resource timing identified the icon request."
+  ],
+  "notes": "Nighttime UI/camera/input compatibility fixture, not full mission journey. First Contact and mission-two acceptance set via reducer; player positioned beside the original coupe. Real E entry, developer time control, mouse orbit/zoom and F/P/C input. The six behavioral assertions passed; the final blanket-console assertion failed on the icon request. No hardware FPS claim."
+}

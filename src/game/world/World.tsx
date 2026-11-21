@@ -10,6 +10,7 @@ import { StepTestArea } from './StepTestArea'
 import { WorldTimeDriver } from './WorldTimeDriver'
 import { AmbientSystem } from '../ambient/AmbientSystem'
 import { NPCSystem } from '../npcs/NPCSystem'
+import { MissionDriver } from '../missions/MissionDriver'
 import { VehicleSystem } from '../vehicles'
 
 /** Marks the game ready once Rapier's WASM has initialised and the world mounted. */
@@ -34,6 +35,7 @@ function WorldImpl() {
       <EnvironmentView />
       <EnvColliders />
       <VehicleSystem />
+      <MissionDriver />
       <NPCSystem />
       <AmbientSystem />
       {/* Phase 1 demo objects, moved out of the street grid into the demo yard east of the city. */}

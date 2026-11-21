@@ -19,7 +19,9 @@ const store = new Map<string, string>()
 Object.assign(windowTarget, { navigator: { userAgent: 'headless' }, innerWidth: 1280, innerHeight: 720, localStorage: { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => void store.set(k, v) } })
 Object.assign(globalThis, { HTMLElement: FakeElement, window: windowTarget, document: Object.assign(new EventTarget(), { hidden: false }) })
 
-const { useMissionStore } = await import('../src/game/missions/missionState')
+const { CHECKPOINTS } = await import('../src/game/missions/checkpointRoute')
+const { MissionDriver } = await import('../src/game/missions/MissionDriver')
+const { useMissionStore,missionStatus } = await import('../src/game/missions/missionState')
 const { acceptMission,declineMission,acknowledgeObjective } = await import('../src/game/missions/missionManager')
 const { missionHUD,missionTarget } = await import('../src/game/missions/missionPresentation')
 const { AmbientSystem } = await import('../src/game/ambient/AmbientSystem')
@@ -61,7 +63,7 @@ await act(async () => {
         <RigidBody type="fixed" colliders={false}><CuboidCollider args={[800, 0.5, 800]} position={[0, -0.5, 0]} /></RigidBody>
         <CityColliders />
         <EnvColliders />
-        <VehicleSystem />
+        <VehicleSystem /><MissionDriver/>
         <NPCSystem />
         <AmbientSystem/>
         <Player />
@@ -118,7 +120,7 @@ check('first HUD waypoint references actual Marcus definition',missionHUD(accept
 await act(()=>{useCharacterStore.getState().openMenu();run(2)})
 check('creator open leaves mission coherent',useMissionStore.getState().progress===accepted)
 await act(()=>{useCharacterStore.getState().cancel();run(2)})
-const render=(npcs=true)=><Suspense fallback={null}><Physics gravity={[0,-9.81,0]} timeStep={FIXED_DT} updatePriority={-50}><RigidBody type="fixed" colliders={false}><CuboidCollider args={[800,.5,800]} position={[0,-.5,0]}/></RigidBody><CityColliders/><EnvColliders/><VehicleSystem/>{npcs&&<NPCSystem/>}<AmbientSystem/><Player/><CameraDirector/><Capture/></Physics></Suspense>
+const render=(npcs=true)=><Suspense fallback={null}><Physics gravity={[0,-9.81,0]} timeStep={FIXED_DT} updatePriority={-50}><RigidBody type="fixed" colliders={false}><CuboidCollider args={[800,.5,800]} position={[0,-.5,0]}/></RigidBody><CityColliders/><EnvColliders/><VehicleSystem/><MissionDriver/>{npcs&&<NPCSystem/>}<AmbientSystem/><Player/><CameraDirector/><Capture/></Physics></Suspense>
 session=await talk('marcus')
 await act(()=>{root.render(render(false))});run(2)
 check('NPC unmount closes dialogue and invalidates stale mission acknowledgement',!useDialogueStore.getState().active&&!acknowledgeObjective('meet-marcus',session)&&useMissionStore.getState().progress===accepted)
@@ -151,6 +153,36 @@ check('final acknowledgement completes with confirmation and no stale waypoint',
 session=await talk('maya')
 check('completed mission cannot restart; Maya normal dialogue retained',!acceptMission(session)&&useDialogueStore.getState().active?.lines===NPCS[1].lines)
 await act(()=>{press('Escape');run(2)})
+session=await talk('marcus')
+await act(()=>{declineMission(session,'motor-row-shakedown');run(2)})
+check('second mission decline leaves First Contact completed',missionStatus(useMissionStore.getState().progress,'first-contact')==='COMPLETED'&&useMissionStore.getState().progress.missionId==='first-contact')
+session=await talk('marcus')
+await act(()=>{acceptMission(session,'motor-row-shakedown');run(2)})
+check('Marcus acceptance unlocks the first driving gate only',useMissionStore.getState().progress.objectiveId==='checkpoint-a'&&missionStatus(useMissionStore.getState().progress,'first-contact')==='COMPLETED')
+session=await talk('marcus')
+check('early Marcus report cannot skip checkpoints',!acknowledgeObjective('report-to-marcus',session))
+await act(()=>{press('Escape');run(2)})
+for(let i=0;i<CHECKPOINTS.length;i++){
+ const g=CHECKPOINTS[i],d=VEHICLES[i],car=getVehicleRuntime(d.id).body!,yaw=Math.atan2(-g.direction.x,-g.direction.z)
+ // Fixture positioning sets up each car; the observed crossing itself is real fixed-step driving.
+ car.setTranslation({x:g.spawn.x-g.direction.x*8,y:g.spawn.y+d.rideHeight+.03,z:g.spawn.z-g.direction.z*8},true)
+ car.setRotation({x:0,y:Math.sin(yaw/2),z:0,w:Math.cos(yaw/2)},true);car.setLinvel({x:0,y:0,z:0},true);car.setAngvel({x:0,y:0,z:0},true);run(45)
+ const exit=findVehicleExit(ctx,car,body as never,d)!
+ body.setTranslation(exit,true);run(3)
+ await act(()=>{press('KeyE');run(2);press('KeyE',false)})
+ check(`${d.id}: checkpoint travel enters only the selected player vehicle`,useVehicleStore.getState().activeVehicleId===d.id)
+ await act(()=>{press('KeyW');for(let j=0;j<210&&useMissionStore.getState().progress.objectiveId===g.id;j++)run(1);press('KeyW',false);press('Space');run(90);press('Space',false)})
+ check(`${d.id}: actual post-physics movement advances its ordered gate`,useMissionStore.getState().progress.objectiveId!==g.id)
+ await act(()=>{press('KeyE');run(2);press('KeyE',false)})
+ check(`${d.id}: safe exit and vehicle switching preserve checkpoint progress`,!useVehicleStore.getState().driving&&useMissionStore.getState().progress.status==='ACTIVE')
+}
+check('third gate selects actual Marcus return target',useMissionStore.getState().progress.objectiveId==='report-to-marcus'&&missionTarget(useMissionStore.getState().progress)===NPCS[0])
+session=await talk('marcus')
+await act(()=>{acknowledgeObjective('report-to-marcus',session);run(2)})
+check('final on-foot acknowledgement completes second mission exactly once',useMissionStore.getState().progress.status==='COMPLETED'&&useMissionStore.getState().progress.completed?.length===2&&!acknowledgeObjective('report-to-marcus',session))
+await act(()=>{root.render(render(false))});run(2)
+await act(()=>{root.render(render())});run(30)
+check('combined mission history and one observer survive remount',useMissionStore.getState().progress.completed?.length===2&&ctx.afterStepCallbacks.size===1)
 check('ambient traffic/pedestrians continue through mission with fixed population',ambientBodies.size===5&&ambientTraffic.get('ambient-coupe')!.distance!==trafficStart)
 check('mission adds no bodies, colliders, callbacks or input listeners',ctx.world.bodies.len()===counts.body&&ctx.world.colliders.len()===counts.collider&&ctx.beforeStepCallbacks.size===counts.callback&&listenerCount()===counts.listeners)
 check('camera stays finite through walking, driving and dialogues',Number.isFinite((camera as unknown as THREE.Camera).position.length()))

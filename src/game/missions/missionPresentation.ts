@@ -1,6 +1,7 @@
+import { CHECKPOINTS } from './checkpointRoute'
 import { missionDefinition,objectiveNPC } from './missionDefinitions'
 import { currentObjective,type MissionProgress } from './missionState'
-export function missionTarget(progress:MissionProgress){const objective=currentObjective(progress);return objective?objectiveNPC(objective):null}
+export function missionTarget(progress:MissionProgress){const objective=currentObjective(progress);return objective?.checkpointId?CHECKPOINTS.find(g=>g.id===objective.checkpointId)!:objective?objectiveNPC(objective):null}
 export function missionHUD(progress:MissionProgress){const objective=currentObjective(progress),target=missionTarget(progress);return objective&&target?{title:missionDefinition(progress.missionId).title,objective:objective.text,target}:null}
 export function targetReadout(player:{x:number;z:number},target:{x:number;z:number}){
  const dx=target.x-player.x,dz=target.z-player.z,distance=Math.hypot(dx,dz)
