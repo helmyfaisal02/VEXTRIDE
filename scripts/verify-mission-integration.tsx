@@ -19,6 +19,9 @@ const store = new Map<string, string>()
 Object.assign(windowTarget, { navigator: { userAgent: 'headless' }, innerWidth: 1280, innerHeight: 720, localStorage: { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => void store.set(k, v) } })
 Object.assign(globalThis, { HTMLElement: FakeElement, window: windowTarget, document: Object.assign(new EventTarget(), { hidden: false }) })
 
+const { GARAGE } = await import('../src/game/garage/garageConfig')
+const { useGarageStore,garageRuntime } = await import('../src/game/garage/garageState')
+const { GarageSystem } = await import('../src/game/garage/GarageSystem')
 const { CHECKPOINTS } = await import('../src/game/missions/checkpointRoute')
 const { MissionDriver } = await import('../src/game/missions/MissionDriver')
 const { useMissionStore,missionStatus } = await import('../src/game/missions/missionState')
@@ -49,7 +52,8 @@ const check = (name: string, ok: boolean, info = '') => { console.log(`${ok ? 'P
 type Ctx = ReturnType<typeof useRapier>
 let rapier: Ctx | null = null
 let camera: THREE.Camera | null = null
-function Capture() { const c = useRapier(); const view = useThree(); useEffect(() => { rapier = c; camera = view.camera }); return null }
+let scene:THREE.Scene|null=null
+function Capture() { const c = useRapier(); const view = useThree(); useEffect(() => { rapier = c; camera = view.camera;scene=view.scene }); return null }
 
 const noop = () => {}
 const canvas = { style: {}, ownerDocument: { addEventListener: noop, removeEventListener: noop }, width: 800, height: 600, clientWidth: 800, clientHeight: 600, addEventListener: noop, removeEventListener: noop, getContext: () => null } as unknown as HTMLCanvasElement
@@ -63,7 +67,7 @@ await act(async () => {
         <RigidBody type="fixed" colliders={false}><CuboidCollider args={[800, 0.5, 800]} position={[0, -0.5, 0]} /></RigidBody>
         <CityColliders />
         <EnvColliders />
-        <VehicleSystem /><MissionDriver/>
+        <VehicleSystem /><MissionDriver/><GarageSystem/>
         <NPCSystem />
         <AmbientSystem/>
         <Player />
@@ -99,6 +103,18 @@ run(240)
 
 const counts={body:ctx.world.bodies.len(),collider:ctx.world.colliders.len(),callback:ctx.beforeStepCallbacks.size,listeners:listenerCount()}
 const trafficStart=ambientTraffic.get('ambient-coupe')!.distance
+place(GARAGE.terminal.x,GARAGE.terminal.z+1.7)
+await act(()=>{press('KeyW');press('KeyE');run(2);press('KeyE',false)})
+check('walking E opens garage and clears held movement without NPC dialogue',useGarageStore.getState().open&&!useDialogueStore.getState().active)
+const servicePosition={...body.translation()}
+await act(()=>{press('KeyW');press('KeyE');run(60);press('KeyE',false)})
+check('open garage blocks walking and duplicate E without camera replacement',Math.hypot(body.translation().x-servicePosition.x,body.translation().z-servicePosition.z)<.02&&useGarageStore.getState().open)
+await act(()=>{press('Escape');run(2)})
+check('shared Escape closes garage and restores cleared input',!useGarageStore.getState().open)
+await act(()=>{press('KeyE');run(2);press('KeyE',false);useCharacterStore.getState().openMenu();run(2)})
+check('creator takes precedence and closes the garage',!useGarageStore.getState().open)
+await act(()=>{useCharacterStore.getState().cancel();run(2)})
+
 async function talk(id:'maya'|'marcus'){
  const n=NPCS.find(n=>n.id===id)!;place(n.spawn.x-2,n.spawn.z)
  await act(()=>{press('KeyE');run(2);press('KeyE',false)})
@@ -120,7 +136,7 @@ check('first HUD waypoint references actual Marcus definition',missionHUD(accept
 await act(()=>{useCharacterStore.getState().openMenu();run(2)})
 check('creator open leaves mission coherent',useMissionStore.getState().progress===accepted)
 await act(()=>{useCharacterStore.getState().cancel();run(2)})
-const render=(npcs=true)=><Suspense fallback={null}><Physics gravity={[0,-9.81,0]} timeStep={FIXED_DT} updatePriority={-50}><RigidBody type="fixed" colliders={false}><CuboidCollider args={[800,.5,800]} position={[0,-.5,0]}/></RigidBody><CityColliders/><EnvColliders/><VehicleSystem/><MissionDriver/>{npcs&&<NPCSystem/>}<AmbientSystem/><Player/><CameraDirector/><Capture/></Physics></Suspense>
+const render=(npcs=true,garage=true)=><Suspense fallback={null}><Physics gravity={[0,-9.81,0]} timeStep={FIXED_DT} updatePriority={-50}><RigidBody type="fixed" colliders={false}><CuboidCollider args={[800,.5,800]} position={[0,-.5,0]}/></RigidBody><CityColliders/><EnvColliders/><VehicleSystem/><MissionDriver/>{garage&&<GarageSystem/>}{npcs&&<NPCSystem/>}<AmbientSystem/><Player/><CameraDirector/><Capture/></Physics></Suspense>
 session=await talk('marcus')
 await act(()=>{root.render(render(false))});run(2)
 check('NPC unmount closes dialogue and invalidates stale mission acknowledgement',!useDialogueStore.getState().active&&!acknowledgeObjective('meet-marcus',session)&&useMissionStore.getState().progress===accepted)
@@ -182,12 +198,48 @@ await act(()=>{acknowledgeObjective('report-to-marcus',session);run(2)})
 check('final on-foot acknowledgement completes second mission exactly once',useMissionStore.getState().progress.status==='COMPLETED'&&useMissionStore.getState().progress.completed?.length===2&&!acknowledgeObjective('report-to-marcus',session))
 await act(()=>{root.render(render(false))});run(2)
 await act(()=>{root.render(render())});run(30)
-check('combined mission history and one observer survive remount',useMissionStore.getState().progress.completed?.length===2&&ctx.afterStepCallbacks.size===1)
+check('combined mission history and one observer survive remount',useMissionStore.getState().progress.completed?.length===2&&ctx.afterStepCallbacks.size===2)
+for(let i=0;i<2;i++){
+ const b=GARAGE.bays[i],d=VEHICLES[i],car=getVehicleRuntime(d.id).body!
+ // Test setup outside the bay; crossing and stop use the real controller and observed physics.
+ car.setTranslation({x:b.x,y:b.y+d.rideHeight+.03,z:b.z+6.5},true);car.setRotation({x:0,y:0,z:0,w:1},true);car.setLinvel({x:0,y:0,z:0},true);car.setAngvel({x:0,y:0,z:0},true);run(45)
+ body.setTranslation(findVehicleExit(ctx,car,body as never,d)!,true);run(3)
+ await act(()=>{press('KeyE');run(2);press('KeyE',false)})
+ check(`${d.id}: garage approach enters the real car`,useVehicleStore.getState().activeVehicleId===d.id)
+ await act(()=>{
+  for(let j=0;j<450&&car.translation().z>b.z+.15;j++){
+   const v=car.linvel();press('KeyW',Math.hypot(v.x,v.z)<2.1);run(1)
+  }
+  press('KeyW',false);press('Space');run(90);press('Space',false);press('KeyE');run(2);press('KeyE',false);run(90)
+ })
+ check(`${d.id}: physical parking and safe exit confirm exclusive bay occupancy`,useGarageStore.getState().occupancy[b.id]===d.id&&!useVehicleStore.getState().driving)
+}
+check('two parked vehicles coexist without duplicate bay or vehicle assignments',Object.keys(useGarageStore.getState().occupancy).length===2&&new Set(Object.values(useGarageStore.getState().occupancy)).size===2)
+const sedanPosition={...getVehicleRuntime('city-sedan').body!.translation()},coupe=getVehicleRuntime('street-coupe').body!
+body.setTranslation(findVehicleExit(ctx,coupe,body as never,VEHICLES[0])!,true);run(3)
+await act(()=>{press('KeyE');run(2);press('KeyE',false);press('KeyS');run(150);press('KeyS',false)})
+check('driving away clears only the departed bay',!useGarageStore.getState().occupancy[GARAGE.bays[0].id]&&useGarageStore.getState().occupancy[GARAGE.bays[1].id]==='city-sedan')
+check('other parked car retains its independent transform',Math.hypot(getVehicleRuntime('city-sedan').body!.translation().x-sedanPosition.x,getVehicleRuntime('city-sedan').body!.translation().z-sedanPosition.z)<.01)
+await act(()=>{press('Space');run(120);press('Space',false);press('KeyE');run(2);press('KeyE',false)})
+getVehicleRuntime('city-sedan').state.recoveryRevision++;run(12)
+check('recovery revision revokes parked status and cannot reconfirm inside the bay',!useGarageStore.getState().occupancy[GARAGE.bays[1].id])
+run(150);check('recovered stationary bay cannot spoof a new drive-in',Object.keys(useGarageStore.getState().occupancy).length===0)
+check('garage actions preserve both completed mission histories',useMissionStore.getState().progress.completed?.length===2)
+for(let i=0;i<3;i++){
+ const resources=new Set<THREE.BufferGeometry|THREE.Material>()
+ ;(scene as unknown as THREE.Scene).traverse(o=>{if(o instanceof THREE.Mesh&&(o.parent?.name==='garage-service-terminal'||o.name==='garage-parking-markers')){const mesh=o as THREE.Mesh<THREE.BufferGeometry,THREE.Material|THREE.Material[]>;resources.add(mesh.geometry);for(const m of Array.isArray(mesh.material)?mesh.material:[mesh.material])resources.add(m)}})
+ let released=0;for(const resource of resources)resource.addEventListener('dispose',()=>released++)
+ await act(()=>{root.render(render(true,false))});run(2)
+ check(`garage remount ${i}: terminal body, occupancy and all six GPU resources release`,garageRuntime.terminal===null&&!useGarageStore.getState().open&&ctx.world.bodies.len()===counts.body-1&&ctx.world.colliders.len()===counts.collider-1&&resources.size===6&&released===6)
+ await act(()=>{root.render(render())});run(30)
+ check(`garage remount ${i}: callbacks, bodies, colliders and listeners plateau`,ctx.world.bodies.len()===counts.body&&ctx.world.colliders.len()===counts.collider&&ctx.afterStepCallbacks.size===2&&listenerCount()===counts.listeners)
+}
+
 check('ambient traffic/pedestrians continue through mission with fixed population',ambientBodies.size===5&&ambientTraffic.get('ambient-coupe')!.distance!==trafficStart)
 check('mission adds no bodies, colliders, callbacks or input listeners',ctx.world.bodies.len()===counts.body&&ctx.world.colliders.len()===counts.collider&&ctx.beforeStepCallbacks.size===counts.callback&&listenerCount()===counts.listeners)
 check('camera stays finite through walking, driving and dialogues',Number.isFinite((camera as unknown as THREE.Camera).position.length()))
 await act(()=>root.unmount())
-check('teardown leaves no dialogue/NPC/ambient references or window listeners',!useDialogueStore.getState().active&&npcRegistry.size===0&&ambientBodies.size===0&&listenerCount()===0)
+check('teardown leaves no dialogue/NPC/ambient references or window listeners',!useDialogueStore.getState().active&&npcRegistry.size===0&&ambientBodies.size===0&&listenerCount()===0&&garageRuntime.terminal===null&&!useGarageStore.getState().open&&Object.keys(useGarageStore.getState().occupancy).length===0)
 check('session mission completion survives component teardown without restarting',useMissionStore.getState().progress.status==='COMPLETED')
 console.log(fails?`${fails} FAILED`:'ALL PASS')
 process.exit(fails?1:0)

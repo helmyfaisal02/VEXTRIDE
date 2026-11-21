@@ -1,0 +1,8 @@
+{
+  "checks": [
+    "Exterior terminal and E hint render during daytime",
+    "Existing developer control switches to nighttime with terminal hint preserved"
+  ],
+  "errors": [],
+  "notes": "Dedicated render fixture positions the player near the terminal and adjusts the existing camera. Physical desktop traversal is recorded separately."
+}

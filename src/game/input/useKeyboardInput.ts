@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { isTypingTarget } from '../shared/dom'
 import { useCharacterStore } from '../state/characterStore'
+import { useGarageStore } from '../garage/garageState'
 import { useDialogueStore } from '../interactions/dialogueState'
 import { inputState, resetInput } from './inputState'
 
@@ -63,6 +64,8 @@ export function useKeyboardInput(): void {
         if(e.code==='Escape'&&!e.repeat){e.preventDefault();dialogue.close()}
         return
       }
+      const garage=useGarageStore.getState()
+      if(garage.open){if(e.code==='Escape'&&!e.repeat){e.preventDefault();garage.close()};return}
       if (isTypingTarget(e.target)) return
       if ((e.code === 'KeyE' || e.code === 'KeyR') && (e.ctrlKey || e.altKey)) return
       // With Cmd held the browser swallows other keys' keyup events, which

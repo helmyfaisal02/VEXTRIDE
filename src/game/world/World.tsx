@@ -10,6 +10,7 @@ import { StepTestArea } from './StepTestArea'
 import { WorldTimeDriver } from './WorldTimeDriver'
 import { AmbientSystem } from '../ambient/AmbientSystem'
 import { NPCSystem } from '../npcs/NPCSystem'
+import { GarageSystem } from '../garage/GarageSystem'
 import { MissionDriver } from '../missions/MissionDriver'
 import { VehicleSystem } from '../vehicles'
 
@@ -36,6 +37,7 @@ function WorldImpl() {
       <EnvColliders />
       <VehicleSystem />
       <MissionDriver />
+      <GarageSystem />
       <NPCSystem />
       <AmbientSystem />
       {/* Phase 1 demo objects, moved out of the street grid into the demo yard east of the city. */}

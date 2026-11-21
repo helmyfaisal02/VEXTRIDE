@@ -2,6 +2,7 @@ import { useEffect, useRef, type RefObject } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useBeforePhysicsStep, useRapier, type RapierRigidBody } from '@react-three/rapier'
 import { Vector3, type Group } from 'three'
+import { useGarageStore } from '../garage/garageState'
 import { useDialogueStore } from '../interactions/dialogueState'
 import { inputState } from '../input'
 import { dampAngle } from '../shared/math'
@@ -59,7 +60,7 @@ export function useCharacterController(
     }
     if (wasDriving.current) { sim.current = createCharacterSim(); wasDriving.current = false }
 
-    if(useDialogueStore.getState().active){
+    if(useDialogueStore.getState().active||useGarageStore.getState().open){
       wasTalking.current=true
       const velocity=body.linvel()
       body.setLinvel({x:0,y:velocity.y,z:0},true)

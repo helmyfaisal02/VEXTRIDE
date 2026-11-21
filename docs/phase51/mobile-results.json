@@ -1,0 +1,35 @@
+{
+  "checks": [
+    "375px garage panel fits viewport",
+    "Close receives focus on opening",
+    "Reverse tab wraps to final vehicle choice",
+    "Forward tab wraps to Close",
+    "Catalog has exactly three vehicles and no ownership/economy labels",
+    "Street Coupe accurate dimensions and speed specification",
+    "City Sedan accurate dimensions and speed specification",
+    "Utility Pickup accurate dimensions and speed specification",
+    "Held movement and repeated E cannot move player or duplicate panel",
+    "Focus loss clears all held gameplay inputs",
+    "Escape closes through shared keyboard handler",
+    "Walking resumes after close",
+    "Three panel remounts add no global listeners",
+    "Character Creator takes precedence over garage panel",
+    "Day/night and F P C do not close or corrupt garage",
+    "Only one fixed kiosk body/collider added, five ambient agents preserved",
+    "Refresh preserves character and resets session-only parking",
+    "No mobile runtime or shader errors"
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:5173/favicon.ico"
+    }
+  ],
+  "counts": {
+    "bodies": 47,
+    "colliders": 565,
+    "ambient": 5
+  },
+  "notes": "375x812 UI/input/Creator/night/remount fixtures use player proximity placement, not physical parking proof. Desktop result records actual drive-in and departure. No mission state mutation."
+}

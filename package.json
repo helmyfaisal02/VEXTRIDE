@@ -17,7 +17,7 @@
     "verify:character": "bun run ./scripts/verify-character.ts",
     "verify:settings": "bun run ./scripts/verify-character-settings.ts",
     "verify:model": "bun run ./scripts/verify-character-model.tsx",
-    "verify:all": "bun run verify:character && bun run verify:settings && bun run verify:model && bun run verify:input && bun run verify:camera && bun run verify:player && bun run verify:city && bun run verify:city-geometry && bun run verify:city-physics && bun run verify:environment && bun run verify:environment-geometry && bun run verify:environment-physics && bun run verify:world-time && bun run verify:city-finalization && bun run verify:camera-collision && bun run verify:vehicle && bun run verify:vehicle-integration && bun run verify:vehicle-variety && bun run verify:vehicle-fleet && bun run verify:driving-polish && bun run verify:vehicle-endurance && bun run verify:vehicle-stability && bun run verify:npcs && bun run verify:npc-integration && bun run verify:ambient && bun run verify:ambient-integration && bun run verify:missions && bun run verify:mission-integration && bun run verify:shakedown",
+    "verify:all": "bun run verify:character && bun run verify:settings && bun run verify:model && bun run verify:input && bun run verify:camera && bun run verify:player && bun run verify:city && bun run verify:city-geometry && bun run verify:city-physics && bun run verify:environment && bun run verify:environment-geometry && bun run verify:environment-physics && bun run verify:world-time && bun run verify:city-finalization && bun run verify:camera-collision && bun run verify:vehicle && bun run verify:vehicle-integration && bun run verify:vehicle-variety && bun run verify:vehicle-fleet && bun run verify:driving-polish && bun run verify:vehicle-endurance && bun run verify:vehicle-stability && bun run verify:npcs && bun run verify:npc-integration && bun run verify:ambient && bun run verify:ambient-integration && bun run verify:missions && bun run verify:mission-integration && bun run verify:shakedown && bun run verify:garage",
     "verify:vehicle-variety": "bun run ./scripts/verify-vehicle-variety.ts",
     "verify:vehicle-fleet": "bun run ./scripts/verify-vehicle-fleet.tsx",
     "verify:vehicle": "bun run ./scripts/verify-vehicle.ts",
@@ -44,7 +44,8 @@
     "verify:ambient-integration": "bun run ./scripts/verify-ambient-integration.tsx",
     "verify:missions": "bun run ./scripts/verify-missions.ts",
     "verify:mission-integration": "bun run ./scripts/verify-mission-integration.tsx",
-    "verify:shakedown": "bun run ./scripts/verify-shakedown.ts"
+    "verify:shakedown": "bun run ./scripts/verify-shakedown.ts",
+    "verify:garage": "bun run ./scripts/verify-garage.ts"
   },
   "dependencies": {
     "@circle-fin/adapter-viem-v2": "^1.19.2",
