@@ -16,6 +16,7 @@ const statusText = {
   missing: 'No compatible browser wallet detected.',
   rejected: 'Wallet connection declined.',
   error: 'Could not connect to the wallet. Try again.',
+  timeout: 'The wallet did not respond. Finish or dismiss the request in your wallet before connecting again.',
 }
 
 export default function ArcWalletContent({ open, registerControls }: {
@@ -65,7 +66,9 @@ export default function ArcWalletContent({ open, registerControls }: {
     <>
     <p className="mt-3 text-xs text-white/75">USDC is separate from Street Cash.</p>
     <p role="status" className="mt-4 text-sm font-medium">
-      {state.connection === 'connected' ? (onArc ? 'Connected to Arc Mainnet' : 'Wrong network') : statusText[state.connection]}
+      {state.connection === 'connected' ? (onArc ? 'Connected to Arc Mainnet' : 'Wrong network')
+        : state.connection === 'disconnected' && state.requestPending
+          ? 'Finish or dismiss the earlier request in your wallet.' : statusText[state.connection]}
     </p>
     {address && (
       <div className="mt-3 space-y-3 text-sm">

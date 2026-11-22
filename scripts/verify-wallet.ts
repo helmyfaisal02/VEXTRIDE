@@ -203,6 +203,27 @@ session.disconnect()
 assert.equal(wallet.count(), 0)
 pass('Chain changes invalidate pending reads, provider disconnect and remount remove every session listener')
 
+const slowWallet = new MockWallet()
+let settleConsent!: (accounts: string[]) => void
+const request = slowWallet.request.bind(slowWallet)
+slowWallet.request = args => {
+  if (args.method !== 'eth_requestAccounts') return request(args)
+  slowWallet.methods.push(args.method)
+  return new Promise<string[]>(resolve => { settleConsent = resolve })
+}
+const slowSession = createWalletSession(() => Promise.resolve(0n), 5)
+const prompt = slowSession.connect(slowWallet)
+await new Promise(resolve => setTimeout(resolve, 25))
+assert.equal(slowSession.store.getState().connection, 'timeout')
+await slowSession.connect(slowWallet)
+assert.deepEqual(slowWallet.methods, ['eth_requestAccounts'])
+settleConsent([secondAddress])
+await prompt
+assert.equal(slowSession.store.getState().requestPending, false)
+assert.equal(slowSession.store.getState().address, null)
+assert.equal(slowWallet.count(), 0)
+pass('Expired wallet consent ignores late completion and keeps the duplicate guard until settlement')
+
 assert.equal(useMissionStore.getState(), core)
 assert.equal(core.economy.balance, 0)
 assert.equal(STREET_CASH.resprayPrice, 125)

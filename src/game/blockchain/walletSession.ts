@@ -5,7 +5,7 @@ import { readArcUsdc } from './usdcBalance'
 import { inspectWallet, providerErrorCode, type WalletProvider } from './walletProvider'
 
 interface WalletState {
-  connection: 'disconnected' | 'connecting' | 'connected' | 'missing' | 'rejected' | 'error'
+  connection: 'disconnected' | 'connecting' | 'connected' | 'missing' | 'rejected' | 'error' | 'timeout'
   address: Address | null
   chainId: number | null
   balanceStatus: 'idle' | 'loading' | 'ready' | 'unavailable'
@@ -24,16 +24,23 @@ const initialState: WalletState = {
   networkNotice: '',
 }
 
-export function createWalletSession(readBalance = readArcUsdc) {
+export function createWalletSession(readBalance = readArcUsdc, consentTimeout = 30_000) {
   const store = createStore<WalletState>(() => initialState)
   let provider: WalletProvider | null = null
   let removeListeners: (() => void) | undefined
   let revision = 0
   let requestPending = false
+  let consentTimer: ReturnType<typeof setTimeout> | undefined
+
+  function clearConsentTimer() {
+    clearTimeout(consentTimer)
+    consentTimer = undefined
+  }
 
   function reset(connection: WalletState['connection']) {
     revision++
     provider = null
+    clearConsentTimer()
     removeListeners?.()
     removeListeners = undefined
     store.setState({ ...initialState, connection, requestPending })
@@ -77,6 +84,7 @@ export function createWalletSession(readBalance = readArcUsdc) {
   }
 
   function finishRequest() {
+    clearConsentTimer()
     requestPending = false
     store.setState({ requestPending })
   }
@@ -87,20 +95,27 @@ export function createWalletSession(readBalance = readArcUsdc) {
     requestPending = true
     const current = ++revision
     store.setState({ ...initialState, connection: 'connecting', requestPending })
+    // A timed-out extension prompt can still be open. Ignore its eventual
+    // approval and keep the duplicate-prompt guard until it actually settles.
+    consentTimer = setTimeout(() => {
+      if (current === revision) reset('timeout')
+    }, consentTimeout)
     try {
       await selected.request({ method: 'eth_requestAccounts' })
       if (current !== revision) return
+      clearConsentTimer()
       provider = selected
       const changed = () => { void sync(selected) }
       const disconnected = () => { if (provider === selected) disconnect() }
+      const listeners = [
+        ['accountsChanged', changed], ['chainChanged', changed], ['disconnect', disconnected],
+      ] as const
       removeListeners = () => {
-        selected.removeListener('accountsChanged', changed)
-        selected.removeListener('chainChanged', changed)
-        selected.removeListener('disconnect', disconnected)
+        for (const [event, listener] of listeners) {
+          try { selected.removeListener(event, listener) } catch { /* Continue cleaning up an inconsistent provider. */ }
+        }
       }
-      selected.on('accountsChanged', changed)
-      selected.on('chainChanged', changed)
-      selected.on('disconnect', disconnected)
+      for (const [event, listener] of listeners) selected.on(event, listener)
       await sync(selected)
     } catch (error) {
       if (provider === selected || current === revision) {
@@ -118,11 +133,17 @@ export function createWalletSession(readBalance = readArcUsdc) {
     requestPending = true
     const current = revision
     store.setState({ requestPending, networkNotice: '' })
+    consentTimer = setTimeout(() => {
+      if (provider === activeProvider) {
+        store.setState({ networkNotice: 'Wallet network request is still open. Finish or dismiss it in your wallet.' })
+      }
+    }, consentTimeout)
     try {
       await activeProvider.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: ARC_MAINNET.chainIdHex }],
       })
+      clearConsentTimer()
       // Wallets normally emit chainChanged; inspect explicitly when they do not.
       if (current === revision) await sync(activeProvider)
       if (provider === activeProvider && store.getState().connection === 'connected' &&

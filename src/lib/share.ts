@@ -1,4 +1,5 @@
 const STUDIO_ORIGINS = ['https://studio.arc.io', 'https://studio-staging.arc.io']
+export const isStudioOrigin = (origin: string) => STUDIO_ORIGINS.includes(origin)
 const HANDSHAKE_TIMEOUT_MS = 1500
 const NAVIGATED_DEBOUNCE_MS = 100
 const trimSlash = (url: string) => url.replace(/\/+$/, '')
@@ -29,12 +30,12 @@ const originOf = (url: string) => {
 }
 
 export function parentStudioOrigins(ancestorOrigins?: ArrayLike<string>, referrer = ''): string[] {
-  const known = [ancestorOrigins?.[0] ?? '', originOf(referrer)].find((o) => STUDIO_ORIGINS.includes(o))
+  const known = [ancestorOrigins?.[0] ?? '', originOf(referrer)].find(isStudioOrigin)
   return known ? [known] : STUDIO_ORIGINS
 }
 
 const onMessage = (event: MessageEvent) => {
-  if (!STUDIO_ORIGINS.includes(event.origin) || event.source !== window.parent) return
+  if (!isStudioOrigin(event.origin) || event.source !== window.parent) return
   const data = event.data as { type?: string; url?: unknown } | null
   if (data?.type !== 'arc-share:url' || typeof data.url !== 'string' || !data.url.startsWith(`${event.origin}/`)) return
   known = trimSlash(data.url)

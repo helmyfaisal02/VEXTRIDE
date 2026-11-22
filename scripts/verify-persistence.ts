@@ -88,7 +88,7 @@ test('actual Rapier drive-in + paid respray restore pose, legitimate occupancy, 
  s.atTerminal();const e=useMissionStore.getState().economy
  assert.ok(!useMissionStore.getState().confirmRespray({operationId,vehicleId:'street-coupe',paintId:'violet'}).ok);assert.equal(useMissionStore.getState().economy,e)
  const next=newResprayOperationId();assert.notEqual(next,operationId);assert.ok(useMissionStore.getState().confirmRespray({operationId:next,vehicleId:'street-coupe',paintId:'violet'}).ok);assert.equal(useMissionStore.getState().economy.balance,200)
- vehicleRegistry.get('street-coupe')!.state.recoveryRevision++;s.pump(10);assert.deepEqual(useGarageStore.getState().occupancy,{});s.coordinator.flush();assert.equal((JSON.parse(storage.data.get(PROGRESS_KEY)!) as GuestSave).parking.length,0);const character=useCharacterStore.getState().settings;assert.ok(s.coordinator.reset());s.pump(120);assert.equal(useMissionStore.getState().economy.balance,0);assert.equal(s.assets[0].materials.body.color.getHexString(),'319ca7');assert.equal(useCharacterStore.getState().settings,character);for(const d of VEHICLES){const p=s.entry(d.id).body.translation();assert.ok(Math.hypot(p.x-d.spawn.x,p.z-d.spawn.z)<.1)};s.free()
+ vehicleRegistry.get('street-coupe')!.state.recoveryRevision++;s.pump(10);assert.deepEqual(useGarageStore.getState().occupancy,{});void s.coordinator.flush();assert.equal((JSON.parse(storage.data.get(PROGRESS_KEY)!) as GuestSave).parking.length,0);const character=useCharacterStore.getState().settings;assert.ok(s.coordinator.reset());s.pump(120);assert.equal(useMissionStore.getState().economy.balance,0);assert.equal(s.assets[0].materials.body.color.getHexString(),'319ca7');assert.equal(useCharacterStore.getState().settings,character);for(const d of VEHICLES){const p=s.entry(d.id).body.translation();assert.ok(Math.hypot(p.x-d.spawn.x,p.z-d.spawn.z)<.1)};s.free()
 })
 test('building/airborne/out-of-bounds positions fall back independently without discarding economy',()=>{
  const save=core();save.vehicles[0]={vehicleId:'street-coupe',x:101,y:.53,z:-103,yaw:0,layoutVersion:1};save.vehicles[1].y=30;save.vehicles[2].x=999
@@ -154,5 +154,23 @@ test('external-tab save changes pause writes and rewards without clobbering the 
  const event=new Event('storage');Object.defineProperties(event,{key:{value:PROGRESS_KEY},newValue:{value:external}});w.dispatchEvent(event)
  assert.ok(useProgressSaveStore.getState().blocked);assert.ok(!s.coordinator.flush());assert.equal(storage.data.get(PROGRESS_KEY),external)
  assert.ok(!useMissionStore.getState().transition({kind:'accept',missionId:'first-contact',npcId:'maya',session:1}));s.free()
+})
+test('flush and reset recheck storage when a newer tab revision has not been delivered as an event',()=>{
+ const storage=new MemoryStorage(),s=scene(storage);s.pump(110)
+ const external=JSON.stringify(core('first-done'))
+ storage.data.set(PROGRESS_KEY,external)
+ assert.ok(useMissionStore.getState().transition({kind:'accept',missionId:'first-contact',npcId:'maya',session:1}))
+ assert.equal(s.coordinator.flush(),false)
+ assert.equal(s.coordinator.reset(),false)
+ assert.equal(useProgressSaveStore.getState().status,'conflict')
+ assert.equal(storage.data.get(PROGRESS_KEY),external);s.free()
+})
+test('a cross-tab storage clear blocks recreation of the old guest save',()=>{
+ const storage=new MemoryStorage(),w=new EventTarget(),d=new EventTarget(),s=scene(storage,{window:w,document:d});s.pump(110)
+ storage.data.clear()
+ const event=new Event('storage');Object.defineProperty(event,'key',{value:null});w.dispatchEvent(event)
+ assert.equal(useProgressSaveStore.getState().status,'conflict')
+ assert.equal(s.coordinator.reset(),false)
+ s.free();assert.equal(storage.data.has(PROGRESS_KEY),false)
 })
 console.log(`ALL PASS (${count} persistence groups)`)
