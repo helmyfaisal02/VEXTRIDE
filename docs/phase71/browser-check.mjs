@@ -238,9 +238,9 @@ async function runDev(){
  }
  if(process.argv.includes('--extended')){
   await p.getByRole('button',{name:/Edit character/}).click()
-  const presets=p.getByRole('radiogroup',{name:'Character preset'}).getByRole('radio')
+  const presets=p.getByRole('group',{name:'Character preset'}).getByRole('radio')
   assert.equal(await presets.count(),3)
-  for(let i=0;i<3;i++)await presets.nth(i).click()
+  for(let i=0;i<3;i++)await presets.nth(i).locator('..').click()
   await btn(p,'Save Character').click()
   // Exercise live movement and scene systems for an additional minute.
   await p.evaluate(()=>{window.place(0,.94,-12);window.rig.yaw=0})

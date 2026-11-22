@@ -1,0 +1,101 @@
+{
+  "browser": "157.0.8103.78",
+  "viewports": [
+    {
+      "width": 375,
+      "height": 812,
+      "hud": "visible",
+      "walletFits": true,
+      "focusRestored": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hud": "visible",
+      "walletFits": true,
+      "focusRestored": true
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "hud": "visible",
+      "walletFits": true,
+      "focusRestored": true
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "hud": "visible",
+      "walletFits": true,
+      "focusRestored": true
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "hud": "visible",
+      "walletFits": true,
+      "focusRestored": true
+    }
+  ],
+  "assetRequests": [
+    {
+      "path": "/assets/index-5GcHGBKf.css",
+      "status": 200,
+      "type": "text/css"
+    },
+    {
+      "path": "/assets/index-CdxUPo2F.js",
+      "status": 200,
+      "type": "text/javascript"
+    },
+    {
+      "path": "/assets/three-CQosuols.js",
+      "status": 200,
+      "type": "text/javascript"
+    },
+    {
+      "path": "/assets/rapier-DVCvfZ9g.js",
+      "status": 200,
+      "type": "text/javascript"
+    },
+    {
+      "path": "/assets/ArcWalletContent-DaXxXTSK.js",
+      "status": 200,
+      "type": "text/javascript"
+    }
+  ],
+  "externalResources": [
+    {
+      "origin": "https://fonts.googleapis.com",
+      "response": 200
+    },
+    {
+      "origin": "https://fonts.gstatic.com",
+      "response": 200
+    },
+    {
+      "origin": "https://rpc.mainnet.arc.io",
+      "response": 200
+    }
+  ],
+  "errors": [],
+  "deepLink": {
+    "status": 200,
+    "path": "/qa/release/nested",
+    "secureContext": true,
+    "webLocks": true
+  },
+  "contextRecovery": true,
+  "refreshAndProfileReopen": true,
+  "readOnlyLookup": {
+    "providerRequests": 0,
+    "historyMutation": false,
+    "evidence": "mocked missing receipt"
+  },
+  "mockRpcMethods": {
+    "eth_chainId": 6,
+    "eth_call": 5,
+    "eth_getTransactionByHash": 1,
+    "eth_getTransactionReceipt": 1
+  }
+}

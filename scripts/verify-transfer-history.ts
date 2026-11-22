@@ -53,6 +53,18 @@ for (const changed of [{...log,address:other}, {...log,transactionHash:word(2n)}
   assert.equal(await rpc.receipt(hash,intent),'unknown')
 }
 pass('ARC ERC-20 evidence deduplicates identical log indexes and rejects ambiguity, wrong emitter, block, recipient or amount')
+const nativeMovement = {
+  ...log,
+  address: '0xfffffffffffffffffffffffffffffffffffffffe',
+  logIndex: '0x4',
+  data: word(intent.amount * 10n ** 12n),
+}
+currentReceipt = { ...receipt, logs: [nativeMovement, log] }
+assert.deepEqual(await rpc.verify(hash, intent), { status: 'confirmed', block: 17n, logIndex: 3 })
+currentReceipt = { ...receipt, logs: [nativeMovement] }
+assert.deepEqual(await rpc.verify(hash, intent), { status: 'unknown' })
+pass('Arc native and ERC-20 companion events count one direct transfer and native-only evidence cannot verify it')
+
 currentReceipt = receipt
 for (const altered of [{...tx,hash:word(1n)}, {...tx,from:other}, {...tx,input:transferData({...intent,recipient:other})},
   {...tx,input:transferData({...intent,amount:2n})}, {...tx,to:other}, {...tx,chainId:'0x1'}, {...tx,value:'0x1'}]) {
