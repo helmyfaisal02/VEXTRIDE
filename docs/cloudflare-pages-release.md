@@ -4,11 +4,13 @@
 
 ## Reproduce the production artifact
 
-Use Bun **1.4.4** and the committed `bun.lock`. Local verification used Linux x64.
+Use Bun **1.4.4** and the committed `bun.lock`. Both `.bun-version` and `packageManager` record the release version. Local verification used Linux x64.
 
 ```bash
 bun --version
 bun install --frozen-lockfile
+bun audit --prod
+bun audit
 bun run check
 bun run verify:all
 bun run build:pages
@@ -42,7 +44,7 @@ The app uses root-relative hashed assets. With no top-level `404.html`, Pages se
 
 ## Production readiness checklist
 
-- [ ] Record the intended Git SHA, build logs, file inventory, final `*.pages.dev` origin and whether branch triggers are enabled.
+- [ ] Record the intended Git SHA, build logs, file inventory, final `*.pages.dev` origin and whether branch triggers are enabled. Run both audits and review any new advisories against the [dependency remediation report](dependency-security-remediation.md).
 - [ ] Confirm the site loads at `/`, an arbitrary nested path and after refresh. Check Safari/Firefox and a Chromium browser where available. Desktop requires WebGL2 and keyboard/mouse. Mobile UI is responsive, with no touch driving controls.
 - [ ] On the production origin, start as a guest. Confirm no wallet request on load, verify the city and camera, walk and enter a vehicle, check the missions and garage, then reload and confirm guest state survives.
 - [ ] Open Arc Wallet, check that the lazy chunk loads and the UI fits narrow and wide viewports. Verify the top-level origin and that secure context, browser storage and Web Locks work.

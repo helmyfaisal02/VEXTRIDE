@@ -34,5 +34,6 @@ The optional wallet supports direct Arc USDC transfers and separate payments thr
 - [SC-4 deployment and verified contract evidence](docs/smart-contract/SC-4-deployment-evidence.md)
 - [SC-5 implementation and test report](docs/smart-contract/SC-5-implementation-report.md)
 - [Cloudflare Pages Free setup, production checklist, manual payment acceptance and rollback](docs/cloudflare-pages-release.md)
+- [Production dependency remediation and audit results](docs/dependency-security-remediation.md)
 
 The router is deployed. Real-payment acceptance is **PENDING** and public application publishing remains owner-controlled.
