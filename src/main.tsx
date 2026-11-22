@@ -32,13 +32,12 @@ const StudioLogo = () => (
 // Studio watermark component - links back to Studio
 const StudioWatermark = () => (
   <a
+    className="studio-watermark"
     href="https://studio.arc.io/"
     target="_blank"
     rel="noopener noreferrer"
     style={{
       position: 'fixed',
-      bottom: '16px',
-      right: '16px',
       display: 'flex',
       alignItems: 'center',
       gap: '6px',

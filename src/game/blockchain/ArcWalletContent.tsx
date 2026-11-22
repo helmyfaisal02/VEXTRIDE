@@ -28,6 +28,7 @@ export default function ArcWalletContent({ open, registerControls }: {
   const [copyFeedback, setCopyFeedback] = useState<{ address: string; text: string }>()
   const onArc = state.chainId === ARC_MAINNET.chain.id
   const address = state.address
+  const hasSession = state.connection === 'connected' || state.connection === 'connecting'
   const network = onArc ? ARC_MAINNET.label : state.chainId === 5042002 ? 'Arc Testnet'
     : state.chainId === 1 ? 'Ethereum Mainnet' : `Chain ${state.chainId}`
 
@@ -68,7 +69,7 @@ export default function ArcWalletContent({ open, registerControls }: {
     </p>
     {address && (
       <div className="mt-3 space-y-3 text-sm">
-        <dl className="grid grid-cols-[auto_1fr] items-center gap-x-5 gap-y-2">
+        <dl className="grid grid-cols-[minmax(0,auto)_minmax(0,1fr)] items-center gap-x-3 gap-y-2 [overflow-wrap:anywhere]">
           <dt className="text-white/70">Address</dt>
           <dd className="m-0 font-mono">{address.slice(0, 6)}…{address.slice(-4)}</dd>
           <dt className="text-white/70">Network</dt>
@@ -96,11 +97,10 @@ export default function ArcWalletContent({ open, registerControls }: {
       </div>
     )}
     <div className="mt-4">
-      {state.connection === 'connected' || state.connection === 'connecting' ? (
-        <button type="button" className={action} disabled={awaitingWallet} onClick={walletSession.disconnect}>Disconnect</button>
-      ) : (
-        <button type="button" className={action} disabled={state.requestPending} onClick={() => void walletSession.connect(injectedWallet())}>Connect Wallet</button>
-      )}
+      <button type="button" className={action} disabled={hasSession ? awaitingWallet : state.requestPending}
+        onClick={hasSession ? walletSession.disconnect : () => void walletSession.connect(injectedWallet())}>
+        {hasSession ? 'Disconnect' : 'Connect Wallet'}
+      </button>
     </div>
     <SendUsdc open={open} canSend={onArc && !!address && !state.requestPending}
       walletKey={address} balance={state.balance} />

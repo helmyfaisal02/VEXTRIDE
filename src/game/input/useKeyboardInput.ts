@@ -58,7 +58,7 @@ function setKey(code: string, down: boolean): void {
 export function useKeyboardInput(): void {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if(isRestoringProgress() || isWalletPanelOpen())return
+      if (e.defaultPrevented || isRestoringProgress() || isWalletPanelOpen()) return
       // The character creator owns the keyboard while it is open.
       if (useCharacterStore.getState().menuOpen) return
       const dialogue=useDialogueStore.getState()
@@ -69,6 +69,11 @@ export function useKeyboardInput(): void {
       const garage=useGarageStore.getState()
       if(garage.open){if(e.code==='Escape'&&!e.repeat){e.preventDefault();garage.close()};return}
       if (isTypingTarget(e.target)) return
+      // Space activates a focused HUD control. A movement key returns focus to the game.
+      if (e.target instanceof HTMLElement && /^(BUTTON|SUMMARY)$/.test(e.target.tagName)) {
+        if (e.code === 'Space') return
+        if (/^(Key[WASDER]|Arrow)/.test(e.code)) e.target.blur()
+      }
       if ((e.code === 'KeyE' || e.code === 'KeyR') && (e.ctrlKey || e.altKey)) return
       // With Cmd held the browser swallows other keys' keyup events, which
       // would leave movement keys stuck; treat it as leaving the game keys.

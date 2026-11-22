@@ -9,10 +9,12 @@ const button='rounded-lg bg-white/15 px-3 py-2 text-sm hover:bg-white/25 focus-v
 export function GarageRespray({vehicleId,name,parked}:{vehicleId:VehicleId;name:string;parked:boolean}){
  const current=useEconomy(s=>s.paints[vehicleId]),balance=useEconomy(s=>s.balance)
  const [selected,setSelected]=useState<PaintId>(current),[pending,setPending]=useState<ResprayRequest|null>(null),[result,setResult]=useState<{ok:boolean;message:string}|null>(null)
- const confirm=useRef<HTMLButtonElement>(null),review=useRef<HTMLButtonElement>(null),returnFocus=useRef(false),submitted=useRef('')
- useEffect(()=>{if(pending)confirm.current?.focus();else if(returnFocus.current){returnFocus.current=false;review.current?.focus()}},[pending])
+ const cancelButton=useRef<HTMLButtonElement>(null),review=useRef<HTMLButtonElement>(null),returnFocus=useRef(false),submitted=useRef('')
+ useEffect(()=>{if(pending)cancelButton.current?.focus();else if(returnFocus.current){returnFocus.current=false;review.current?.focus()}},[pending])
  const cancel=()=>{returnFocus.current=true;setPending(null);setResult(null)}
- return <section className="mt-4 rounded-xl border border-white/15 p-4" aria-label="Vehicle body respray" data-testid="respray-service">
+ return <section className="mt-4 rounded-xl border border-white/15 p-4" aria-label="Vehicle body respray" data-testid="respray-service" onKeyDown={event=>{
+  if(event.key==='Escape'&&pending){event.preventDefault();event.stopPropagation();cancel()}
+ }}>
   <h3 className="text-sm font-semibold">Vehicle Body Respray · {STREET_CASH.resprayPrice} SC</h3>
   <p className="mt-2 text-xs text-white/70">{name} · Current color: <span data-testid="current-paint">{paintPreset(vehicleId,current)!.name}</span></p>
   {!parked&&<p className="mt-2 text-xs text-white/70">Park this vehicle fully in a marked bay, stop and exit to use this service.</p>}
@@ -22,15 +24,15 @@ export function GarageRespray({vehicleId,name,parked}:{vehicleId:VehicleId;name:
   </label>
   <p className="mt-2 text-xs text-white/70">Balance: {formatSC(balance)}</p>
   {pending?<div className="mt-3 space-y-3" data-testid="respray-confirmation"><p className="text-sm">Respray {name} to {paintPreset(vehicleId,pending.paintId)!.name} for {STREET_CASH.resprayPrice} SC?</p><div className="flex flex-wrap gap-2">
-   <button ref={confirm} type="button" className={button} onClick={()=>{
+   <button type="button" className={button} onClick={()=>{
     if(submitted.current===pending.operationId)return
     submitted.current=pending.operationId
     const response=useMissionStore.getState().confirmRespray(pending)
     setResult(response);returnFocus.current=true;setPending(null)
-   }}>Confirm respray — {STREET_CASH.resprayPrice} SC</button><button type="button" className={button} onClick={cancel}>Cancel respray</button>
+   }}>Confirm respray — {STREET_CASH.resprayPrice} SC</button><button ref={cancelButton} type="button" className={button} onClick={cancel}>Cancel respray</button>
   </div></div>:<button ref={review} type="button" disabled={!parked} className={`${button} mt-3`} onClick={()=>{setResult(null);setPending({operationId:newResprayOperationId(),vehicleId,paintId:selected})}}>Review respray</button>}
   {result&&<p role={result.ok?'status':'alert'} className="mt-3 text-sm" data-testid="respray-result">{result.message}</p>}
-  <p className="mt-3 text-[11px] text-white/55">Street Cash is fictional game currency. Check Guest Progress below for local-save status.</p>
+  <p className="mt-3 text-[11px] text-white/75">Street Cash is fictional game currency. Check Guest Progress below for local-save status.</p>
  </section>
 }
 export function GarageEconomyHistory(){

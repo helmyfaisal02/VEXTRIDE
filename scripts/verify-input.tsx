@@ -15,7 +15,9 @@ const act = rawAct as unknown as (callback: () => void | Promise<void>) => Promi
 class FakeElement {
   tagName: string
   isContentEditable = false
+  blurred = false
   constructor(tagName: string) { this.tagName = tagName }
+  blur() { this.blurred = true }
 }
 const windowTarget = new EventTarget()
 const documentTarget = Object.assign(new EventTarget(), { hidden: false })
@@ -42,6 +44,7 @@ function key(type: 'keydown' | 'keyup', code: string, target: unknown = null, ex
   Object.defineProperties(event, {
     code: { value: code },
     repeat: { value: extra.repeat === true },
+    defaultPrevented: { value: extra.defaultPrevented === true },
     target: { value: target },
     metaKey: { value: extra.metaKey === true },
     preventDefault: { value: () => { result.prevented = true } },
@@ -94,6 +97,15 @@ check('typing in a text field: Space is not hijacked', !typedSpace.prevented)
 key('keydown', 'KeyW', new FakeElement('DIV'))
 check('focus on a non-text element still plays', inputState.forward)
 key('keyup', 'KeyW')
+
+const hudButton = new FakeElement('BUTTON')
+const hudSpace = key('keydown', 'Space', hudButton)
+check('Space activates a focused HUD button without queuing a gameplay jump', !hudSpace.prevented && !inputState.jumpQueued)
+key('keydown', 'KeyW', hudButton)
+check('a movement key moves focus out of a HUD button and resumes gameplay', hudButton.blurred && inputState.forward)
+key('keyup', 'KeyW')
+key('keydown', 'KeyD', hudButton, { defaultPrevented: true })
+check('keyboard events consumed by UI do not queue gameplay input', !inputState.right)
 
 // Opening and closing the creator while a key is held never leaves it stuck.
 key('keydown', 'KeyW')

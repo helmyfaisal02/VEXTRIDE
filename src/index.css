@@ -26,3 +26,135 @@ canvas {
   cursor: grab;
   touch-action: none;
 }
+
+.vex-hud {
+  --hud-inset: 1.25rem;
+}
+
+.vex-hud :is(button, input:not([type="radio"]), select, summary, a):focus-visible,
+.vex-preset:has(input:focus-visible),
+.studio-watermark:focus-visible {
+  outline: 2px solid #9feee0;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #142440;
+}
+
+.vex-overlay button,
+.vex-wallet-panel button,
+.vex-controls-compact summary {
+  min-block-size: 2.75rem;
+  min-inline-size: 2.75rem;
+}
+
+.vex-wallet-panel input {
+  font-size: max(1rem, 16px);
+}
+
+.vex-hud-top,
+.vex-hud-bottom {
+  position: absolute;
+  inset-inline: var(--hud-inset);
+  display: grid;
+  gap: 0.5rem;
+}
+
+.vex-hud-top {
+  inset-block-start: max(var(--hud-inset), env(safe-area-inset-top));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 44%);
+  align-items: start;
+}
+
+.vex-hud-info,
+.vex-hud-actions {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  overflow-wrap: anywhere;
+}
+
+.vex-hud-actions {
+  align-items: flex-end;
+}
+
+.vex-time-controls {
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  max-block-size: 45dvh;
+  overflow: auto;
+}
+
+.vex-hud-bottom {
+  inset-block-end: max(var(--hud-inset), env(safe-area-inset-bottom));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 24rem) minmax(0, 1fr);
+  align-items: end;
+}
+
+.vex-hud-feedback {
+  max-inline-size: 24rem;
+  inline-size: 100%;
+  justify-self: center;
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.vex-controls {
+  justify-self: start;
+}
+
+.vex-control-card {
+  max-block-size: 42dvh;
+  overflow: auto;
+  color: #1b3158;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 1rem;
+  box-shadow: 0 8px 30px rgba(27, 49, 88, 0.18);
+}
+
+.vex-controls-compact {
+  display: none;
+}
+
+.studio-watermark {
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  right: 1rem;
+}
+
+#root:has(.vex-overlay) > .studio-watermark {
+  visibility: hidden;
+}
+
+@media (max-width: 63.999rem) {
+  .vex-hud-bottom {
+    inset-block-end: calc(max(1rem, env(safe-area-inset-bottom)) + 2.75rem);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vex-controls-wide {
+    display: none;
+  }
+
+  .vex-controls-compact {
+    display: block;
+    pointer-events: auto;
+  }
+}
+
+@media (min-width: 40rem) {
+  .vex-hud {
+    --hud-inset: 1.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vex-hud * {
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}

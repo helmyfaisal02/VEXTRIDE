@@ -1,5 +1,6 @@
 import { useEffect, useState, useSyncExternalStore } from 'react'
-import { isWalletPanelOpen, resetInput } from '../input/inputState'
+import { resetInput } from '../input/inputState'
+import { isGameplayModalOpen } from '../input/gameplayUi'
 import { isTypingTarget } from '../shared/dom'
 import { useCharacterStore } from '../state/characterStore'
 import { formatWorldTime, timePeriod, worldClock } from '../world/worldTime'
@@ -12,7 +13,7 @@ export function WorldTimeHud() {
   useEffect(() => {
     if (!import.meta.env.DEV) return
     const toggle = (event: KeyboardEvent) => {
-      if (isWalletPanelOpen() || event.repeat || event.ctrlKey || event.altKey || event.metaKey || isTypingTarget(event.target)) return
+      if (isGameplayModalOpen() || event.defaultPrevented || event.repeat || event.ctrlKey || event.altKey || event.metaKey || isTypingTarget(event.target)) return
       if (event.shiftKey && event.code === 'KeyT') {
         event.preventDefault()
         resetInput()
@@ -25,19 +26,19 @@ export function WorldTimeHud() {
 
   return (
     <>
-      <div className="absolute left-5 top-24 rounded-xl bg-[#142440]/80 px-3 py-2 text-xs tabular-nums text-white sm:left-7" data-testid="world-time">
+      <div className="rounded-xl bg-[#142440]/90 px-3 py-2 text-xs tabular-nums text-white" data-testid="world-time">
         <time>{formatWorldTime(worldClock.hour)}</time>
         <span className="ml-2 text-white/75">{timePeriod(worldClock.hour)}{worldClock.paused ? ' · Paused' : ''}</span>
       </div>
       {import.meta.env.DEV && !creatorOpen && open && (
         <section
           aria-label="Developer world time"
-          className="pointer-events-auto absolute left-5 top-44 z-20 w-64 space-y-3 rounded-xl bg-[#142440]/95 p-4 text-xs text-white sm:left-7"
+          className="vex-time-controls pointer-events-auto z-10 w-full max-w-64 space-y-3 rounded-xl bg-[#142440]/95 p-4 text-xs text-white"
           onFocusCapture={() => resetInput()}
           onKeyDown={(event) => { if (event.code === 'Escape') setOpen(false); event.stopPropagation() }}
         >
           <div className="flex justify-between"><strong>Developer world time</strong><button type="button" aria-label="Close time controls" onClick={() => setOpen(false)}>×</button></div>
-          <label className="flex items-center justify-between gap-2">World hour
+          <label className="flex flex-wrap items-center justify-between gap-2">World hour
             <select aria-label="World hour" value={Math.floor(worldClock.hour)} className="rounded bg-[#304563] p-1" onChange={(event) => { worldClock.setPaused(true); worldClock.setHour(Number(event.target.value)) }}>
               {Array.from({ length: 24 }, (_, hour) => <option key={hour} value={hour}>{formatWorldTime(hour)}</option>)}
             </select>

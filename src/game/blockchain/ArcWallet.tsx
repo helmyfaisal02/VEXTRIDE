@@ -74,7 +74,7 @@ export function ArcWallet() {
             setOpen(true)
             setWalletPanelOpen(true)
           }}
-          className="pointer-events-auto absolute right-5 top-[8.25rem] flex items-center gap-1.5 rounded-full border border-white/25 bg-[#142440]/90 px-3 py-2 text-xs font-semibold text-white hover:bg-[#243d60] focus-visible:outline focus-visible:outline-2 sm:right-7"
+          className="pointer-events-auto flex min-h-11 max-w-full items-center gap-1.5 rounded-full border border-white/25 bg-[#142440]/90 px-3 py-2 text-xs font-semibold text-white hover:bg-[#243d60] focus-visible:outline focus-visible:outline-2"
         >
           <Wallet size={14} aria-hidden="true" /> Arc Wallet
         </button>
@@ -91,9 +91,9 @@ export function ArcWallet() {
           setWalletPanelOpen(false)
           trigger.current?.focus()
         }}
-        className="pointer-events-auto max-h-[calc(100%-2rem)] w-[calc(100%-2rem)] max-w-sm overflow-auto rounded-2xl border border-white/20 bg-[#142440] p-5 text-white shadow-2xl backdrop:bg-slate-950/55"
+        className="vex-wallet-panel pointer-events-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-sm overflow-auto rounded-2xl border border-white/20 bg-[#142440] px-4 pb-4 text-white sm:px-5 sm:pb-5 shadow-2xl backdrop:bg-slate-950/55"
       >
-        <div className="flex items-center justify-between gap-4">
+        <div className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-3 border-b border-white/15 bg-[#142440] py-3">
           <h2 id={titleId} className="font-display text-lg font-semibold uppercase tracking-wider">Arc Wallet</h2>
           <button type="button" className="rounded-lg bg-white/15 px-3 py-2 text-xs font-semibold hover:bg-white/25 focus-visible:outline focus-visible:outline-2" onClick={closePanel}>Close</button>
         </div>

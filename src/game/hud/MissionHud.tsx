@@ -19,12 +19,12 @@ export function MissionHud(){
  },[target,creator])
  useEffect(()=>{if(!notice)return;const timer=setTimeout(()=>useMissionStore.getState().dismissCompletion(),5000);return ()=>clearTimeout(timer)},[notice])
  if(creator)return null
- const style='pointer-events-none absolute left-5 top-44 w-[calc(100%_-_2.5rem)] max-w-xs rounded-xl border border-white/15 bg-[#142440]/90 px-4 py-3 text-white shadow-lg sm:left-7'
+ const style='max-w-xs rounded-xl border border-white/15 bg-[#142440]/90 px-4 py-3 text-white shadow-lg'
  if(notice)return <div role="status" className={style} data-testid="mission-complete"><p className="text-sm font-semibold">Mission Complete — {missionDefinition(progress.missionId).title}</p>{reward&&<p className="mt-2 text-xs text-[#70e4d1]" data-testid="mission-reward">+{reward.amount} SC — {reward.reason}</p>}</div>
  if(!view)return null
  return <div className={style} data-testid="mission-hud" aria-label="Active mission">
   <p className="text-xs font-semibold uppercase tracking-wide">{view.title}</p>
   <p className="mt-1 text-sm" role="status">◆ {view.objective}</p>
-  <p ref={readout} className="mt-2 text-[11px] text-white/65" data-testid="mission-waypoint">{view.target.name}</p>
+  <p ref={readout} className="mt-2 text-xs text-white/80" data-testid="mission-waypoint">{view.target.name}</p>
  </div>
 }

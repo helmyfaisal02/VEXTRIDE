@@ -53,7 +53,7 @@ export function TransferActivity({ sender, onArc, open }: { sender: Address | nu
       {sender && !onArc && <p>Switch to Arc Mainnet to resume checking transfers.</p>}
       {sender && own.length === 0 && <p>No saved transfers for this account.</p>}
       {sender && own.length > 0 && (
-        <ul className="max-h-72 space-y-2 overflow-auto pr-1">
+        <ul className="space-y-2">
           {[...own].reverse().map(record => (
             <ActivityRow key={record.id} record={record} canCheck={open && onArc && !checking}
               awaiting={awaiting} verified={verified[record.id] === verificationKey(record)} />
@@ -87,12 +87,12 @@ function ActivityRow({ record, canCheck, awaiting, verified }: { record: Transfe
   return (
     <li className="space-y-2 rounded-xl border border-white/15 p-3">
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <strong className={status === 'confirmed' ? 'text-emerald-200' : 'text-white'}>
+        <strong className={status === 'confirmed' && verified ? 'text-emerald-200' : 'text-white'}>
           {!unresolved && status !== 'rejected' ? (verified ? 'Verified · ' : 'Saved · ') : ''}{labels[status]}
         </strong>
         <time dateTime={new Date(record.createdAt).toISOString()}>{new Date(record.createdAt).toLocaleString()}</time>
       </div>
-      <p>{formatUsdc(BigInt(record.amount))} USDC · Arc Mainnet (5042)</p>
+      <p className="[overflow-wrap:anywhere]">{formatUsdc(BigInt(record.amount))} USDC · Arc Mainnet (5042)</p>
       <p className="break-all font-mono">To {record.recipient}</p>
       {record.hash && <><p className="break-all font-mono">{record.hash}</p><Explorer hash={record.hash} /></>}
       {record.block && <p>Block {record.block}{record.logIndex !== null && ` · Log ${record.logIndex}`}</p>}

@@ -1,7 +1,10 @@
-import { memo, useEffect, useRef } from 'react'
+import { memo, useEffect, useRef, type RefObject } from 'react'
 import { UserRound } from 'lucide-react'
 import { ArcWallet } from '../blockchain/ArcWallet'
-import { isWalletPanelOpen } from '../input/inputState'
+import { resetInput } from '../input/inputState'
+import { isGameplayModalOpen } from '../input/gameplayUi'
+import { useGarageStore } from '../garage/garageState'
+import { useDialogueStore } from '../interactions/dialogueState'
 import { isTypingTarget } from '../shared/dom'
 import { subscribePerf } from '../shared/perfStats'
 import { useCharacterStore } from '../state/characterStore'
@@ -18,19 +21,13 @@ import { useVehicleStore } from '../vehicles/vehicleState'
 
 function Brand() {
   return (
-    <div className="pointer-events-none absolute left-5 top-5 select-none sm:left-7 sm:top-6">
+    <div className="select-none">
       <h1
         className="font-display text-2xl font-bold uppercase text-white sm:text-3xl"
         style={{ letterSpacing: '0.14em', textShadow: '0 2px 14px rgba(20, 40, 80, 0.45)' }}
       >
         Vextride
       </h1>
-      <p
-        className="mt-1 text-[11px] font-medium uppercase text-white/85"
-        style={{ letterSpacing: '0.1em', textShadow: '0 1px 8px rgba(20, 40, 80, 0.5)' }}
-      >
-        NPC Foundation &middot; Phase 4.1
-      </p>
     </div>
   )
 }
@@ -55,15 +52,15 @@ const Controls = memo(function Controls() {
   const driving = useVehicleStore((s) => s.driving)
 
   if (creatorOpen) return null
-  return (
+  const rows = (
     <dl
-      className="pointer-events-none absolute bottom-5 left-5 m-0 grid select-none grid-cols-[auto_1fr] gap-x-3 rounded-2xl border border-white/40 bg-white/55 px-4 py-3 text-xs text-[#1B3158] shadow-[0_8px_30px_rgba(27,49,88,0.18)] backdrop-blur-md sm:bottom-6 sm:left-7"
+      className="vex-control-rows m-0 grid grid-cols-[auto_1fr] gap-x-3 px-3 py-2 text-xs"
       style={{ lineHeight: 1.65 }}
     >
       <ControlRow keys="WASD" label={driving ? 'Drive / Steer' : 'Move'} />
       {!driving && <ControlRow keys="Shift" label="Sprint" />}
       <ControlRow keys="Space" label={driving ? 'Handbrake' : 'Jump'} />
-      <ControlRow keys="E" label={driving ? 'Exit when stopped' : 'Talk / Enter nearby car'} />
+      <ControlRow keys="E" label={driving ? 'Exit when stopped' : 'Interact'} />
       <ControlRow keys="Mouse Drag" label="Camera" />
       <ControlRow keys="Scroll" label="Zoom" />
       <ControlRow keys="F" label="Performance" note={showPerf ? 'on' : 'off'} />
@@ -72,6 +69,16 @@ const Controls = memo(function Controls() {
       {import.meta.env.DEV && <ControlRow keys="Shift T" label="Time Controls" />}
     </dl>
   )
+  return (
+    <div className="vex-controls">
+      <div className="vex-control-card vex-controls-wide">{rows}</div>
+      <details className="vex-control-card vex-controls-compact">
+        <summary className="cursor-pointer px-3 py-2 text-xs font-semibold">Controls</summary>
+        {rows}
+      </details>
+    </div>
+  )
+
 })
 
 /** Measured stats. Updates its own DOM node, so it causes no React renders. */
@@ -91,7 +98,7 @@ function PerfReadout() {
   return (
     <div
       ref={ref}
-      className="pointer-events-none absolute right-5 top-5 select-none rounded-xl bg-[#1B3158]/80 px-3 py-2 font-mono text-[11px] tabular-nums text-white top-[4.25rem] sm:right-7 sm:top-[4.5rem]"
+      className="rounded-xl bg-[#1B3158]/90 px-3 py-2 font-mono text-xs tabular-nums text-white"
     >
       measuring...
     </div>
@@ -99,34 +106,33 @@ function PerfReadout() {
 }
 
 /** Small in-game entry point to reopen the character creator. */
-const CharacterButton = memo(function CharacterButton() {
+const CharacterButton = memo(function CharacterButton({ trigger }: { trigger: RefObject<HTMLButtonElement> }) {
   const driving = useVehicleStore((s) => s.driving)
   const name = useCharacterStore((s) => s.settings.name)
   const open = useCharacterStore((s) => s.menuOpen)
   const openMenu = useCharacterStore((s) => s.openMenu)
-  if (open) return null
   return (
     <button
       type="button"
       disabled={driving}
       title={driving ? 'Exit vehicle to edit character' : 'Edit character'}
-      onClick={(e) => {
-        // Release focus so a later Space press (jump) cannot re-activate this button.
-        e.currentTarget.blur()
-        openMenu()
-      }}
+      ref={trigger}
+      aria-haspopup="dialog"
+      onClick={openMenu}
       aria-label={`Edit character: ${name}`}
-      className="pointer-events-auto absolute right-5 top-5 flex h-11 select-none items-center gap-2 rounded-full border border-white/50 bg-white/55 pl-3 pr-4 text-xs font-semibold text-[#1B3158] shadow-[0_8px_30px_rgba(27,49,88,0.18)] backdrop-blur-md transition-colors hover:bg-white/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1B3158] sm:right-7 sm:top-6"
+      className={`pointer-events-auto flex min-h-11 max-w-full select-none items-center gap-2 rounded-full border border-white/50 bg-white/80 px-3 py-2 text-xs font-semibold text-[#1B3158] shadow-[0_8px_30px_rgba(27,49,88,0.18)] backdrop-blur-md transition-colors hover:bg-white disabled:opacity-75 ${open ? 'invisible' : ''}`}
     >
       <UserRound size={16} aria-hidden="true" />
-      <span className="max-w-[9rem] truncate">{name}</span>
+      <span className="min-w-0 truncate">{name}</span>
     </button>
   )
 })
 
-function CreatorGate() {
-  const open = useCharacterStore((s) => s.menuOpen)
-  return open ? <CharacterCreator /> : null
+function WorldInteractionHint() {
+  const npcHint = useDialogueStore(s => s.hint)
+  const garageHint = useGarageStore(s => s.hint)
+  const hint = npcHint || garageHint
+  return hint ? <p className="rounded-xl bg-[#142440]/95 px-4 py-2 text-xs text-white" data-testid={npcHint ? 'npc-hint' : 'garage-hint'}>{hint}</p> : null
 }
 
 function LoadingVeil() {
@@ -152,7 +158,7 @@ function LoadingVeil() {
 function useDebugHotkeys() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (isWalletPanelOpen() || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return
+      if (isGameplayModalOpen() || e.defaultPrevented || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return
       // Letters typed into the name field must never trigger debug shortcuts.
       if (isTypingTarget(e.target)) return
       const store = useGameStore.getState()
@@ -167,21 +173,42 @@ function useDebugHotkeys() {
 
 export function Hud() {
   useDebugHotkeys()
+  const creatorOpen = useCharacterStore(s => s.menuOpen)
+  const talking = useDialogueStore(s => !!s.active)
+  const garageOpen = useGarageStore(s => s.open)
+  const characterTrigger = useRef<HTMLButtonElement>(null)
+  const modalOpen = creatorOpen || talking || garageOpen
+
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <Brand />
-      <WorldTimeHud />
-      <EconomyHud />
-      <GuestSaveWarning />
-      <VehicleHud />
+    <div className="vex-hud pointer-events-none absolute inset-0 overflow-hidden" onFocusCapture={resetInput}>
+      <div {...(modalOpen ? { inert: '' } : {})}>
+        <div className="vex-hud-top">
+          <div className="vex-hud-info">
+            <Brand />
+            <WorldTimeHud />
+            <EconomyHud />
+            <MissionHud />
+          </div>
+          <div className="vex-hud-actions">
+            <CharacterButton trigger={characterTrigger} />
+            <ArcWallet />
+            <PerfReadout />
+            <GuestSaveWarning />
+          </div>
+        </div>
+        {!modalOpen && (
+          <div className="vex-hud-bottom">
+            <Controls />
+            <div className="vex-hud-feedback">
+              <VehicleHud />
+              <WorldInteractionHint />
+            </div>
+          </div>
+        )}
+      </div>
       <NPCDialogue />
-      <MissionHud />
       <GaragePanel />
-      <PerfReadout />
-      <Controls />
-      <CharacterButton />
-      <ArcWallet />
-      <CreatorGate />
+      {creatorOpen && <CharacterCreator returnFocus={characterTrigger} />}
       <LoadingVeil />
     </div>
   )
