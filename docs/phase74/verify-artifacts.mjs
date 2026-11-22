@@ -62,7 +62,10 @@ async function served(path, artifact) {
 
 const http = []
 if (!process.argv.includes('--inventory-only')) {
-  for (const file of artifacts) http.push(await served('/' + file.path, file))
+  // Pages consumes _headers as deployment metadata. It is not a public asset.
+  for (const file of artifacts.filter(file => file.path !== '_headers')) {
+    http.push(await served('/' + file.path, file))
+  }
   for (const route of ['/', '/qa/release/nested']) http.push(await served(route, index))
 }
 

@@ -7,6 +7,8 @@ import { walletSession } from './walletSession'
 import { transferSession } from './transferSession'
 import { SendUsdc } from './SendUsdc'
 import { TransferActivity } from './TransferActivity'
+import { RouterPayment } from './RouterPayment'
+import { routerSession } from './routerSession'
 import type { WalletPanelControls } from './ArcWallet'
 
 const action = 'rounded-lg bg-white/15 px-3 py-2 text-xs font-semibold hover:bg-white/25 focus-visible:outline focus-visible:outline-2 disabled:opacity-50'
@@ -24,7 +26,10 @@ export default function ArcWalletContent({ open, registerControls }: {
   registerControls: (controls: WalletPanelControls | null) => void
 }) {
   const state = useStore(walletSession.store)
-  const awaitingWallet = useStore(transferSession.store, state => state.status === 'wallet')
+  const transferPrompt = useStore(transferSession.store, state => state.status === 'wallet')
+  const routerPrompt = useStore(routerSession.store, state => state.awaitingWallet)
+  const awaitingWallet = transferPrompt || routerPrompt
+  const [mode, setMode] = useState<'direct' | 'router'>('direct')
   const copyGeneration = useRef(0)
   const [copyFeedback, setCopyFeedback] = useState<{ address: string; text: string }>()
   const onArc = state.chainId === ARC_MAINNET.chain.id
@@ -35,17 +40,21 @@ export default function ArcWalletContent({ open, registerControls }: {
 
   useEffect(() => {
     registerControls({
-      canClose: () => transferSession.store.getState().status !== 'wallet',
-      cancelDraft: () => transferSession.clearDraft(),
+      canClose: () => transferSession.store.getState().status !== 'wallet' && !routerSession.store.getState().awaitingWallet,
+      cancelDraft: () => { transferSession.clearDraft(); routerSession.clearDraft() },
     })
     const unsubscribe = walletSession.store.subscribe((next, previous) => {
       if (next.address !== previous.address || next.chainId !== previous.chainId ||
-          next.connection !== previous.connection) transferSession.invalidateWallet()
+          next.connection !== previous.connection) {
+        transferSession.invalidateWallet()
+        routerSession.invalidateWallet()
+      }
     })
     return () => {
       registerControls(null)
       unsubscribe()
       transferSession.clearDraft()
+      routerSession.clearDraft()
       walletSession.disconnect()
     }
   }, [registerControls])
@@ -105,9 +114,19 @@ export default function ArcWalletContent({ open, registerControls }: {
         {hasSession ? 'Disconnect' : 'Connect Wallet'}
       </button>
     </div>
-    <SendUsdc open={open} canSend={onArc && !!address && !state.requestPending}
-      walletKey={address} balance={state.balance} />
-    <TransferActivity sender={address} onArc={onArc} open={open} />
+    <div role="group" aria-label="USDC payment method" className="mt-4 flex flex-wrap gap-2">
+      <button type="button" className={action} aria-pressed={mode === 'direct'} disabled={awaitingWallet}
+        onClick={() => { routerSession.clearDraft(); setMode('direct') }}>Direct transfer</button>
+      <button type="button" className={action} aria-pressed={mode === 'router'} disabled={awaitingWallet}
+        onClick={() => { transferSession.clearDraft(); setMode('router') }}>Fixed-recipient router</button>
+    </div>
+    {mode === 'direct' ? (
+      <>
+        <SendUsdc open={open} canSend={onArc && !!address && !state.requestPending}
+          walletKey={address} balance={state.balance} />
+        <TransferActivity sender={address} onArc={onArc} open={open} />
+      </>
+    ) : <RouterPayment key={address} open={open} sender={address} canSend={onArc && !!address && !state.requestPending} />}
     </>
   )
 }

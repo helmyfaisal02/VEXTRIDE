@@ -1,54 +1,38 @@
 # VEXTRIDE
 
-A browser-based, stylized 3D open-world urban adventure game. Current state: a physics-driven 3D test world with a playable third-person character (run, sprint, jump), a follow camera, and a character creator with three presets. Vehicles, the city, missions and Arc integration come in later phases.
+VEXTRIDE is a stylized, single-player, 3D browser game with six city districts, three drivable vehicles, ambient traffic and pedestrians, two missions and a working garage. Create a character, explore the city, earn fictional Street Cash and spend it on garage resprays. Guest progress is saved in the current browser and origin.
 
-Built with [Arc Studio](https://studio.arc.io)
+Built with React, TypeScript, Vite, Three.js, React Three Fiber, Rapier and Zustand. The desktop game uses WebGL2, a keyboard and a mouse. The UI adapts to narrow screens.
 
-## Tech stack
+The city spans 340 × 340 metres across Central Plaza, Downtown, Residential, Motor Row, Warehouse / Industrial and Riverside. Central Plaza is the normal starting point and the old physics demo yard remains east of the city. The character creator includes Urban Blue, Street Red and Metro Green with cosmetic customization. [City map](docs/city-layout.png) · [Arc Studio](https://studio.arc.io)
 
-- React, TypeScript, Vite
-- Three.js with React Three Fiber and drei
-- Rapier physics (`@react-three/rapier`)
-- Zustand for game state
-- Tailwind CSS
+## Run locally
+
+Use [Bun](https://bun.sh) 1.4.4.
+
+```bash
+bun install --frozen-lockfile
+bun run dev
+bun run check
+bun run verify:all
+bun run build:pages
+```
+
+The Pages build outputs `dist/` and checks its static assets. No app environment variables, server, authentication or wallet are needed to play.
 
 ## Controls
 
-- `WASD` move, `Shift` sprint, `Space` jump
-- Mouse drag rotates the camera, scroll zooms
-- `P` toggles collider debug view
-- `F` toggles a measured performance readout
-- `C` switches to a free debug orbit camera and back
+- `WASD` moves or drives. `Shift` sprints and `Space` jumps or applies the handbrake.
+- `E` interacts, enters a vehicle or exits a vehicle. `R` recovers a vehicle.
+- Drag to rotate the camera and scroll to zoom.
+- `F` shows performance data, `P` shows colliders, and `C` toggles the debug orbit camera.
 
-## VEXTRIDE City (road network)
+## Arc Wallet
 
-A 340 x 340 m city centred on the world origin (X east, Z south, 1 unit = 1 m): a 5 x 5 grid of junctions joined by 40 road segments, with sidewalks, curbs, crosswalks, stop lines and lane markings. Main roads are 14 m wide (an outer loop plus a central crossing) and secondary roads 9 m; sidewalks are 2.5 m with 0.13 m curbs. Six districts are laid out as zones: Central Plaza (start), Downtown, Residential, Motor Row, Warehouse / Industrial and Riverside. You start on the plaza. The earlier demo objects and the step test area now sit in a demo yard east of the city (about 260 m along +X). `docs/city-layout.png` is a top-down map of the layout (`bun run city:map` regenerates it).
+The optional wallet supports direct Arc USDC transfers and separate payments through the fixed-recipient VEXTRIDE router. Arc Mainnet chain ID is **5042**. Router address is `0xcAD7E77c93485F7eADe96AC7a58437ded3777FCF`. Router payment transfers real funds and grants no game benefits. Street Cash is a separate fictional economy. A wallet is never connected automatically.
 
-## City buildings and environment
+- [SC-4 deployment and verified contract evidence](docs/smart-contract/SC-4-deployment-evidence.md)
+- [SC-5 implementation and test report](docs/smart-contract/SC-5-implementation-report.md)
+- [Cloudflare Pages Free setup, production checklist, manual payment acceptance and rollback](docs/cloudflare-pages-release.md)
 
-The roads are now lined with 20 procedural buildings across nine types (offices, brick shops, apartments, houses, convenience stores, an auto garage, a vehicle showroom, warehouses and workshops), each with windows, doors, awnings or loading docks, and a sign. Each district has its own look: Downtown (offices, brick storefronts, benches and planters), Residential (houses with fenced yards and driveways, low-rise apartments), Motor Row (garage, showroom, parking lots), Warehouse / Industrial (warehouses with loading docks, container yards), Riverside (park lawns, promenade, pavilion and an empty strip reserved for a future river) and Central Plaza (paved square with a landmark monument, benches, planters and trees). Streets have lamps, trees, benches, bins, hydrants and stop signs. Everything is placed from fixed data, so the city is identical on every load.
-
-## Movement notes
-
-The character climbs ledges up to 0.2 m (curbs, stairs) when walking or sprinting; anything taller blocks. A small test area with blocks of rising height and a short staircase sits at the far corner of the map (look toward +X, -Z from the start). Camera changes (creator, follow, debug orbit) blend smoothly rather than snapping.
-
-## Character creator
-
-On first launch you choose a name, one of three presets (Urban Blue, Street Red, Metro Green) and a clothing colour, previewed live on the real in-game character. Your choice is saved in this browser (guest only, no account) and restored on refresh. Use the character button at the top right to reopen it. Customisation is cosmetic only.
-
-## Development
-
-Prerequisites: [Bun](https://bun.sh).
-
-```bash
-bun install
-bun run dev         # start the dev server on port 5173
-bun run check       # lint + typecheck
-bun run verify:all        # headless checks: controller physics, settings, models, input, cameras, player, city layout / geometry / physics
-bun run city:map          # render docs/city-layout.png (roads, buildings and props) from the layout data
-bunx vite build     # production build
-```
-
-### Environment variables
-
-None.
+The router is deployed. Real-payment acceptance is **PENDING** and public application publishing remains owner-controlled.

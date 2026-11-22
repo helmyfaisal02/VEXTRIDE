@@ -1,6 +1,6 @@
 import {
   decodeEventLog, parseAbi, TransactionNotFoundError, TransactionReceiptNotFoundError,
-  type Address, type Hash, type PublicClient, type Transaction, type TransactionReceipt,
+  type Address, type Hash, type Transaction, type TransactionReceipt,
 } from 'viem'
 import { ARC_MAINNET } from './arcConfig'
 import { isTransactionHash, type TransferIntent } from './transferValidation'
@@ -18,7 +18,7 @@ export interface ObservedMovement {
 
 export type Observation =
   | { status: 'pending' | 'unknown' }
-  | { status: 'confirmed' | 'reverted'; block: bigint; sender: Address; to: Address | null; movements: ObservedMovement[]; transaction: Transaction }
+  | { status: 'confirmed' | 'reverted'; block: bigint; sender: Address; to: Address | null; movements: ObservedMovement[]; transaction: Transaction; receipt: TransactionReceipt }
 
 export type Verification =
   | { status: 'pending' | 'unknown' }
@@ -49,7 +49,10 @@ function movements(receipt: TransactionReceipt) {
 const transferTopic = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
 
 export async function observeTransfer(
-  client: Pick<PublicClient, 'getTransaction' | 'getTransactionReceipt'>,
+  client: {
+    getTransaction(args: { hash: Hash }): Promise<Transaction>
+    getTransactionReceipt(args: { hash: Hash }): Promise<TransactionReceipt>
+  },
   hash: Hash,
 ): Promise<Observation> {
   if (!isTransactionHash(hash)) throw new Error('Invalid transaction hash')
@@ -80,7 +83,7 @@ export async function observeTransfer(
   return {
     status: receipt.status === 'success' ? 'confirmed' : 'reverted',
     block: receipt.blockNumber, sender: transaction.from, to: transaction.to,
-    movements: observed, transaction,
+    movements: observed, transaction, receipt,
   }
 }
 

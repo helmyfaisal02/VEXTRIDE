@@ -5,6 +5,8 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 export default defineConfig({
   plugins: [react(), nodePolyfills()],
+  envDir: false,
+  envPrefix: [],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -52,7 +54,6 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: true,
-    cors: true,
+    allowedHosts: ['.studio.arc.io', '.studio-staging.arc.io'],
   },
 })
