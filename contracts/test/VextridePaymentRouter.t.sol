@@ -17,13 +17,17 @@ contract MockUSDC is ERC20 {
         ShortCredit,
         NoMovement,
         NoReturn,
-        Callback
+        Callback,
+        ExcessCredit,
+        RevertBalanceAfterTransfer
     }
 
     error MockTransferFailed();
+    error MockBalanceReadFailed();
 
     TransferMode private mode;
     bytes32 private callbackReference;
+    bool private balanceReadFailed;
 
     constructor() ERC20("Mock USDC", "mUSDC") {}
 
@@ -44,6 +48,11 @@ contract MockUSDC is ERC20 {
         callbackReference = paymentReference;
     }
 
+    function balanceOf(address account) public view override returns (uint256) {
+        if (balanceReadFailed) revert MockBalanceReadFailed();
+        return super.balanceOf(account);
+    }
+
     function transferFrom(address from, address to, uint256 amount) public override returns (bool) {
         if (mode == TransferMode.RevertTransfer) revert MockTransferFailed();
         if (mode == TransferMode.NoMovement) return true;
@@ -56,6 +65,8 @@ contract MockUSDC is ERC20 {
         }
 
         super.transferFrom(from, to, amount);
+        if (mode == TransferMode.ExcessCredit) _mint(to, 1);
+        if (mode == TransferMode.RevertBalanceAfterTransfer) balanceReadFailed = true;
         if (mode == TransferMode.NoReturn) {
             assembly ("memory-safe") {
                 return(0, 0)
@@ -207,6 +218,19 @@ contract VextridePaymentRouterTest is RouterFixture {
         _pay(PAYER, REF, amount);
     }
 
+    function testLargestAmountWithinNativeRepresentationSettlesExactly() public {
+        uint256 amount = type(uint256).max / 1e12;
+        token.mint(PAYER, amount);
+        _approve(PAYER, amount);
+        vm.recordLogs();
+        _pay(PAYER, REF, amount);
+
+        _assertSettlements(PAYER, REF, amount, 1);
+        assertEq(token.balanceOf(RECIPIENT), amount);
+        assertEq(token.balanceOf(PAYER), INITIAL_BALANCE);
+        assertEq(token.allowance(PAYER, address(router)), 0);
+    }
+
     function testPaymentRejectsZeroReference() public {
         vm.expectRevert(VextridePaymentRouter.InvalidReference.selector);
         _pay(PAYER, bytes32(0), AMOUNT);
@@ -304,6 +328,25 @@ contract VextridePaymentRouterTest is RouterFixture {
         _assertPaymentRollsBack(
             abi.encodeWithSelector(VextridePaymentRouter.UnexpectedRecipientCredit.selector, AMOUNT, 0)
         );
+    }
+
+    function testExcessCreditRollsBackCreditAndReference() public {
+        token.setMode(MockUSDC.TransferMode.ExcessCredit);
+        _assertPaymentRollsBack(
+            abi.encodeWithSelector(VextridePaymentRouter.UnexpectedRecipientCredit.selector, AMOUNT, AMOUNT + 1)
+        );
+    }
+
+    function testRevertingSecondBalanceReadRollsBackTransferAndAllowsRetry() public {
+        token.setMode(MockUSDC.TransferMode.RevertBalanceAfterTransfer);
+        _assertPaymentRollsBack(abi.encodeWithSelector(MockUSDC.MockBalanceReadFailed.selector));
+
+        token.setMode(MockUSDC.TransferMode.Exact);
+        vm.recordLogs();
+        _pay(PAYER, REF, AMOUNT);
+        _assertSettlements(PAYER, REF, AMOUNT, 1);
+        assertTrue(router.isReferenceUsed(PAYER, REF));
+        assertEq(token.balanceOf(RECIPIENT), AMOUNT);
     }
 
     function testNoReturnTokenWithExactCreditSettles() public {
